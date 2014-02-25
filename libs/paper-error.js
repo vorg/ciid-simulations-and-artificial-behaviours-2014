@@ -1,5 +1,24 @@
 window.addEventListener('DOMContentLoaded', function() {
-  console.log('DOMContentLoaded')
+  var canvas = document.getElementById('myCanvas');
+  if (!canvas) {
+    throw 'No <canvas> element found with id "myCanvas"';
+  }
+  var scriptTags = document.getElementsByTagName('script');
+  var paperScriptCodeFound = false;
+  for(var i=0; i<scriptTags.length; i++) {
+    var script = scriptTags[i];
+    if (script.type == 'text/paperscript') {
+      paperScriptCodeFound = true;
+    }
+  }
+
+   if (!paperScriptCodeFound) {
+   throw 'No paper script code found. Did you add type="text/paperscript" to your <script> tag?';
+  }
+
+  if (typeof(paper) == 'undefined') {
+   throw 'No paper.js library found. Have you added proper script tag?';
+  }
 })
 
 window.onerror = function(error, url, lineNumber) {

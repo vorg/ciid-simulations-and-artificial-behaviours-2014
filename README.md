@@ -1,6 +1,6 @@
-ciid-simulations-and-artificial-behaviours-2014
-===============================================
+Simulations and Artificial Behaviours Class
+===========================================
 
-Simulations and Artificial Behaviours Class - February 2014 @ [CIID](http://ciid.dk)
+[CIID](http://ciid.dk), Copenhagen February 2014
 
 by [David Gauthier](http://gauthiier.info) & [Marcin Ignac](http://marcinignac.com)

@@ -1,0 +1,48 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		var hexagon = new Path.RegularPolygon(new Point(0,0), 5, 150);
+		hexagon.position = view.center; //[view.center.x, view.center.y] ;
+		hexagon.fillColor = {
+			gradient: {
+				stops: ["#DD5469", "#54DDC8"]
+			},
+			origin: hexagon.firstSegment.point,
+			destination: hexagon.lastSegment.point
+		};	
+		hexagon.strokeColor = 'black';
+
+		// clone and existing path
+		var hexaclone = hexagon.clone();
+
+		// transforms
+
+		// pivot used for both rotation and scaling
+		var pivot = new Point(200, 200);
+
+		// representation of the above pivot
+		var pivotcircle = new Path.Circle(pivot, 3);
+		pivotcircle.fillColor = 'black';
+
+		// rotation
+		//hexaclone.rotate(45);
+		hexaclone.rotate(45, pivot);
+
+		// translation
+		hexaclone.position.translate(100, 0]);
+		//hexaclone.position += [100, 0];
+
+		// scaling
+		//hexaclone.scale(1.5);
+		hexaclone.scale(1.5, pivot);
+
+	</script>
+
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

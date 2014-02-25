@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		var style_grey = {
+			fillColor: new Color(0.7, 0.7, 0.7, 0.5),
+			strokeColor: 'black'
+		};
+
+		var hexagon = Path.RegularPolygon(new Point(0,0), 5, 150);
+		hexagon.style = style_grey;
+		hexagon.position = view.center;
+		hexagon.selected = true;
+
+		// keeping track of which object or segment is being dragged
+		var fillobject = null;
+		var segment = null;
+
+		// callback functions of mouse inputs
+		function onMouseDown(event) {
+			console.log('down');
+			
+			// did we hit the hexagon?
+			var hitresult = hexagon.hitTest(event.point);
+
+			// if so where?
+			if(hitresult) {
+				// inside the actual shape?
+				if(hitresult.type == 'fill') {
+					// keep track of the shape being clicked
+					fillobject = hitresult.item;
+					console.log(fillobject);
+				} 
+				// or on one of its segment?
+				else if(hitresult.type == 'segment') {
+					// keep track of the segment being clicked
+					segment = hitresult.segment;
+					console.log(segment);
+				}
+			}
+		}
+
+		function onMouseDrag(event) {
+			console.log('drag');
+
+			// are we dragging an object?
+			if(fillobject) {
+				// if so translate the shape
+				fillobject.position += event.point - event.lastPoint;
+			}
+
+			// are we dragging a segment?
+			if(segment) {
+				// if so set the segment position to the mouse position
+				segment.point = event.point;
+			}
+
+		}
+
+		function onMouseUp(event) {
+			console.log('up');	
+			// let's make sure we are not dragging anything when the mouse if released
+			fillobject = null;
+			segment = null;		
+		}
+
+	</script>
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

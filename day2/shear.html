@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		var style_grey = {
+			fillColor: new Color(0.7, 0.7, 0.7, 0.5),
+			strokeColor: 'black'
+		};
+
+		var square = Path.RegularPolygon(new Point(0,0), 4, 50);
+		square.style = style_grey;
+		square.position = view.center;
+		square.selected = true;
+
+		var shearfactor = 0.02;
+		var scalefactor = 1.2;
+		var total = 0;
+
+		square.onFrame = function () {
+			total += shearfactor;
+
+			square.shear(shearfactor, shearfactor);
+			square.scale(scalefactor);
+
+			if(total > 0.1) {
+				shearfactor = -0.02;
+				scalefactor = 0.9;
+			} else if(total < -0.1) {
+				shearfactor = 0.02;
+				scalefactor = 1.0 / 0.9;
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+	</script>
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

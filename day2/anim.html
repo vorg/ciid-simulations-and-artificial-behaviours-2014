@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+  //create new rectangle at x=400, y=300 and radius=50
+  var shape = new Path.Rectangle(new Point(400, 300), 50);
+  //set the color to FF 00 00 = 255, 0, 0 = red
+  shape.fillColor = '#FF0000';
+
+  //animate shape's position to given x, y
+  //position is Point, point has x, y properties
+  Timeline.anim(shape.position).to({ x:100, y:100 });
+
+  //animation function
+  function onFrame() {
+    //update timeline animations
+    Timeline.update();
+
+    //move to the right
+    //shape.position.x = shape.position.x + 1;
+    //rotate a bit
+    //shape.rotate(3);
+  }
+
+  //function called on mouse click
+  function onMouseDown(event) {
+    //animate rectangle to mouse position
+    Timeline.anim(shape.position).to({x:event.point.x, y:event.point.y});
+  }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

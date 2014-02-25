@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+  //create new rectangle at x=400, y=300 and radius=50
+  var shape = new Path.Rectangle(new Point(400, 300), 50);
+  //set the color to FF 00 00 = 255, 0, 0 = red
+  shape.fillColor = '#FF0000';
+
+  //eyes
+  var eye1 = new Path.Rectangle(new Point(400, 300), new Size(10, 5));
+  eye1.fillColor = 'yellow';
+
+  var eye2 = new Path.Rectangle(new Point(400, 300), new Size(10, 5));
+  eye2.fillColor = 'yellow';
+
+  //animate shape's position to given x, y
+  //position is Point, point has x, y properties
+  Timeline.anim(shape.position).to({ x:100, y:100 });
+  Timeline.anim(eye1.position).to({ x:100 - 18, y:100 - 10 });
+  Timeline.anim(eye2.position).to({ x:100 + 18, y:100 - 10 });
+
+  //animation function
+  function onFrame() {
+    //update timeline animations
+    Timeline.update();
+
+    //move to the right
+    //shape.position.x = shape.position.x + 1;
+    //rotate a bit
+    //shape.rotate(3);
+  }
+
+  var clickCount = 0;
+
+  //this will happen only when we click our rectangle
+  shape.onMouseDown = function() {
+    //color has r, g, b, hue, saturation and brightness, alpha
+    //Math.random() return number 0..1, while hue has value 0..360
+    var hueValue = Math.random() * 360;
+    Timeline.anim(shape.fillColor).to({hue: hueValue});
+
+    clickCount += 1;
+    Timeline.anim(shape).to({rotation: clickCount * 360})
+  }
+
+  //alternative syntax
+  //function onShapeMouseDown = function() {
+    //...
+  //}
+  //shape.onMouseDown = onShapeMouseDown;
+
+  //function called on mouse click
+  function onMouseDown(event) {
+    //Timeline.Easing..
+    //Linear, Quadratic, Cubic, Elastic, Back, Bounce
+    //EaseIn, EaseOut, EaseInOut
+
+    //animate rectangle to mouse position
+    Timeline.anim(shape.position).to(1, { x: event.point.x, y: event.point.y }, 1,
+      Timeline.Easing.Cubic.EaseInOut);
+    Timeline.anim(eye1.position).to(1, { x: event.point.x - 18, y: event.point.y - 10 }, 1);
+    Timeline.anim(eye2.position).to(1, { x: event.point.x + 18, y: event.point.y - 10 }, 1);
+
+    //Timeline.anim(target).to(delay, {properties}, duration)
+    Timeline.anim(eye1).to(0, { scale:5 }, 0.2).to({ scale: 1}, 0.2);
+    Timeline.anim(eye2).to(0, { scale:5 }, 0.2).to({ scale: 1}, 0.2);
+
+    //Every shape has scale property
+    /*
+    Shape = {
+      position: {
+        x: 0,
+        y: 0
+      },
+      scale: 1,
+      rotation: 0,
+      fillColor: {
+        r: 1,
+        g: 0,
+        b: 0
+      }
+    }
+    */
+  }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

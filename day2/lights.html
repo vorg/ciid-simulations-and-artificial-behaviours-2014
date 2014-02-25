@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+/*
+   ____
+  |    |
+  | R  |
+  |____|
+  |    |
+  | G  |
+  |____|
+
+*/
+
+var rect = new Path.Rectangle(new Point(0, 0), new Size(200, 600));
+rect.position = view.center;
+rect.fillColor = 'black';
+
+var greenCircle = new Path.Circle(new Point(0, 0), 75);
+greenCircle.position.x = view.center.x;
+greenCircle.position.y = view.center.y + 200;
+greenCircle.fillColor = 'green';
+
+var redCircle = greenCircle.clone();
+redCircle.position.y = view.center.y - 200;
+redCircle.fillColor = 'red';
+
+var yellowCircle = greenCircle.clone();
+yellowCircle.position.y = view.center.y;
+yellowCircle.fillColor = 'yellow';
+
+redCircle.fillColor.brightness = 0.3;
+yellowCircle.fillColor.brightness = 0.3;
+greenCircle.fillColor.brightness = 0.3;
+
+function animateLights() {
+  //start with red
+  Timeline.anim(redCircle.fillColor).to({brightness:1});
+  //add timer
+  //wait 10s
+  //turn off red
+  Timeline.anim(redCircle.fillColor).to(10, {brightness:0.3});
+  //turn on yellow
+  Timeline.anim(yellowCircle.fillColor).to(10, {brightness:1});
+  //wait 2
+  //turn off yellow
+  Timeline.anim(yellowCircle.fillColor).to(12, {brightness:0.3});
+  //turn on green
+  Timeline.anim(greenCircle.fillColor).to(12, {brightness:1});
+  //wait 10s
+  Timeline.anim(greenCircle.fillColor)
+    .to(22, {brightness:0.3}, 0.2)
+    .to({brightness:1.0}, 0.2)
+    .to({brightness:0.3}, 0.2)
+    .to({brightness:1.0}, 0.2)
+    .to({brightness:0.3}, 0.2)
+    .to({brightness:1.0}, 0.2)
+    .to({brightness:0.3})
+  //blink green
+  //turn off green
+  //turn on red
+  Timeline.anim(redCircle.fillColor).to(23, {brightness:1});
+  //wait for click
+  //bonus : clock
+}
+
+var group = new Group();
+group.addChild(rect);
+group.addChild(redCircle);
+group.addChild(yellowCircle);
+group.addChild(greenCircle);
+
+group.onMouseDown = function() {
+  animateLights();
+}
+
+function onFrame() {
+  Timeline.update();
+  group.rotate(1)
+}
+
+
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

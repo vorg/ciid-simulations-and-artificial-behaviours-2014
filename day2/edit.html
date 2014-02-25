@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		var style_grey = {
+			fillColor: new Color(0.7, 0.7, 0.7, 0.5),
+			strokeColor: 'black'
+		};
+
+		var edit = false;
+		var currentShape = null;
+
+		// callback functions of mouse inputs
+		function onMouseDown(event) {
+			console.log('down');
+
+			// are we currently editing?
+			if(edit == false) {
+				console.log('start editing');
+
+				// if NOT let's create a new shape
+				currentShape = new Path();
+				currentShape.style = style_grey;
+				currentShape.selected = true;
+				currentShape.add(event.point);
+
+				edit = true;
+
+			} 
+
+			else {
+
+				// is so - are we clicking near trying to close the shape by clicking on the first segment?
+				var d = currentShape.firstSegment.point - event.point;
+				if(d.length < 3) {
+					// if yes, close the shape
+					currentShape.closed = true;
+					currentShape = null;
+					edit = false;
+				} else {
+					// if not add a new segment
+					currentShape.add(event.point);
+				}
+
+			}
+		}
+
+		function onMouseMove(event) {
+			console.log('move');
+			// are we currently editing?
+			if(edit) {
+				// if so, are we moving the mouse near the currentShapes's first segment?
+				var d = currentShape.firstSegment.point - event.point;
+				console.log(d);
+				if(d.length < 3) {
+					// if yes, color it red
+					currentShape.fillColor = 'red';
+				} else {
+					// if yes, color color it grey!
+					currentShape.fillColor = style_grey.fillColor;
+				}
+			}
+
+		}
+
+	</script>
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		var style_grey = {
+			fillColor: new Color(0.7, 0.7, 0.7, 0.5),
+			strokeColor: 'black'
+		};
+
+		var edit = false;
+		var currentShape = null;
+
+		var fillobject = null;
+		var segment = null;		
+
+		function createShape(point) {
+			currentShape = new Path();
+			currentShape.style = style_grey;
+			currentShape.selected = true;
+			currentShape.add(point);
+
+			edit = true;			
+		}
+
+		function finaliseShape() {
+			currentShape.closed = true;
+			currentShape = null;
+			edit = false;
+		}
+
+		function onMouseDown(event) {
+			console.log('down');
+			if(edit == false) {
+
+				var hitresult = project.activeLayer.hitTest(event.point);
+
+				if(hitresult) {
+					if(hitresult.type == 'fill') {
+
+						fillobject = hitresult.item;
+
+					} else if(hitresult.type == 'segment') {
+
+						segment = hitresult.segment;
+
+					}
+
+				} else {
+					console.log('start editing');
+					createShape(event.point);					
+				}
+
+
+
+			} else {
+
+				var d = currentShape.firstSegment.point - event.point;
+				if(d.length < 3) {
+					finaliseShape();
+				} else {
+					currentShape.add(event.point);
+				}
+
+			}
+		}
+
+		function onMouseDrag(event) {
+
+			if(fillobject) {
+				fillobject.position += event.point - event.lastPoint;
+				//fillobject.position = event.point
+			}		
+			if(segment) {
+				segment.point = event.point;
+			}
+
+		}
+
+		function onMouseMove(event) {
+			console.log('move');
+			if(edit) {
+				var d = currentShape.firstSegment.point - event.point;
+				console.log(d);
+				if(d.length < 3) {
+					currentShape.fillColor = 'red';
+				} else {
+					currentShape.fillColor = new Color(0.7, 0.7, 0.7, 0.5);
+				}
+			}
+
+		}
+
+		function onMouseUp(event) {
+			console.log('up');	
+			fillobject = null;
+			segment = null;
+		}
+
+	</script>
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

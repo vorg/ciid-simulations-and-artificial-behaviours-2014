@@ -1,0 +1,23 @@
+<!DOCTYPE>
+<html>
+<head>
+	<!-- Link google font - http://www.google.com/fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100' rel='stylesheet' type='text/css'>
+
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		var text = new PointText(new Point(100,100));
+		text.content = "Bonjour Marcin Ignac!";
+		text.fillColor = "black";
+		text.fontSize = 65;
+		text.font = "Roboto";
+		text.position = view.center;
+
+	</script>
+
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

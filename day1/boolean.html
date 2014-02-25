@@ -1,0 +1,71 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		// styles //
+		var style_grey = {
+			fillColor: new Color(0.7, 0.7, 0.7, 0.5),
+			strokeColor: 'black'
+		};
+
+		var style_blue = {
+			fillColor: new Color(0.33, 0.86, 0.87, 0.5),
+			strokeColor: 'black'
+		};
+
+		var hexagone = new Path.RegularPolygon(new Point(0,0), 5, 100);
+		hexagone.style = style_grey;
+		hexagone.position = view.center / 2;
+
+		var circle = new Path.Circle(new Point(0,0), 100);
+		circle.style = style_grey;
+		circle.position = hexagone.position + [30, 0];
+
+		console.log(hexagone.style);
+
+		// boolean operators
+
+		// union
+		var hu = hexagone.clone().translate([view.center.x / 2, 0]);
+		var cu = circle.clone().translate([view.center.x / 2, 0]);
+		var union = hu.unite(cu);
+		union.style = style_blue;
+		union.selected = true;
+
+		// intersection
+		var hi = hexagone.clone().translate([view.center.x, 0]);
+		var ci = circle.clone().translate([view.center.x, 0]);
+		var intersection = hi.intersect(ci);
+		intersection.style = style_blue;
+		intersection.selected = true;
+
+		// subtraction 
+		var hs = hexagone.clone().translate([0, view.center.y]);
+		var cs = circle.clone().translate([0, view.center.y]);
+		var subtraction = hs.subtract(cs);
+		subtraction.style = style_blue;
+		subtraction.selected = true;
+
+		// division
+		var hd = hexagone.clone().translate([view.center.x / 2, view.center.y]);
+		var cd = circle.clone().translate([view.center.x / 2, view.center.y]);
+		var division = hd.divide(cd);
+		division.style = style_blue;
+		division.selected = true;
+
+		// exclusion
+		var he = hexagone.clone().translate([view.center.x, view.center.y]);
+		var ce = circle.clone().translate([view.center.x, view.center.y]);
+		var exclusion = he.exclude(ce);
+		exclusion.style = style_blue;
+		exclusion.selected = true;
+
+	</script>
+
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

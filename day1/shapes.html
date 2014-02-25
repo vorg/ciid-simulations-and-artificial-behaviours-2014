@@ -1,0 +1,74 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="supercanvas">
+
+		var circle = new Shape.Circle(new Point(100, 100), 75);
+		circle.fillColor = "#DD5469";
+		circle.position = view.center / 2;
+
+		var rectangle = new Shape.Rectangle(new Point(0,0), new Size(200, 150));
+		rectangle.fillColor = "#54DDC8";
+		rectangle.position = circle.position + [100, 0];
+
+		var triangle = new Path.RegularPolygon(new Point(0,0), 3, 100);
+		triangle.fillColor = new Color(0.33, 0.86, 0.87);
+		triangle.position = view.center;
+		triangle.strokeColor = "black";
+		triangle.strokeWidth = 2.5;
+
+		triangle.fillColor.alpha = 0.5;
+
+		var square = new Path.RegularPolygon(new Point(0,0), 4, 100);
+		square.fillColor = new Color(0.86, 0.33, 0.41, 0.5);
+		square.position = triangle.position;
+		square.strokeColor = 'black';
+		square.dashArray = [15, 2];
+
+
+		var hexagon = new Path.RegularPolygon(new Point(0,0), 5, 100);
+		hexagon.position = [3/2 * view.center.x, 3/2 * view.center.y] ;
+		hexagon.fillColor = {
+			gradient: {
+				stops: ["#DD5469", "#54DDC8"]
+			},
+			origin: hexagon.firstSegment.point,
+			destination: hexagon.lastSegment.point
+		};	
+		hexagon.strokeColor = 'black';
+
+
+		var random = new Path();
+		for(var i = 0; i < 4; i++){
+			random.add( Point.random() * new Point(250, 250) );
+		}
+		random.fillColor = "#54DDC8";
+		random.position = hexagon.position;
+		random.strokeColor = 'black';
+		random.dashArray = [5, 2];
+		random.closed = true;
+
+		/*
+		NOTE: the two following statements are the same
+
+		var fillStyle = {
+			gradient: ...,
+			origin: ....,
+			destination: ...
+		}
+
+		var fillStyle = {};
+		fillStyle.gradient = ...
+		fillStyle.origin = ....
+		
+		*/
+
+
+	</script>
+
+</head>
+<body>
+	<canvas id="supercanvas" resize></canvas>
+</body>
+</html>

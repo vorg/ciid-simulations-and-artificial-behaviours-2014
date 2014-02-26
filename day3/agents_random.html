@@ -16,7 +16,6 @@ for(var i=0; i<numAgents; i++) {
   var triangle = new Path.RegularPolygon(view.center, 3, 8);
   triangle.segments[1].point.y -= 10;
   triangle.fillColor = 'green';
-  randomAgent.setPath(triangle);
 
   //RandomWalk has two parameters: chance to turn 0..1, turn angle 0..90
   randomAgent.addBehaviour(new Behaviour.RandomWalk(0.05, 30));

@@ -44,6 +44,17 @@ Agent.prototype.addBehaviour = function(behaviour) {
   this.behaviours.push(behaviour);
 }
 
+Agent.prototype.removeBehaviour = function(behaviour) {
+   var i = this.behaviours.indexOf(behaviour);
+   if(i > -1) {
+    this.behaviours.splice(i,1);
+   }   
+}
+
+Agent.prototype.removeAllBehaviours = function() {
+  this.behaviours = [];
+}
+
 Agent.prototype.clone = function() {
   var a = new Agent(this.position.clone());
   a.behaviours = this.behaviours.map(function(b) { return b; });

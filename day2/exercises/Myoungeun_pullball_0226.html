@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+  var from = new Point(20, 15);
+  var to = new Point(810, 510);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#00cc99"
+
+  var from = new Point(50, 50);
+  var to = new Point(770, 60);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor =   shape.fillColor = "#339966"
+
+
+  var from = new Point(50, 50);
+  var to = new Point(70, 470);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#339966"
+
+
+
+  var h1 = new Path.Circle(new Point(60,50),30);
+  h1.fillColor = "#333300"
+
+  var h2 = new Path.Circle(new Point(400,50),30);
+  h2.fillColor = "#333300"
+
+  var h3 = new Path.Circle(new Point(760,50),30);
+  h3.fillColor = "#333300"
+
+  var h4 = new Path.Circle(new Point(60,470),30);
+  h4.fillColor = "#333300"
+
+  var h5 = new Path.Circle(new Point(400,470),30);
+  h5.fillColor = "#333300"
+
+  var h6 = new Path.Circle(new Point(760,470),30);
+  h6.fillColor = "#333300"
+
+  var from = new Point(767, 50);
+  var to = new Point(770, 470);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#66ff99"
+
+  var from = new Point(50, 467);
+  var to = new Point(770, 470);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#66ff99"
+
+  var from = new Point(30, 20);
+  var to = new Point(800, 50);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#00cc99"
+
+  var from = new Point(30, 470);
+  var to = new Point(800, 500);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#00cc99"
+
+  var from = new Point(30, 30);
+  var to = new Point(60, 500);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#00cc99"
+
+  var from = new Point(770, 30);
+  var to = new Point(800, 500);
+  var shape = new Path.Rectangle(from,to);
+  shape.fillColor = "#00cc99"
+
+
+
+
+
+
+
+  var circle1 = new Shape.Circle(new Point(0,0),20);
+  circle1.position = new Point(90,160);
+  circle1.fillColor = 'white';
+
+  var circle2 = new Shape.Circle(new Point(0,0),20);
+  circle2.position = new Point(650,440);
+  circle2.fillColor = '#ff9966';
+  
+  var circle3 = new Shape.Circle(new Point(0,0),20);
+  circle3.position = new Point(745,340);
+  circle3.fillColor = '#ff3366';
+  
+  
+  //var hole1 = new Shape.Circle(new Point(0,0),20);
+  //hole1.position = new Point(600,200);
+  //hole1.fillColor = 'black';
+
+
+
+
+  Timeline.anim(circle1.position).to(400, {x:100, y:100});
+  Timeline.anim(circle2.position).to(400, {x:100, y:100});
+  Timeline.anim(circle3.position).to(400, {x:100, y:100});
+
+function onFrame(){
+    //update timeline animations
+    Timeline.update();
+}
+
+function onMouseDown(event){
+    //Timeline, Easing//
+    //Linear, Quadratic, Cubic, Elastic, Back, Bounce
+    //EaseIn, EaseOut, EaseInOut
+    Timeline.anim(circle1.position).to({x:640, y:430},1, Timeline.Easing.Cubic.EaseOut);   
+    //Timeline.anim(circle2.position).to(0.47,{x:750, y:455},0.05, Timeline.Easing.Cubic.EaseOutBouce);   
+    Timeline.anim(circle2.position).to(0.62,{x:747, y:380},0.6, Timeline.Easing.Cubic.EaseOut);   
+    Timeline.anim(circle3.position)
+    .to(1.05,{x:745, y:70},1, Timeline.Easing.Cubic.EaseOut)
+    Timeline.anim(circle3).to(1.8, {scale: 0}, 0.2, Timeline.Easing.Cubic.EaseIn );   
+    }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

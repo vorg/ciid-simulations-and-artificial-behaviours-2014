@@ -1,0 +1,75 @@
+<!DOCTYPEhtml>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"> </script>
+	<script type="text/javascript" src="js/paper-error.js"> </script>
+	<script type="text/javascript" src="js/paper-timeline.js"> </script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+var shape = new Path.Rectangle(new Point(200,20), 1000,700);
+	shape.fillColor = '#31d673';
+
+var shapeA = new Path.Circle(new Point(200,20), 30);
+	shapeA.fillColor = 'white';
+var shapeB = new Path.Circle(new Point(1200,20), 30);
+	shapeB.fillColor = 'white';
+var shapeC = new Path.Circle(new Point(200,700), 30);
+	shapeC.fillColor = 'white';
+var shapeD = new Path.Circle(new Point(1200,700), 30);
+	shapeD.fillColor = 'white';
+var shapeE = new Path.Circle(new Point(700,20), 30);
+	shapeE.fillColor = 'white';
+var shapeF = new Path.Circle(new Point(700,700), 30);
+	shapeF.fillColor = 'white';
+
+var circle = new Path.Circle({
+	center: new Point(50, 50),
+	radius: 30
+});
+circle.fillColor = 'red';
+
+
+var innerCircle = new Path.Circle({
+	center: new Point(50, 50),
+	radius: 10
+});
+innerCircle.fillColor = 'white';
+
+
+var group = new Group([circle, innerCircle]);
+
+
+
+// Move the inner circle 5pt to the right:
+group.children[1].position.x += 6;
+
+
+
+function onFrame(){
+        	Timeline.update();
+		}
+
+		var clickCount =0;
+
+		//group.onMouseDown = function() {
+			
+			//clickCount += 1;
+			//Timeline.anim(group).to({rotation: clickCount * 360}) 
+			
+		//}
+
+		function onMouseDown(event){
+			Timeline.anim(group.position).to({x:event.point.x,y:event.point.y}, 1, Timeline.Easing.Back.InOut);
+			Timeline.anim(group.position).to({rotation:3000}, 5);
+			clickCount += 1;
+			Timeline.anim(group).to({rotation: clickCount * 10000}); 
+			
+		}
+
+</script>
+
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

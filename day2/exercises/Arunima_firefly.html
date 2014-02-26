@@ -1,0 +1,78 @@
+<!DOCTYPE>
+<html>
+<head>
+<!-- Import paper.js file -->
+<script type = "text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script> <!--error library-->
+<script type="text/javascript" src="js/paper-timeline.js"></script> <!--animation library-->
+<script type="text/paperscript" canvas="myCanvas">
+
+var fly = new Path.Circle(new Point(150,250),30);
+fly.fillColor = 'yellow';
+var eye1 = new Path.Circle(new Point(400,300), new Size(3, 3));
+ eye1.fillColor ='black';
+ var eye2 = new Path.Circle(new Point(400,300), new Size(3, 3));
+ eye2.fillColor ='black';
+ var mouth = new Path.Circle(new Point(400,300), new Size(10,10));
+ mouth.fillColor='black';
+
+for(var i = 0; i<25; i++){
+	var firefly1 = new Path.Circle(new Point(Math.random() * view.size.width, Math.random() * view.size.height), 10);
+	//firefly1.position.x = view.center.x;
+	firefly1.fillColor = 'yellow';
+	//shrink new shape in 5sec, and then remove it
+	firefly1.onMouseDown = function() {
+		var clickedFirefly = this;
+		Timeline.anim(clickedFirefly).to({scale:0.2}, 1)
+		.onEnd(function(){console.log(clickedFirefly); clickedFirefly.remove();});			
+	}
+
+
+}
+function onMouseMove() {
+	for(var i = 0; i < project.activeLayer.children.length; i++) {
+		var f = project.activeLayer.children[i];
+		fillColor= 'white';
+}
+}
+var group = new Group();
+ group.addChild(fly);
+ group.addChild(eye1);
+ group.addChild(eye2);
+ group.addChild(mouth);
+
+group.onMouseDown = function(){
+	Timeline.anim(fly.fillColor). to({brightness:0.3});
+	Timeline.anim(eye1.fillColor). to(3,{brightness:1});
+	Timeline.anim(eye2.fillColor). to(6,{brightness:1});
+	Timeline.anim(mouth.fillColor). to(9,{brightness:1});
+	
+ }
+
+
+ function onFrame(){
+ 	Timeline.update();
+ 	//group.rotate(1);
+ }
+
+function onMouseDown(event){
+
+	Timeline.anim(fly.position).to({x:event.point.x, y:event.point.y}, 1, Timeline.Easing.Elastic.EaseIn);
+	Timeline.anim(eye1.position).to({x:event.point.x - 10, y:event.point.y- 10}, 1);
+ 	Timeline.anim(eye2.position).to({x:event.point.x + 10, y:event.point.y- 10}, 1);
+ 	Timeline.anim(mouth.position).to({x:event.point.x + 3, y:event.point.y+10}, 1);
+
+ 	Timeline.anim(eye1).to(1,{scale:0.5}).to({scale:1});
+ 	Timeline.anim(eye2).to(1,{scale:0.5}).to({scale:1});
+ 	Timeline.anim(mouth).to(1,{scale:0.5}).to({scale:1});
+
+ }
+
+
+</script>
+</head>
+<body>
+<canvas id="myCanvas" resize style="background-color:black;">
+	</canvas>
+</body>
+</html>

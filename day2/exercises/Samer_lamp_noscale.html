@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+  var rectangle = new Rectangle(new Point(50, 300), new Size(130, 40));
+  var base = new Path.Ellipse(rectangle);
+  base.fillColor = 'black';
+
+  var arc = new Path.Arc({
+          from: [125, 320],
+          through: [110, 200],
+          to: [175, 100],
+          strokeColor: 'black',
+          strokeWidth: 15
+  });
+
+  var square = new Rectangle(new Point(170, 50), new Size(60, 60));
+  var head = new Path.Ellipse(square);
+  head.fillColor = 'black';
+
+  var light = new Path();
+  light.fillColor = 'yellow';
+  light.opacity = 0.05;
+  light.add(new Point(head.position.x+30, head.position.y));
+  light.add(new Point(head.position.x+1000,head.position.y+400));
+  light.add(new Point(head.position.x+1000,head.position.y-100));
+
+
+  head.onMouseDrag = function(e){
+    head.position = e.point;
+    arc.segments[1].point = e.point;
+    light.segments[0].point = new Point(head.position.x+30, head.position.y);
+    Timeline.anim(light).to({opacity: 1}, 3).to(5, {opacity: 0.05}, 3);
+  };
+
+  function onFrame(){
+     Timeline.update();
+  }
+
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

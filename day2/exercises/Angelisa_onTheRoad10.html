@@ -1,0 +1,246 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script> <!-- animation library -->
+	<script type="text/paperscript" canvas="myCanvas">
+
+	
+		var horizonHeight=300;
+
+		var grassSizeX= view.size.width;
+		var grassSizeY= roadHeight;
+		grassX=view.size.width/2;
+		grassY=horizonHeight+ roadHeight/2;
+		var grass= new Shape.Rectangle(new Point(0,300), new Size(grassSizeX, 400));
+		grass.fillColor= 'green';
+
+		var style_grey={
+			fillColor: new Color(0.7 , 0.7 ,0.7 ,0.9),
+			strokeColor: 'black'
+		};
+
+		
+		var roadHeight= view.size.height-horizonHeight;
+		var point1 = new Point(view.size.width/2 -70, horizonHeight);
+		var point2= new Point(view.size.width/2 +70,horizonHeight);
+
+		var point3= new Point(view.size.width-350,view.size.height);
+		var point4= new Point(350, view.size.height);
+		
+		var street;
+		street = new Path();
+		street.style= style_grey;
+		street.strokeColor='black';	//currentShape.style= style_grey;
+				
+		street.add(point1);
+		street.add(point2);
+		street.add(point3);
+		street.add(point4);
+		street.closed= true;
+
+		
+		rectHeight=20;
+		rectWidth=13;
+
+		var rectangles = [];
+		for(var i=0; i<5; i++){
+			var rectX= view.size.width/2;
+			var rectY=horizonHeight + roadHeight/5*i;
+
+			rectangles[i] = new Shape.Rectangle(new Point(rectX,rectY), new Size(rectWidth,rectHeight));
+			rectangles[i].fillColor='black';
+		}
+
+
+
+		function onFrame(){
+			//onMouseDown();
+			Timeline.update();
+			//blinkingStars();
+
+			//display_car();
+			console.log(car_image);
+
+			car_image.position.y -=1;
+
+			for(var i=0; i<5; i++){
+				if(rectangles[i].position.y> horizonHeight){
+					rectangles[i].position.y -=1;
+				}else{
+					rectangles[i].position.y = view.size.height;
+
+				}
+			}
+
+		}
+		var car_image = new Raster({
+			source: 'image/redCar1.png',
+			position: view.size.width/2+ 60
+			//position.y:  view.size.height-160
+		});
+
+		car_image.scale(0.5);
+		car_image.rotate(-10);
+
+
+		var skySizeX= view.size.width;
+		var skySizeY= horizonHeight;
+
+		var sky= new Shape.Rectangle(new Point(0,0), new Size(skySizeX, skySizeY));
+		sky.fillColor= "#4339D8";
+
+
+        //STARS********
+		var star1a= new Path.RegularPolygon(new Point(150,150), 3, 30);
+		star1a.fillColor='yellow';
+		
+		var star1b= new Path.RegularPolygon(new Point(150,165), 3, 30);
+		star1b.fillColor='yellow';
+		star1b.rotate(180);
+
+
+		var star2a= new Path.RegularPolygon(new Point(600,130), 3, 30);
+		star2a.fillColor='yellow';
+		
+		var star2b= new Path.RegularPolygon(new Point(600,145), 3, 30);
+		star2b.fillColor='yellow';
+		star2b.rotate(180);
+
+		var star3a= new Path.RegularPolygon(new Point(800,50), 3, 30);
+		star3a.fillColor='yellow';
+		
+		var star3b= new Path.RegularPolygon(new Point(800,65), 3, 30);
+		star3b.fillColor='yellow';
+		star3b.rotate(180);
+
+		var star4a= new Path.RegularPolygon(new Point(1000,120), 3, 30);
+		star4a.fillColor='yellow';
+		
+		var star4b= new Path.RegularPolygon(new Point(1000,135), 3, 30);
+		star4b.fillColor='yellow';
+		star4b.rotate(180);
+		
+		var star5a= new Path.RegularPolygon(new Point(350,100), 3, 30);
+		star5a.fillColor='yellow';
+		
+		var star5b= new Path.RegularPolygon(new Point(350,115), 3, 30);
+		star5b.fillColor='yellow';
+		star5b.rotate(180);
+
+		var star6a= new Path.RegularPolygon(new Point(1200,160), 3, 30);
+		star6a.fillColor='yellow';
+		
+		var star6b= new Path.RegularPolygon(new Point(1200,175), 3, 30);
+		star6b.fillColor='yellow';
+		star6b.rotate(180);
+
+		var toBig=true;
+
+		function onMouseDown(event){
+		//Timeline.anim(target).to(delay, {properties}, duration)
+		Timeline.anim(star1a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+		Timeline.anim(star1b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+
+		Timeline.anim(star2a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+		Timeline.anim(star2b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+
+		Timeline.anim(star3a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+		Timeline.anim(star3b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+
+		Timeline.anim(star4a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+		Timeline.anim(star4b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+
+		Timeline.anim(star5a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+		Timeline.anim(star5b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+
+		Timeline.anim(star6a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+		Timeline.anim(star6b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+		}
+
+		function blinkingStars(){
+			
+			if(toBig==true){
+				//Timeline.anim(target).to(delay, {properties}, duration)
+				Timeline.anim(star1a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+				Timeline.anim(star1b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+
+				Timeline.anim(star2a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+				Timeline.anim(star2b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+
+				Timeline.anim(star3a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+				Timeline.anim(star3b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+
+				Timeline.anim(star4a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+				Timeline.anim(star4b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+
+				Timeline.anim(star5a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+				Timeline.anim(star5b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+
+				Timeline.anim(star6a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+				Timeline.anim(star6b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+				toBig=false;
+			}else{
+				Timeline.anim(star1a).to(0.1,{scale:1}, 0.2).to({scale:1},0.2);
+				Timeline.anim(star1b).to(0.1,{scale:1}, 0.2).to({scale:1},0.2);
+
+				Timeline.anim(star2a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+				Timeline.anim(star2b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+
+				Timeline.anim(star3a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+				Timeline.anim(star3b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+
+				Timeline.anim(star4a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+				Timeline.anim(star4b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+
+				Timeline.anim(star5a).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+				Timeline.anim(star5b).to(0.1,{scale:0.6}, 0.2).to({scale:1},0.2);
+
+				Timeline.anim(star6a).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+				Timeline.anim(star6b).to(0.1,{scale:1}, 0.2).to({scale:0.6},0.2);
+				toBig=true;	
+			}
+		}
+
+		setInterval(blinkingStars, 300); //400 miliseconds = 0.4s
+		
+
+		
+
+		//******* CAR IMAGE
+		/*
+		var canvas = document.getElementById("myCanvas");
+		var context = canvas.getContext('2d');
+		
+
+		  var car_image;
+		function display_car(){
+			car_image = new Image();
+		 
+		  car_image.onload = function(){
+		    context.drawImage(this, view.size.width/2+ 40, view.size.height-160, this.width/7*3, this.height/7*3);
+		  }
+		  car_image.src = 'image/redCar1.png';
+		  
+		}
+		*/
+		
+
+		//var car_image = new Raster('image/redCar1.png');
+		//car_image.position.x=view.size.width/2+ 40;
+		//car_image.position..y=view.3size.height-160;
+
+		function moveCar(){
+
+
+		}
+
+		
+
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPEhtml>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"> </script>
+	<script type="text/javascript" src="js/paper-error.js"> </script>
+	<script type="text/javascript" src="js/paper-timeline.js"> </script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+		
+
+	for(var i = 0; i < 30; i++){
+			for(var j = 0; j <30; j++){
+		var circ = new Shape.Circle(new Point(200, 100), 30);
+	circ.position.x =  160+i*30;
+	circ.position.y = -70+j*30;
+	circ.strokeColor = new Color(0.3,0.3,0.3);
+	circ.strokeWidth = 0.5;
+	Timeline.anim(circ.position).to(1,{x:view.center.x, y:view.center.y}, 5);
+
+	}	
+	}
+
+/*
+//trying to make a collapsing honeycomb structure here but........
+	var n = 4; //number of circles in first row
+	var r = 20; //circle radius
+	var xOff = 300;
+	var num = 4; //number of circles in row
+
+		for(var rows = 0; rows < n; rows ++) //y change
+		{
+			for(var circDown = 0; circDown < n+rows; circDown++){ //x change
+			var circ = new Shape.Circle(new Point(200, 100), r);
+			circ.position.x = 100+xOff + (circDown*r);
+			circ.position.y = 100 + rows*r;	
+			xOff = xOff-r;
+
+
+			circ.strokeColor = new Color(0.3,0.3,0.3);
+			Timeline.anim(circ.position).to(1,{x:view.center.x, y:view.center.y}, 5);
+			}
+	
+	}
+	var n = ybegin; //beginning of y offset for second group
+	for(var secondrows = n; secondrows < 2n-1 ; secondrows ++) //y change
+		{
+			for(var circDown = 0; circDown < n+secondrows; circDown++){ //x change
+			var circ = new Shape.Circle(new Point(200, 100), r);
+			circ.position.x = 100+xOff + (circDown*r);
+			circ.position.y = 100 +ybegin+secondrows*r;	
+			xOff = xOff+r;
+
+
+			circ.strokeColor = new Color(0.3,0.3,0.3);
+			Timeline.anim(circ.position).to(1,{x:view.center.x, y:view.center.y}, 5);
+			}
+	
+	}
+	*/
+
+	//Timeline.anim(greenCircle.position).to({x:300, y:200});
+
+	function onFrame() {
+		//shape.positon.x = shape.position.x + 1;
+		//shape.rotate(3);
+		Timeline.update();
+	}
+
+	
+
+	
+
+	</script>
+
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

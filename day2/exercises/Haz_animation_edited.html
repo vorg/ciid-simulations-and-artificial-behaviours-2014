@@ -1,0 +1,80 @@
+<!DOCTYPE>
+<html>
+<head>
+
+	<!--import paper.js file -->
+	<script type = "text/javascript" src= "js/paper.js"> //src = source</script>
+	<script type = "text/javascript" src= "js/paper-error.js"> //src = source</script> <!-- if using paper-error need to use MYCANVAS not supercanvas-->
+    <script type = "text/javascript" src= "js/paper-timeline.js"> //src = source</script>
+	<script type="text/paperscript" canvas = "myCanvas"> //refer back to canvas here
+	
+//CREATE ONE SPOKE AT CENTRE TO EDGE OF TYRE
+var spoke = new Path();
+spoke.strokeColor ='black';
+spoke.strokeWidth = 3;
+spoke.add(view.center, view.center+[0,180]) ;
+
+//CREATE INSIDE CIRCLE
+var insidecircle= new Shape.Circle({ 
+	center :[0,0],
+	radius :30, 
+	fillColor: 'white',
+	strokeColor: 'black',
+	strokeWidth: 4,
+});
+
+//CREATE TYRE
+var tyre = new Shape.Circle({ 
+	center :[0,0],
+	radius :200, 
+	strokeColor: 'black',
+	strokeWidth: 15,
+	dashArray: [15,4], //DOTTED LINE
+
+});
+
+tyre.position = view.center;
+insidecircle.position = view.center;
+
+
+onMouseDown = function(event){
+	console.log(event.point);
+	group.strokeColor = new Color(Math.random(), Math.random(), Math.random(), 0.4); //RBG, ALPHA
+
+}
+
+//CREATE GROUP
+var group = new Group ();
+group.addChild(spoke);
+group.addChild(insidecircle);
+group.addChild(tyre);
+console.log(group);
+
+function createSpokes(){
+	for(var i=0; i<50; i++){
+		var angle = (i*8);
+		var spokeclone = spoke.clone();
+		spokeclone.rotate(angle, view.center);
+	 	group.addChild(spokeclone);
+	}
+}
+
+
+//DECLARE FUNCTION
+createSpokes();
+
+
+
+//rotate group
+function onFrame(event) {
+	// Rotate the group by 1 degree from the centerpoint of the view:
+	group.rotate(1, view.center);
+}
+
+</script>
+</head>
+<body>
+<canvas id ="myCanvas" resize></canvas> <!-- state canvas here-->
+</body>
+</html
+

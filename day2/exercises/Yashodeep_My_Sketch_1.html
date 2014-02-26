@@ -1,0 +1,68 @@
+<!Doctype >
+<html>
+
+	<head>
+
+		<!--Import Javascript paper.js -->
+		<script type="text/javascript" src="js/paper.js"></script>
+
+		<script type="text/paperscript" canvas="supercanvas">
+
+			tool.minDistance = 5;
+			tool.maxDistance = 100;
+
+			
+			var path;
+
+			function onMouseDown(event) {
+				path = new Path();
+				path.fillColor = '#000fff';
+
+				path.add(event.point);
+			}
+
+			function onMouseDrag(event) {
+
+				path.add(event.point);
+
+				var step = event.delta;
+				step.angle += 25;
+				
+
+				var top = event.middlePoint + step;
+				var bottom = event.middlePoint - step;
+				
+				var line = new Path();
+				line.strokeColor = '#000fff';
+				
+
+				line.strokeWidth = 0.5;
+				line.add(top);
+				line.add(bottom);
+
+				path.add(top);
+				path.insert(0, bottom);
+				path.smooth();
+			}
+
+			function onMouseUp(event) {
+				path.add(event.point);
+				path.closed = true;
+				path.smooth();
+				path.selected = true;
+			}
+
+			
+
+		</script>
+
+
+	</head>
+
+	<body>
+		<canvas id="supercanvas" resize width="1024	" height="768">
+
+		</canvas>
+	</body>
+
+</html>

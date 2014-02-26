@@ -1,0 +1,85 @@
+<!DOCTYPE>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script> <!--error helper-->
+<script type="text/javascript" src="js/paper-timeline.js"></script> <!--animation library-->
+<script type="text/paperscript" canvas="myCanvas">
+
+var background = new Shape.Rectangle(new Point(0,0), new Size(myCanvas.width,myCanvas.height));
+background.fillColor = "#E7E7E7";
+
+var stick = new Shape.Rectangle(new Point(view.center.x-5,view.center.y), new Size(10,500));
+stick.fillColor = "#FFE1B2";
+
+
+var semicircle = new Path();
+var firstPoint = new Point(view.center.x, view.center.y);
+semicircle.add(firstPoint);
+
+// The point through which we will create the arc:
+var throughPoint = new Point(view.center.x+90, view.center.y+90);
+
+// The point at which the arc will end:
+var toPoint = new Point(view.center.x+180, view.center.y);
+
+// Draw an arc through 'throughPoint' to 'toPoint
+semicircle.arcTo(throughPoint, toPoint);
+semicircle.fillColor = '#24DCFF';
+
+
+var triangle = new Path();
+triangle.add(new Point(view.center.x, view.center.y));
+triangle.add(new Point(view.center.x+3, view.center.y+80));
+triangle.add(new Point(view.center.x+90, view.center.y+92));
+triangle.closed = true;
+triangle.fillColor = '#FFE940';
+
+var windmill = new Group([semicircle, triangle]);
+
+var ssc1 = windmill.clone().translate(-45,-135);
+ssc1.rotate(-90);
+var ssc2 = ssc1.clone().translate(-135,50);
+ssc2.rotate(-90);
+var ssc3 = ssc2.clone().translate(50,135);
+ssc3.rotate(-90);
+
+var windmills = new Group([ssc1, ssc2, ssc3, windmill]);
+
+var circle = new Shape.Circle(new Point(0,0), 40);
+		circle.fillColor = "#FF8724";
+		circle.position = view.center;
+
+var pivot = (new Point(view.center.x, view.center.y));
+
+function onFrame(event) {
+	Timeline.update();
+	windmill.rotate(3, pivot);
+		ssc1.rotate(3, pivot);
+		ssc2.rotate(3, pivot);
+		ssc3.rotate(3, pivot);
+		}
+
+
+circle.onMouseDown = function() {
+		var hueValue = Math.random()*360;
+		for(var i = 0; i < windmills.children.length; i++) {
+			var g = windmills.children[i];
+			// var semicircle = g.children[0];
+			// var triangle = g.children[1];
+			Timeline.anim(g.children[0].fillColor).to({hue: hueValue});	
+		}
+
+		// Timeline.anim(windmill.fillColor).to({hue: hueValue});
+		// Timeline.anim(ssc1.fillColor).to({hue: hueValue});
+		// Timeline.anim(ssc2.fillColor).to({hue: hueValue});
+		// Timeline.anim(ssc3.fillColor).to({hue: hueValue});
+	}
+
+</script>
+		
+</head>
+<body>
+	<canvas id="myCanvas" resize margin="0"></canvas>
+	</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js">
+	</script>
+	<script type="text/javascript" src="js/paper-error.js">
+	</script>
+	<script type="text/javascript" src="js/paper-timeline.js">
+	</script>
+	<script type="text/paperscript" canvas="myCanvas">
+	
+	var style_faucet = {
+		fillColor: new Color(0, 0, 0),
+	};
+
+	var i_X = 300;
+	var i_Y = 150;
+
+
+	var drop = new Path.Circle(new Point(0,0),10);
+	drop.fillColor = new Color(Math.random(),Math.random(), Math.random(),0.5);
+	drop.position.x = view.center.x-135+i_X ;
+	drop.position.y = view.center.y+85-i_Y;
+	drop.smooth();
+
+	//drop.selected = true;
+	//drop.flatten(9);
+
+	var f_square0 = Path.Rectangle(new Point(0,0),200,3000);
+	f_square0.style = style_faucet;
+	f_square0.position.x = view.center.x+198+i_X ;
+	f_square0.position.y = view.center.y-i_Y;
+
+	var f_square = Path.Rectangle(new Point(0,0),150, 100,15);
+	f_square.style = style_faucet;
+	f_square.position.x = view.center.x+i_X ;
+	f_square.position.y = view.center.y-i_Y;
+
+
+	var f_square2 = Path.Rectangle(new Point(0,0),130, 20,7.5);
+	f_square2.style = style_faucet;
+	f_square2.position.x = view.center.x+i_X ;
+	f_square2.position.y = view.center.y- 90-i_Y;
+
+
+	var f_square3 = Path.Rectangle(new Point(0,0),20, 50);
+	f_square3.style = style_faucet;
+	f_square3.position.x = view.center.x+i_X ;
+	f_square3.position.y = view.center.y-60-i_Y;
+
+
+	var f_square4 = Path.Rectangle(new Point(0,0),30,70);
+	f_square4.style = style_faucet;
+	f_square4.position.x = view.center.x+80+i_X ;
+	f_square4.position.y = view.center.y-i_Y;
+
+
+	var f_square7 = Path.Rectangle(new Point(0,0),30,70);
+	f_square7.style = style_faucet;
+	f_square7.position.x = view.center.x-75+i_X ;
+	f_square7.position.y = view.center.y-i_Y;
+
+
+	var f_square8 = Path.Rectangle(new Point(0,0),70,30);
+	f_square8.style = style_faucet;
+	f_square8.position.x = view.center.x-135+i_X ;
+	f_square8.position.y = view.center.y+60-i_Y;
+
+
+	var f_square9 = Path.Rectangle(new Point(0,0),90,20,7.5);
+	f_square9.style = style_faucet;
+	f_square9.position.x = view.center.x-135+i_X ;
+	f_square9.position.y = view.center.y+80-i_Y;
+
+
+	// tube start
+	var f_circle1 = Path.Circle(new Point(0,0),85);
+	f_circle1.position.x = view.center.x-85+i_X ;
+	f_circle1.position.y = view.center.y+50-i_Y;
+
+
+	var f_circle2 = Path.Circle(new Point(0,0),15);
+	f_circle2.position.x = view.center.x-85+i_X ;
+	f_circle2.position.y = view.center.y+50-i_Y;
+
+
+	var f_square5 = Path.Rectangle(new Point(0,0),100,200);
+	f_square5.position.x = view.center.x-35+i_X ;
+	f_square5.position.y = view.center.y+50-i_Y;
+
+
+	var f_square6 = Path.Rectangle(new Point(0,0),200,100);
+	f_square6.position.x = view.center.x-85+i_X ;
+	f_square6.position.y = view.center.y+100-i_Y;
+
+
+	var subtraction = f_circle1.subtract(f_square6).subtract(f_square5).subtract(f_circle2);
+	subtraction.style = style_faucet;
+
+
+
+	function animateDrop(){
+		
+		Timeline.anim(drop).to(0,{scale:2.3},5);
+
+
+		Timeline.anim(drop.position)
+		.to(5, {x:view.center.x-135+i_X, y:view.center.y+400-i_Y}, 5, Timeline.Easing. Cubic.EaseIn)
+		.onEnd(function(){drop.remove()});
+
+	}
+
+	var edit = false;
+	function onMouseDown(){
+		if (edit == false){
+			animateDrop();
+			edit = true;
+		}else{
+			if( drop.position.y> 300){
+				edit = false;
+			}
+			
+		}
+
+	
+	}
+	function onFrame(){
+		Timeline.update();
+		
+	}	
+
+	</script>
+
+</head>
+<body>
+
+<canvas id="myCanvas" resize>
+</canvas>
+
+</body>
+</html>

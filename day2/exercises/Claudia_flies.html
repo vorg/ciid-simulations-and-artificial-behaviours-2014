@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+	//draw shape
+	for (var i=0; i<100; i++) {
+   		var fly = new Path.Circle (new Point (Math.random() * view.size.width, Math.random() * view.size.height), 10);
+   		fly.fillColor = "black";
+   	}
+
+	//same as draw
+	function onFrame(){
+	Timeline.update();
+	}
+
+	//detect the mouse passing over the shapes
+	function onMouseMove(event) {
+		var hitresult = project.activeLayer.hitTest(event.point);
+		console.log(hitresult);
+		for (var i=0; i<100; i++) {
+		Timeline.anim(fly.position).to( {x:Math.random() * view.size.width,y:Math.random() * view.size.height}, Timeline.Easing.Back.EaseInOut);
+		}
+	}
+	
+
+
+
+	</script>
+</head>
+<body>
+	<canvas id= "myCanvas" resize> </canvas>
+</body>
+</html>

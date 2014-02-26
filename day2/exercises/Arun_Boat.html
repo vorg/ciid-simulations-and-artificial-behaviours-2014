@@ -1,0 +1,86 @@
+<!DOCTYPEhtml>
+<html>
+<head>
+	<script type="text/javascript" src ="js/paper.js"></script>
+	<script type="text/javascript" src ="js/paper-error.js"></script>
+	<script type="text/javascript" src ="js/paper-timeline.js"></script> <!--animation library-->
+	<script type="text/paperscript" canvas ="myCanvas">
+
+//top of the boat
+var path = new Path({
+	segments: [[270, 480], [200, 350], [720, 350], [650, 480]],
+	fillColor: 'lightblue',
+	closed: true
+});
+			
+//top of the Boat
+var triangle = new Path.RegularPolygon(new Point(460,340),3,80);
+	triangle.fillColor= new Color('lightblue');
+	triangle.selected = false;
+
+
+//grouped the triangle and the path
+var group = new Group();
+group.addChild(path);
+group.addChild(triangle);
+
+//Timeline.anim(group.position).to({ x:event.point.x, y:event.point.y} Timeline.Easing.Cubic.EaseIn);
+
+function onFrame() {
+  Timeline.update();
+}
+
+
+//function onMouseDown(event){
+	//Timeline.anim(group.position).to({x:event.point.x,y:event.point.y}Timeline.Easing.Cubic.EaseIn);
+
+
+//}
+
+	// The amount of segment points we want to create:
+	var amount = 10;
+	// The maximum height of the wave:
+	var height = 6;
+
+
+	// Create a new path and style it:
+	var path = new Path({
+	// 80% black:
+	strokeColor: [0, 0, 0.6, 0.7],
+	strokeWidth: 10,
+	strokeCap: 'round'
+
+	});
+
+
+	// Add 5 segment points to the path spread out
+	// over the width of the view:
+	for (var i = 0; i <= amount; i++) {
+	path.add(new Point(i / amount, 0.8) * view.size);
+				}
+
+	// Select the path, so we can see how it is constructed:
+	path.selected = false;
+
+	function onFrame(event) {
+	// Loop through the segments of the path:
+		for (var i = 0; i <= amount; i++) {
+			 var segment = path.segments[i];
+
+			// A cylic value between -1 and 1
+			var sinus = Math.sin(event.time * 3 + i);
+						
+			// Change the y position of the segment point:
+			segment.point.y = sinus * height +480;
+			//segment.point.y = sinus * height +160;
+			}
+			//smooth the path:
+			 path.smooth();
+			}
+
+</script>
+</Head>
+<body>
+	<canvas id= "myCanvas" resize></canvas>
+</body
+</html>

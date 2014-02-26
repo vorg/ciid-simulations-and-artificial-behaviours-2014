@@ -1,0 +1,82 @@
+<!DOCTYPE>
+<html>
+<head>
+	<!-- Import paper.js file -->
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script> <!-- error helper -->
+	<script type="text/javascript" src="js/paper-timeline.js"></script> <!-- animation library -->
+	<script type="text/paperscript" canvas="myCanvas">
+		
+
+		var hueValue = Math.random() * 360;
+
+
+		var text = new PointText(new Point(100,100));
+		text.content = "XII";
+		text.fillColor = "blue";
+		text.fontSize = 70;
+		text.font = "helvetica";
+		text.position.x = view.center.x;
+		text.position.y = view.center.y-300;
+
+		var textIII = text.clone();
+		textIII.position.x = view.center.x+300;
+		textIII.position.y = view.center.y;
+		textIII.content = "III";
+
+		var textVI = text.clone();
+		textVI.position.x = view.center.x;
+		textVI.position.y = view.center.y+300;
+		textVI.content = "VI";
+
+		var textIX = text.clone();
+		textIX.position.x = view.center.x-300;
+		textIX.position.y = view.center.y;
+		textIX.content = "IX";
+
+
+
+
+		// Hexagon 
+		var hexagon = new Path.Rectangle(new Point(0,0), new Size(15, 200));
+		hexagon.position = [view.center.x, view.center.y+100];
+		hexagon.fillColor = "white";
+
+
+		// Clone
+		var hexaclone = hexagon.clone();
+		hexaclone.fillColor = "blue";
+		
+		var hexaclone2 = hexagon.clone();
+		hexaclone2.fillColor = "blue";
+
+	
+		//pivot
+		var pivot = hexagon.segments[2].point;
+		var pivotcircle = new Path.Circle(pivot, 15);
+		pivotcircle.fillColor ="blue";
+
+
+		function onFrame(event) {
+			hexaclone.rotate(-10, pivot);
+			hexaclone2.rotate(5, pivot);
+
+			hexaclone2.fillColor.hue += 0.2;
+			hexaclone.fillColor.hue += 0.1;
+			pivotcircle.fillColor.hue += 0.2;	
+			text.fillColor.hue += 0.9;
+			textIII.fillColor.hue += 0.7;
+			textIX.fillColor.hue += 0.5;
+			textVI.fillColor.hue += 0.3;
+
+	
+		}
+
+		</script>
+
+</head>
+<body>
+	
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

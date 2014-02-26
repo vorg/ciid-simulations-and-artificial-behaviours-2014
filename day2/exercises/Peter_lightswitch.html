@@ -1,0 +1,109 @@
+<!DOCTYPE>
+<html>
+	<head>
+	<style>
+		body{background: #DDCEFF;}
+	</style>
+	<!--import paper.js file -->
+	<script type = "text/javascript" src= "js/paper.js"></script>
+	<script type = "text/javascript" src= "js/paper-error.js"></script>
+	<script type = "text/javascript" src= "js/paper-timeline.js"></script>
+
+	<script type="text/paperscript" canvas = "myCanvas">
+		var bulpStyle = {
+			fillColor: new Color(255, 235, 0, 0.3)
+		};
+
+		var bulpTop = new Rectangle(new Point(0, 0), new Size(160, 320));
+		var bulpTopPath = new Path.Ellipse(bulpTop);
+		bulpTopPath.style = bulpStyle;
+		bulpTopPath.position = view.center.x/2,view.center.y;
+
+		var bulpBottom = new Rectangle(new Point(20, 20), new Size(60, 30));	
+		var bulpBottomPath = new Path.Rectangle(bulpBottom);
+		bulpBottomPath.style = bulpStyle;
+		bulpBottomPath.position = bulpTopPath.position+[0,160];
+
+		var socket = new Rectangle(new Point(20, 20), new Size(60, 30));	
+		var socketPath = new Path.Rectangle(socket);
+		socketPath.fillColor = 'grey';
+		socketPath.position = bulpBottomPath.position+[0,30];
+
+		bulpBottomPath.fillColor.alpha = 0.5;
+		bulpTopPath.fillColor.alpha = 0.5;
+
+		var outletShadow = new Rectangle(new Point(0,0), new Size(208,308));
+		var cornerSize = new Size(10, 10);
+		var outletShadowPath = new Path.Rectangle(outletShadow,cornerSize);
+		outletShadowPath.fillColor = "#666";
+
+		var outlet = new Rectangle(new Point(0,0), new Size(200,300));
+		var cornerSize = new Size(10, 10);
+		var outletPath = new Path.Rectangle(outlet,cornerSize);
+		outletPath.fillColor = "#e8e8e8";
+
+		var outletInner = new Rectangle(new Point(0,0), new Size(180,280));
+		var cornerSize = new Size(10, 10);
+		var outletInnerPath = new Path.Rectangle(outletInner,cornerSize);
+		outletInnerPath.strokeColor = "black";
+
+		var outletSwitchShadow = new Rectangle(new Point(0,0), new Size(155,155));
+		var cornerSize = new Size(10, 10);
+		var outletSwitchPathShadow = new Path.Rectangle(outletSwitchShadow,cornerSize);
+		outletSwitchPathShadow.fillColor = "black";
+		outletSwitchPathShadow.fillColor.alpha = 0.5;
+
+		var outletSwitch = new Rectangle(new Point(0,0), new Size(150,150));
+		var cornerSize = new Size(10, 10);
+		var outletSwitchPath = new Path.Rectangle(outletSwitch,cornerSize);
+		outletSwitchPath.fillColor = "#dadada";
+
+		outletPath.position = view.center+[view.center.x/2,0];
+		outletShadowPath.position = outletPath.position+[5];
+		outletInnerPath.position = outletPath.position;
+		outletSwitchPathShadow.position = outletInnerPath.position;
+		outletSwitchPath.position = outletInnerPath.position-[5];
+
+		var clickCounter = 0;
+
+		function onFrame() {
+  			Timeline.update();
+		}
+
+		function turnOnLights(){
+			Timeline.anim(bulpBottomPath.fillColor).to({alpha:1});
+			Timeline.anim(bulpTopPath.fillColor).to({alpha:1});
+		}
+
+		function turnOffLights(){
+			Timeline.anim(bulpBottomPath.fillColor).to({alpha:0.5});
+			Timeline.anim(bulpTopPath.fillColor).to({alpha:0.5});
+		}
+
+		outletSwitchPath.onMouseDown = function() {
+			clickCounter++;
+			
+			if (clickCounter == 1) {
+				turnOnLights();
+				outletSwitchPath.position = outletInnerPath.position;
+			};
+
+			if (clickCounter == 2) {
+				turnOffLights();
+				outletSwitchPath.position = outletInnerPath.position-[5];
+			};
+
+			if (clickCounter == 3) {
+				clickCounter = 0;
+			};
+			console.log(clickCounter);
+		}
+
+	</script>
+	</head>
+
+	<body>
+		<canvas id ="myCanvas" resize></canvas>
+	</body>
+
+</html>

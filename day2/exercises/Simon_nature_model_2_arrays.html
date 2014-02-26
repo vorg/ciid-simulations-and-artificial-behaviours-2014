@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+		var tree_style = {
+			fillColor: "green",
+			strokeColor: "black"
+		}
+		var trunk_style = {
+			fillColor: "#49311C"
+		}
+
+		var forest = [];
+		var originalforest = [];
+		var newtree = null;
+		var originaltree = null;
+		var treetop = null;
+
+		var tree1 = makeTree(); 
+		var tree2 = makeTree();
+		var tree3 = makeTree(); 
+
+	function makeTree() {
+
+			var treePoint = new Point(Math.random()*800, 500); //tree base
+			//initial treetop point
+			treetop = new Point(treePoint.x +50, treePoint.y - Math.floor(Math.random()*(450 - 150) + 150)); 
+
+			var originalx = treetop.x;
+
+			newtree = new Path(new Point(treePoint.x+0,treePoint.y+0), new Point(treePoint.x+100, treePoint.y+0), treetop);
+			newtree.style = tree_style;
+			newtree.closed = true;
+
+			var trunk = new Shape.Rectangle(new Point(treePoint.x +45, treePoint.y), new Size(10, 30));
+			trunk.style = trunk_style;
+
+			forest.push(newtree);
+
+		}
+
+		function onMouseMove(event){ //move the treetop with the mouse
+
+			for(var i = 0; i < forest.length; i++){ //loop through tree array, animate each
+				//console.log(forest[i].lastSegment.point.x);
+
+				var xpoint = forest[i].lastSegment.point.x; 
+
+				//var xpoint = new Point(forest[i].lastSegment.point.x, forest[i].lastSegment.point.y); 
+				//does it propagate back into makeTree? 
+
+				if (event.point.x > xpoint-50 && event.point.x < xpoint + 50){
+					Timeline.anim(forest[i].lastSegment.point).to({x: event.point.x, y: forest[i].lastSegment.point.y}); 
+					}
+
+				else { 
+					//return trees to straight position somehow
+
+					//Timeline.anim(forest[i].lastSegment.point.x).to(forest[i].originalx); 
+					//Timeline.anim(forest[i].lastSegment.point).to(forest[i].originalx, forest[i].lastSegment.point.y); 
+					//xpoint = forest[i].lastSegment.point.x;
+				}
+			}
+		}
+
+		function onMouseDown(event){
+			makeTree(); //add trees!
+		}
+
+		//animation
+		function onFrame(){
+			Timeline.update();
+		}
+
+
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

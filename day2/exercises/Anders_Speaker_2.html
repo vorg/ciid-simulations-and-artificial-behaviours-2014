@@ -1,0 +1,94 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js">	</script>
+	<script type="text/javascript" src="js/paper-error.js"> </script>
+	<script type="text/javascript" src="js/paper-timeline.js"> </script>
+	<audio src="basedrum.mp3" id="mp3" preload="auto"></audio>
+	<script type="text/paperscript" canvas="myCanvas">
+
+// Drawing shapes
+
+	var rect = new Path.Rectangle(new Point(view.center.x-100,view.center.y-200),200,400);
+	rect.fillColor = 'black';
+
+	var bass = new Path.Circle(new Point(view.center.x,view.center.y+100),78);
+	bass.strokeColor = 'grey';
+	bass.fillColor = 'white';
+	bass.strokeWidth = 10;
+	var bassCenter = new Path.Circle(new Point(view.center.x,view.center.y+100),20);
+	bassCenter.fillColor = 'black';
+	var groupBass = new Group([bass, bassCenter]);
+
+	var medium = new Path.Circle(new Point(view.center.x,view.center.y-55),48);
+	medium.strokeColor = 'grey';
+	medium.strokeWidth = 8;
+	medium.fillColor = 'white';
+	var mediumCenter = new Path.Circle(new Point(view.center.x,view.center.y-55),12);
+	mediumCenter.fillColor = 'black';
+	var groupMedium = new Group([medium, mediumCenter]);
+
+	var high = new Path.Circle(new Point(view.center.x,view.center.y-145),20);
+	high.strokeColor = 'grey';
+	high.strokeWidth = 4;
+	high.fillColor = 'white';
+	var highCenter = new Path.Circle(new Point(view.center.x,view.center.y-145),5);
+	highCenter.fillColor = 'black';
+	var groupHigh = new Group([high, highCenter]);
+
+	// Drawing notes
+	
+
+	
+
+
+
+	
+
+
+	//Playing music
+
+
+
+	function onFrame() {
+		Timeline.update();
+	}
+
+	var audio = document.getElementsByTagName("audio")[0];
+
+	function onMouseDown(event) {
+		var newgroupBase = new Group([bass, bassCenter]);
+		Timeline.anim(newgroupBase).to({scale:1.2},0.2).to({scale:1},0.2);
+		var newgroupMedium = new Group([medium, mediumCenter]);
+		Timeline.anim(newgroupMedium).to({scale:1.2},0.2).to({scale:1},0.2);
+		var newgroupHigh = new Group([high, highCenter]);
+		Timeline.anim(newgroupHigh).to({scale:1.2},0.2).to({scale:1},0.2);
+		audio.currentTime = 0;
+		audio.play();
+
+		var rectangle = new Rectangle(new Point(402, 200), new Size(18, 12));
+		var shape = new Shape.Ellipse(rectangle);
+
+		var fane = new Path.Rectangle(new Point(418,160),2,50);
+		fane.fillColor = 'black';
+		shape.fillColor = 'black';
+		var groupNote = new Group[shape,fane];
+
+		groupNote.position += new Point(200,400);
+		var newgroupBase = new Group([bass, bassCenter]);
+		Timeline.anim(newgroupBase).to({scale:1.2},0.2).to({scale:1},0.2);
+
+
+
+		
+	
+	}
+
+</script>
+</head>
+<body>
+<canvas id="myCanvas" resize> </canvas>
+<audio>
+	<source src="basedrum.mp3" type="audio/mpeg">
+</audio>
+</body>

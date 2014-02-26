@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script type="text/javascript"  src="js/paper.js"></script>
+<script type="text/javascript"  src="js/paper-error.js"></script>
+<script type="text/javascript"  src="js/paper-timeline.js"></script>
+
+<script type="text/paperscript" canvas="myCanvas">
+
+
+//CARROT VARIABLES
+
+var carrotColor = {
+	fillColor: 'orange'
+}
+
+// var carrotGreen = {
+// 	strokeColor: 'black',
+// 	strokeWidth: 8
+// }
+
+// var greenEnd1 = new Point(view.center.x+30, view.center.y-10);
+// var carrotGreen1 = new Path.Line(view.center, greenEnd1);
+// carrotGreen1.rotate(-10);
+// carrotGreen1.style = carrotGreen;
+
+// var greenEnd2 = new Point(view.center.x+35, view.center.y-2);
+// var carrotGreen2 = new Path.Line(view.center, greenEnd2);
+// //carrotGreen2.rotate(-10);
+// carrotGreen2.style = carrotGreen;
+
+// var greenEnd3 = new Point(view.center.x+30, view.center.y+5);
+// var carrotGreen3 = new Path.Line(view.center, greenEnd3);
+// //carrotGreen3.rotate(-10);
+// carrotGreen3.style = carrotGreen;
+
+var rectanlgeCarrot = new Rectangle(new Point(0,0), new Size(40,15));
+var carrotBody = new Path.Ellipse(rectanlgeCarrot);
+carrotBody.style = carrotColor;
+carrotBody.rotate(-10);
+carrotBody.position = view.center;
+
+var carrot = new Group();
+// carrot.addChild(carrotGreen1);
+// carrot.addChild(carrotGreen2);
+// carrot.addChild(carrotGreen3);
+carrot.addChild(carrotBody);
+
+
+
+//BUNNY VARIABLES
+
+var fur = {
+	fillColor: 'blue',
+	strokeColor: 'black'
+}
+
+var eyes = {
+	fillColor: 'white',
+	strokeColor: 'black'
+}
+
+var pink = {
+	fillColor: 'pink',
+}
+
+var leftLeg = new Path.Rectangle(new Point(0,0), new Size(15,10));
+leftLeg.style = fur;
+leftLeg.position.x = 100;
+leftLeg.position.y = 480;
+
+var rightLeg = leftLeg.clone();
+rightLeg.style = fur;
+rightLeg.position.x = 150;
+rightLeg.position.y = 480;
+
+var rectangleFeet = new Rectangle(new Point(0,0), new Size(40,20));
+var leftFoot = new Path.Ellipse(rectangleFeet);
+leftFoot.style = fur;
+leftFoot.position.x = 100;
+leftFoot.position.y = 490; 
+
+var rightFoot = leftFoot.clone();
+rightFoot.style = fur;
+rightFoot.position.x = 150;
+rightFoot.position.y = 490;
+
+var rectangleBody = new Rectangle(new Point(0,0), new Size(100,90));
+var body = new Path.Ellipse(rectangleBody);
+body.style = fur;
+body.position.x = leftLeg.segments[1].point.x+30;
+body.position.y = leftLeg.segments[1].point.y-20;
+
+var rectangleEar = new Rectangle(new Point(0,0), new Size(25,70));
+var leftEar = new Path.Ellipse(rectangleEar);
+leftEar.style = fur;
+leftEar.rotate(30);
+leftEar.position.x = body.position.x+30;
+leftEar.position.y = body.position.y-95;
+
+var rightEar = leftEar.clone();
+rightEar.style = fur;
+rightEar.rotate(-60);
+rightEar.position.x = body.position.x-30;
+rightEar.position.y = body.position.y-95;
+
+var rectangleEarCenter = new Rectangle(new Point(0,0), new Size(10,45));
+var leftEarCenter = new Path.Ellipse(rectangleEarCenter);
+leftEarCenter.style = pink;
+leftEarCenter.rotate(30);
+leftEarCenter.position.x = body.position.x+30;
+leftEarCenter.position.y = body.position.y-95;
+
+var rightEarCenter = leftEarCenter.clone();
+rightEarCenter.style = pink;
+rightEarCenter.rotate(-60);
+rightEarCenter.position.x = body.position.x-30;
+rightEarCenter.position.y = body.position.y-95;
+
+var head = new Path.Circle(new Point(0,0), 30);
+head.style = fur;
+head.position.x = body.position.x;
+head.position.y = body.position.y-50;
+
+var rectangleEye = new Rectangle(new Point(0,0), new Size(15,20));
+var leftEye = new Path.Ellipse(rectangleEye);
+leftEye.style = eyes;
+leftEye.position.x = head.position.x-10;
+leftEye.position.y = head.position.y-10;
+
+var rightEye = leftEye.clone();
+rightEye.style = eyes;
+rightEye.position.x = head.position.x+10;
+rightEye.position.y = head.position.y-10;
+
+var leftEyeball = new Path.Circle(new Point(0,0), 4);
+leftEyeball.fillColor = 'black';
+leftEyeball.position.x = leftEye.position.x;
+leftEyeball.position.y = leftEye.position.y+2;
+
+var rightEyeball = leftEyeball.clone();
+rightEyeball.fillColor = 'black';
+rightEyeball.position.x = rightEye.position.x;
+rightEyeball.position.y = rightEye.position.y+2;
+
+var nose = new Path.Circle(new Point(0,0), 4);
+nose.style = pink;
+nose.position.x = head.position.x;
+nose.position.y = head.position.y+5;
+
+var rectangleMouth = new Rectangle(new Point(0,0), new Size(10,5));
+var mouth = new Path.Ellipse(rectangleMouth);
+mouth.fillColor = 'black';
+mouth.position.x = head.position.x;
+mouth.position.y = head.position.y+20;
+
+var bunnyLegs = new Group();
+bunnyLegs.addChild(leftLeg);
+bunnyLegs.addChild(rightLeg);
+bunnyLegs.addChild(leftFoot);
+bunnyLegs.addChild(rightFoot);
+
+var bunnyBody = new Group();
+bunnyBody.addChild(body);
+bunnyBody.addChild(leftEar);
+bunnyBody.addChild(rightEar);
+bunnyBody.addChild(leftEarCenter);
+bunnyBody.addChild(rightEarCenter);
+bunnyBody.addChild(head);
+bunnyBody.addChild(leftEye);
+bunnyBody.addChild(rightEye);
+bunnyBody.addChild(leftEyeball);
+bunnyBody.addChild(rightEyeball);
+bunnyBody.addChild(nose);
+bunnyBody.addChild(mouth);
+
+
+//MOUSE DOWN
+
+function onMouseDown(){
+	
+	var startX = bunnyLegs.position.x;
+	var startY = bunnyLegs.position.y;
+	var newEventX = event.x-5;
+	var newEventY = event.y+50; 
+	var jumpDistance = (newEventX - Math.abs(startX)) * 0.5;
+	var maxX = startX + jumpDistance;
+	var maxY = newEventY - (Math.abs(jumpDistance));
+
+
+	//Jump
+	Timeline.anim(leftLeg.segments[1].point)
+		.to(0, {x:startX-30, y:startY-5})
+		.to(0.5, {x:maxX-20, y:maxY-50})
+		.to(0, {x:newEventX-30, y:newEventY-5})
+		.to(0, {x:newEventX-30, y:newEventY-20});
+	
+	Timeline.anim(leftLeg.segments[2].point)
+		.to(0, {x:startX-20, y:startY-5})
+		.to(0.5, {x:maxX-5, y:maxY-50})
+		.to(0, {x:newEventX-20, y:newEventY-5})
+		.to(0, {x:newEventX-20, y:newEventY-20});
+	
+	Timeline.anim(rightLeg.segments[1].point)
+		.to(0, {x:startX+20, y:startY-5})
+		.to(0.5, {x:maxX+5, y:maxY-50})
+		.to(0, {x:newEventX+20, y:newEventY-5})
+		.to(0, {x:newEventX+20, y:newEventY-20});
+	
+	Timeline.anim(rightLeg.segments[2].point)
+		.to(0, {x:startX+30, y:startY-5})
+		.to(0.5, {x:maxX+20, y:maxY-50})
+		.to(0, {x:newEventX+30, y:newEventY-5})
+		.to(0, {x:newEventX+30, y:newEventY-20});
+	
+	Timeline.anim(bunnyLegs.position)
+		.to(2, {x:maxX, y:maxY}, 0.5, Timeline.Easing.Quadratic.EaseIn)
+		.to(0, {x:newEventX, y:newEventY}, 1, Timeline.Easing.Quadratic.EaseOut);
+
+	Timeline.anim(bunnyBody.position)
+		.to(0, {x:startX, y:startY-75})
+		.to(0.5, {x:maxX, y:maxY-100})
+		.to(0, {x:newEventX, y:newEventY-60})
+		.to(0, {x:newEventX, y:newEventY-75});
+
+	//Scale mouth
+	Timeline.anim(mouth).to(3.5, {scale:3}, 0.5).to({scale:1}, 0.5);
+
+	//Change color of carrot
+	var carrotHue = Math.random()*360;
+	Timeline.anim(carrotBody.fillColor).to({hue:carrotHue}, 0);
+
+	//Change color of bunny
+	Timeline.anim(leftEar.fillColor).to(4, {hue:carrotHue}, 0);
+	Timeline.anim(rightEar.fillColor).to(4, {hue:carrotHue}, 0);
+	Timeline.anim(head.fillColor).to(4, {hue:carrotHue}, 0);
+	Timeline.anim(body.fillColor).to(4, {hue:carrotHue}, 0);
+	Timeline.anim(leftLeg.fillColor).to(4, {hue:carrotHue}, 0);
+	Timeline.anim(rightLeg.fillColor).to(4, {hue:carrotHue}, 0);
+	Timeline.anim(leftFoot.fillColor).to(4, {hue:carrotHue}, 0);
+	Timeline.anim(rightFoot.fillColor).to(4, {hue:carrotHue}, 0);
+
+}	
+
+
+//MOUSE MOVE
+
+function onMouseMove(event){
+	carrot.position = event.point;
+	carrotHue = Math.random()*360;
+	Timeline.anim(carrotBody.fillColor).to({hue:carrotHue});
+}
+
+function onFrame(){
+	Timeline.update();
+}
+
+
+
+</script>
+</head>
+
+
+<body>
+<canvas id="myCanvas" resize></canvas>
+</body>
+
+</html>

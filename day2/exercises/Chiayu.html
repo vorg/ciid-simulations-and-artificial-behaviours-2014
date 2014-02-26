@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+
+	var url = 'img/water.png'
+	var img2 = new Raster(url);
+	img2.position = new Point(400, 500);
+	img2.scale(0.5);
+
+	var url = 'img/toilet.png'
+	var img1 = new Raster(url);
+	img1.position = new Point(400, 350);
+	img1.scale(0.8);
+
+	var poo = new Path.Ellipse({
+		point: [350+Math.random()*10, 510-Math.random()*10],
+		size: [Math.random()*100+30, 40],
+		fillColor: '9F5000',
+	});
+	poo.rotate(Math.random()*360);
+
+	var flushing = new Path.Ellipse({
+		point: [370, 70],
+		size: [60, 30],
+		fillColor: '#e3e3e1',
+		strokeColor: 'black'
+	});
+
+
+	//animation function
+	function onFrame(){
+		Timeline.update();
+	}
+
+	flushing.onMouseDown = function(){
+
+		Timeline.anim(poo)
+	      .to({scale:0.30, rotation: 5000}, 6)
+	      .onEnd(function() { poo.remove() });
+
+
+		Timeline.anim(img2)
+	      .to({scale:1, rotation: 800}, 10);
+
+	}
+
+
+
+	</script>
+
+</head>
+<body>
+<canvas id="myCanvas" resize>
+</canvas>
+
+</body>
+</html>

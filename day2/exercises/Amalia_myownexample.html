@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+
+	var centerCircle = new Shape.Circle(new Point(0, 0), 135);
+		centerCircle.fillColor = "#DD5469";
+		centerCircle.position = view.center;
+
+		//for(stetup, loop until, )
+
+		var petalsgroup = new Group();
+
+for(var i=0; i<=360; i+=20) {
+
+	var rad = i * Math.PI / 180;
+
+	var x = (Math.cos(rad) * 150) + view.center.x;
+	var y = (Math.sin(rad) * 150) + view.center.y;
+	var petal = new Shape.Circle(new Point(0, 0), 25);
+		petal.fillColor = 'black';
+		petal.position = [x, y];
+
+	petalsgroup.addChild(petal);
+		//petals.position.y = y;
+
+
+}
+
+	function onMouseDown() {
+		petalsgroup.rotate(10);
+
+		// accessing individually 
+		//for(var i = 0; i < petalsgroup.children.length; i++) {
+			//var child = petalsgroup.children[i];
+		//}
+	}
+	
+
+
+
+
+
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

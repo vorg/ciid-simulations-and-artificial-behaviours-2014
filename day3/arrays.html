@@ -71,7 +71,7 @@ function onFrame(event) {
     child.rotate(3);
     for(var j=0; j<child.segments.length; j++) {
 
-      if (event.count % 2 == 0 && j == 0) { //every 10 frame
+      if (event.count % 2 == 0 && j == 0) { //every 10 frame and if segmentIndex == 0
         var line = new Path.Line([0, 0], child.segments[j].point);
         line.strokeColor = 'black';
       }

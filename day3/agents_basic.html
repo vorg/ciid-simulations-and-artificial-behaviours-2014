@@ -29,6 +29,11 @@ var randomAgent = new Agent(view.center);
 randomAgent.addBehaviour(new Behaviour.RandomWalk());
 randomAgent.addBehaviour(new Behaviour.Trace())
 
+var creepyAgent = new Agent(view.center);
+creepyAgent.addBehaviour(new Behaviour.FollowPoint(randomAgent.position));
+creepyAgent.shape.fillColor = 'blue';
+
+
 
 function onFrame() {
 }

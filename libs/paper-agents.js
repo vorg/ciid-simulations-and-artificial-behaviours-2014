@@ -36,8 +36,11 @@ Agent.prototype.update = function(deltaTime, frame) {
     behaviour.update(self, deltaTime, frame);
   });
   this.prevPosition = this.position.clone();
-  this.position = this.position.add(this.force.scale(deltaTime));
-  this.shape.position = this.position;
+  var newPosition = this.position.add(this.force.scale(deltaTime));
+  this.position.x = newPosition.x;
+  this.position.y = newPosition.y;
+  this.shape.position.x = newPosition.x;
+  this.shape.position.y = newPosition.y;
 }
 
 Agent.prototype.addBehaviour = function(behaviour) {

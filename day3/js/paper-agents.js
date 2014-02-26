@@ -89,7 +89,7 @@ Behaviour.Walk = function(direction) {
   }
 }
 
-Behaviour.RandomWalk = function(probbilty, angle) {
+Behaviour.RandomWalk = function(probabilty, angle) {
   var direction = new Point(0, -50);
   angle = angle || 90;
   probabilty = probabilty || 0.05;

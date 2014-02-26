@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+//creates new agent at position
+var agent = new Agent(view.center);
+
+//add new walking behaviour to the agent
+agent.addBehaviour(new Behaviour.Walk(new Point(-10, 0)));
+agent.addBehaviour(new Behaviour.Trace())
+
+//follows the mouse
+var followerAgent = new Agent(view.center);
+followerAgent.addBehaviour(new Behaviour.FollowMouse());
+followerAgent.addBehaviour(new Behaviour.Trace())
+
+var followerPath = new Path.RegularPolygon(new Point(0, 0),3, 15);
+followerPath.fillColor = 'red';
+//replace the default black dot with given path
+followerAgent.setPath(followerPath);
+
+//walks in random direction
+var randomAgent = new Agent(view.center);
+randomAgent.addBehaviour(new Behaviour.RandomWalk());
+randomAgent.addBehaviour(new Behaviour.Trace())
+
+
+function onFrame() {
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

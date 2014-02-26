@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library 0.1 -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var numAgents = 10;
+var agents = [];
+
+var path = new Path.RegularPolygon(view.center, 12, 300);
+path.strokeColor = 'red';
+
+//Create new empty behaviour
+var rainbowBehaviour = new Behaviour();
+rainbowBehaviour.update = function(agent, deltaTime) {
+  //shape is the path reperesenting the agent
+  agent.shape.fillColor.hue += 5;
+  agent.trace.strokeColor.hue += 5;
+}
+
+var rotatingBehaviour = new Behaviour();
+rotatingBehaviour.update = function(agent, deltaTime) {
+  agent.shape.rotate(4);
+}
+
+for(var i=0; i<numAgents; i++) {
+  var randomAgent = new Agent(view.center);
+
+  var triangle = new Path.RegularPolygon(view.center, 3, 8);
+  triangle.segments[1].point.y -= 10;
+  triangle.fillColor = 'green';
+  randomAgent.setPath(triangle);
+
+  //Follow given path, parameters: path, loop (true/false)
+  randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+
+  //Trace has one parameter: color
+  randomAgent.addBehaviour(new Behaviour.Trace('green'));
+
+  //Rotates agent's shape towards walking direction
+  //randomAgent.addBehaviour(new Behaviour.Orient());
+
+  //Repulse has one parameter: spread distance
+  randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+  //Avoid mouse cursor, has one parameter: distance to cursor
+  randomAgent.addBehaviour(new Behaviour.RepulseMouse(50));
+
+  randomAgent.addBehaviour(rainbowBehaviour);
+  randomAgent.addBehaviour(rotatingBehaviour);
+
+  agents.push(randomAgent);
+}
+
+function createAgent() {
+  var agent = new Agent(view.center);
+  agent.addBehaviour(new Behaviour.Repulse(50));
+  //agent.addBehaviour(new Behaviour.Trace());
+
+  var target = new Point(Math.random() * view.size.width, Math.random() * view.size.height);
+  agent.addBehaviour(new Behaviour.FollowPoint(target));
+
+  var targetCicle = new Path.Circle(target, 5);
+  targetCicle.position = target;
+  targetCicle.strokeColor = 'red';
+
+  //call this piece of code every 5 seconds
+  setInterval(function() {
+    Timeline.anim(target).to(5, {
+      x: Math.random() * view.size.width,
+      y: Math.random() * view.size.height
+    });
+  }, 5000);
+}
+
+for(var i=0; i<5; i++) {
+  createAgent();
+}
+
+function onMouseDown() {
+  createAgent();
+}
+
+function onFrame() {
+  Timeline.update();
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

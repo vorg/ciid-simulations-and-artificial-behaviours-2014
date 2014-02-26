@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+  //Lower case path
+  var shape = new Path.Rectangle(new Point(100, 100), new Size(50, 50))
+  shape.fillColor = 'red';
+
+  Timeline.anim(shape.position).to({x:view.center.x, y:view.center.y}, 1, Timeline.Easing.Cubic.EaseOut)
+  Timeline.anim(shape).to({rotation: 180, scale: 0.5}, 0.5, Timeline.Easing.Cubic.EaseOut)
+  Timeline.anim(shape.fillColor).to({hue:180}, 1).to(1, {hue:240}, 1)
+
+  onFrame = function(frame) {
+    Timeline.anim(shape).to({scale:1 + 0.5 * Math.sin(frame.time * 5)}, 0)
+    Timeline.update();
+  }
+
+  onMouseMove = function(event) {
+    var shape = new Path.Rectangle(event.point - [25, 25], new Size(50, 50))
+    shape.fillColor = 'red';
+    shape.fillColor.hue = Math.random() * 360
+    Timeline.anim(shape).to({scale:0.5}).onEnd(function() {
+      shape.remove()
+    })
+  }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

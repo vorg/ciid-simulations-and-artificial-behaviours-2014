@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+  //scaling
+
+
+  var shape2 = new Path();
+  shape2.add(new Point(0, 0))
+  shape2.add(new Point(100, 0))
+  shape2.add(new Point(90, 50))
+  shape2.strokeColor = 'blue';
+  shape2.closed = true;
+
+  shape2.position = view.center;
+
+  //circle.position = center;//shape2.segments[0].point;
+
+  var pivot = shape2.bounds.topLeft.clone();
+
+  var prevScale = 1;
+
+  var lightScale = {
+    value: 1
+  }
+
+  Timeline.anim(lightScale).to({value:5}, 1)
+
+  onMouseMove = function(event) {
+  }
+
+  onFrame = function() {
+    Timeline.update();
+
+    scale = lightScale.value;
+    shape2.scale(scale / prevScale, pivot);
+    prevScale = scale;
+  }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

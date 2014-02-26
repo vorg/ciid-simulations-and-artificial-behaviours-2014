@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+  //Lower case path
+  var shape = new Path.RegularPolygon(new Point(0, 0), 7, 100)
+  shape.strokeColor = 'red';
+  shape.fillColor = 'white';
+
+  onFrame = function(frame) {
+    Timeline.update();
+  }
+
+  function onMouseDown(event) {
+    for(var i=0; i<shape.segments.length; i++) {
+      var p = shape.segments[i].point;
+
+      if (!shape.segments[i].ox) shape.segments[i].ox = shape.segments[i].point.x;
+      if (!shape.segments[i].oy) shape.segments[i].oy = shape.segments[i].point.y;
+
+      Timeline.anim(shape.position).to({x:event.point.x, y:event.point.y})
+      Timeline.anim(p)
+        .to(i*0.1, {x: p.x, y:p.y}, 0.2)
+        .to({x: p.x, y:p.y}, 0.2)
+    }
+  }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

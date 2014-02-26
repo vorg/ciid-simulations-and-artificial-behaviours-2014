@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+  //Lower case path
+  var shape = new Path.Rectangle(new Point(100, 100), new Size(50, 50))
+  shape.fillColor = 'red';
+
+  var anim = false;
+
+  function move() {
+    console.log('move', anim)
+    if (!anim) {
+      return;
+    }
+    Timeline.anim(shape.position)
+      .to({x:view.center.x, y:view.center.y}, 1, Timeline.Easing.Cubic.EaseOut)
+      .to({x:view.center.x + 100, y:view.center.y}, 1, Timeline.Easing.Cubic.EaseIn)
+      .onEnd(move)
+  }
+
+  onFrame = function(frame) {
+    Timeline.update();
+  }
+
+  shape.onMouseDown = function() {
+    console.log(anim);
+    if (anim) {
+      anim = false;
+    }
+    else {
+      anim = true;
+      move()
+    }
+  }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

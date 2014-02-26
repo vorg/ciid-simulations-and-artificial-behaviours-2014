@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+  //Lower case path
+  var shape = new Path.Rectangle(new Point(100, 100), new Size(50, 50))
+  shape.fillColor = 'red';
+
+  onFrame = function(frame) {
+    shape.segments[0].point.x = 50 + Math.sin(frame.time) * 50;
+    Timeline.update();
+  }
+
+  onMouseMove = function(event) {
+  }
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

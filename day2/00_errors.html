@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+  var shape = new Path.Circle(new Point(100, 100), new Size(50, 50))
+
+  //Mispelled class name
+  //var shape = new Path.Crcle(new Point(100, 100), new Size(50, 50))
+
+  //Invlid param
+  var shape = new Path.Crcle([[],[]], new Size(51, 50))
+
+  //var shape = new Path.Circle(viw.center, new Size(50, 50))
+
+  shape.fillColor = 'red';
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+  <audio src="track.mp3" autoplay="true" loop="true" controls></audio>
+</body>
+</html>

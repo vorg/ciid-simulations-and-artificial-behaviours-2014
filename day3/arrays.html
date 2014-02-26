@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var circle = new Path.Circle(view.center, 50);
+circle.fillColor = 'red';
+circle.selected = true;
+
+//take second segment and move 50px up
+circle.segments[1].point += [0, -50];
+//take fourth segment and move it 10px up
+circle.segments[3].point += [0, -10];
+
+Timeline.anim(circle.segments[1].point).to({y:0}).to({y:250})
+Timeline.anim(circle.position).to({y:600}, 10)
+
+console.log(circle.segments.length);
+
+//create an empty array
+var shapes = [ ];
+
+//add another shape at each segment point
+for(var i=0; i<circle.segments.length; i++) {
+  var segmentPoint = circle.segments[i].point;
+
+  var size = new Size(50, 20);
+  var shape = new Path.Rectangle(segmentPoint, size);
+  shape.position = segmentPoint;
+  shape.fillColor = 'blue';
+
+  //push - adds add the end of the array
+  //pop - removes last element
+  //shift - removes first element
+  //unshift - adds at the beggining of the array
+
+  //add a shape to the shapes array
+  shapes.push(shape);
+}
+
+var rectangle = new Path.Rectangle(new Point(0,0), new Size(100, 100));
+rectangle.fillColor = new Color(0.2, 0.9, 0.9, 1.0);
+rectangle.position = view.center + [200, 0];
+rectangle.selected = true;
+
+rectangle.visible = false;
+
+var animatedRectangle = rectangle.clone();
+animatedRectangle.fillColor = 'red';
+animatedRectangle.visible = true;
+
+function onFrame(event) {
+  Timeline.update();
+  //animate all the shapes in the shape array
+  for(var i=0; i<shapes.length; i++) {
+    var shape = shapes[i];
+    shape.rotate(3);
+  }
+
+  for(var i=0; i<animatedRectangle.segments.length; i++) {
+    var segment = animatedRectangle.segments[i];
+    var originalSegment = rectangle.segments[i];
+    segment.point.y = originalSegment.point.y + Math.sin(event.time * 10 + i * 2) * 20;
+  }
+
+  for(var i=0; i<parent.children.length; i++) {
+    var child = parent.children[i];
+    child.rotate(3);
+    for(var j=0; j<child.segments.length; j++) {
+
+      if (event.count % 2 == 0 && j == 0) { //every 10 frame
+        var line = new Path.Line([0, 0], child.segments[j].point);
+        line.strokeColor = 'black';
+      }
+
+      //child.segments[j].point.x *= 0.98;
+    }
+  }
+}
+
+var pentagon = new Path.RegularPolygon([0,0], 5, 50);
+pentagon.fillColor = 'green';
+
+var triangle = new Path.RegularPolygon([0,0], 3, 50);
+triangle.fillColor = 'orange';
+
+var parent = new Group();
+parent.addChild(pentagon);
+parent.addChild(triangle);
+
+parent.position = new Point(300, 300);
+
+
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

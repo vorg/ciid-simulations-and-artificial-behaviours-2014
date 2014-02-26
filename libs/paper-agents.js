@@ -230,9 +230,10 @@ Behaviour.RepulsePoint = function(point) {
   }
 }
 
-Behaviour.FollowPath = function(path, loop, snapRadius) {
+Behaviour.FollowPath = function(path, loop, speed, snapRadius) {
   loop = loop || false;
   snapRadius = snapRadius || 10;
+  speed = speed || 100;
   var activePointIndex = 0;
   this.update = function(agent, deltaTime, frame) {
     if (activePointIndex > path.segments.length - 1) {
@@ -246,7 +247,6 @@ Behaviour.FollowPath = function(path, loop, snapRadius) {
     var activePoint = path.segments[activePointIndex].point;
     var dist = activePoint.subtract(agent.position);
     //var ratio = 0.5 + 0.5 * Math.random();
-    var speed = 100;
     agent.force = agent.force.add(activePoint.subtract(agent.position)).normalize().scale(speed);
     if (dist.length < snapRadius) {
       activePointIndex++;

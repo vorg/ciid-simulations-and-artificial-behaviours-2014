@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var email = new EmailSignal();
+
+var rect = new Path.Rectangle(new Point(0, 100), new Size(500, 200));
+rect.fillColor = new Color(1, 0, 0, 1);
+
+var rect2 = new Path.Rectangle(new Point(0, 300), new Size(500, 200));
+rect2.fillColor = new Color(1, 0, 0, 1);
+
+var rect3 = new Path.Rectangle(new Size(5, 20));
+rect3.position = new Point(250, 250);
+rect3.fillColor = new Color(1, 1, 0, 1);
+
+var lineValues = [];
+var line = new Path();
+line.strokeColor = 'white';
+for(var i=0; i<288; i++) {
+  var value = email.getValue(i/288);
+  var p = new Point(i/288*view.size.width, 100 - value * 100);
+  line.add(p);
+}
+
+var scanLine = new Path.Line(new Point(0, 0), new Point(0, 100));
+scanLine.strokeColor = 'green';
+
+email.onEmail = function(numEmails) {
+  console.log("You've got a message!", numEmails);
+}
+
+function onFrame(event) {
+  email.update(event.time);
+  rect.fillColor.red = email.value;
+  rect2.fillColor.red = email.avgValue;
+  rect3.position.x = view.size.width/2 + view.size.width/2 * email.delta;
+
+  scanLine.position.x = (event.time/60 % 1) * view.size.width;
+
+  if (email.delta > 0)
+    rect3.fillColor = 'green';
+  else if (email.delta < 0)
+    rect3.fillColor = 'yellow';
+  else rect3.fillColor = 'white';
+}
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+</body>
+</html>

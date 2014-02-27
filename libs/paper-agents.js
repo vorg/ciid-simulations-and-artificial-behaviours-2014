@@ -144,7 +144,8 @@ Behaviour.SplitWalk = function(direction, time, angle, splits, speedRatio) {
   }
 }
 
-Behaviour.Trace = function(color) {
+Behaviour.Trace = function(color, maxLength) {
+  maxLength = maxLength || 200;
   color = color || 'black'
   this.update = function(agent, deltaTime, frame) {
     if (!agent.trace) {
@@ -152,7 +153,7 @@ Behaviour.Trace = function(color) {
       agent.trace.strokeColor = color;
     }
     agent.trace.add(agent.position);
-    if (agent.trace.segments.length > 200) {
+    if (agent.trace.segments.length > maxLength) {
       agent.trace.removeSegment(0)
     }
   }

@@ -36,12 +36,26 @@ Agent.prototype.update = function(deltaTime, frame) {
     behaviour.update(self, deltaTime, frame);
   });
   this.prevPosition = this.position.clone();
-  this.position = this.position.add(this.force.scale(deltaTime));
-  this.shape.position = this.position;
+  var newPosition = this.position.add(this.force.scale(deltaTime));
+  this.position.x = newPosition.x;
+  this.position.y = newPosition.y;
+  this.shape.position.x = newPosition.x;
+  this.shape.position.y = newPosition.y;
 }
 
 Agent.prototype.addBehaviour = function(behaviour) {
   this.behaviours.push(behaviour);
+}
+
+Agent.prototype.removeBehaviour = function(behaviour) {
+   var i = this.behaviours.indexOf(behaviour);
+   if(i > -1) {
+    this.behaviours.splice(i,1);
+   }   
+}
+
+Agent.prototype.removeAllBehaviours = function() {
+  this.behaviours = [];
 }
 
 Agent.prototype.clone = function() {
@@ -89,7 +103,7 @@ Behaviour.Walk = function(direction) {
   }
 }
 
-Behaviour.RandomWalk = function(probbilty, angle) {
+Behaviour.RandomWalk = function(probabilty, angle) {
   var direction = new Point(0, -50);
   angle = angle || 90;
   probabilty = probabilty || 0.05;
@@ -219,9 +233,10 @@ Behaviour.RepulsePoint = function(point) {
   }
 }
 
-Behaviour.FollowPath = function(path, loop, snapRadius) {
+Behaviour.FollowPath = function(path, loop, speed, snapRadius) {
   loop = loop || false;
   snapRadius = snapRadius || 10;
+  speed = speed || 100;
   var activePointIndex = 0;
   this.update = function(agent, deltaTime, frame) {
     if (activePointIndex > path.segments.length - 1) {
@@ -235,7 +250,6 @@ Behaviour.FollowPath = function(path, loop, snapRadius) {
     var activePoint = path.segments[activePointIndex].point;
     var dist = activePoint.subtract(agent.position);
     //var ratio = 0.5 + 0.5 * Math.random();
-    var speed = 100;
     agent.force = agent.force.add(activePoint.subtract(agent.position)).normalize().scale(speed);
     if (dist.length < snapRadius) {
       activePointIndex++;

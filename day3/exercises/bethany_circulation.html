@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+
+var numAgents = 75;
+var agents = [];
+
+
+var path = new Path.RegularPolygon([0,0], 8, 300);
+path.strokeColor = 'grey';
+path.visible = false;
+path.rotate(200);
+path.reverse();
+
+var path2 = path.clone();
+path2.scale(1.5);
+path2.rotate(100);
+path2.visible = false;
+path.reverse();
+
+
+var path3 = path.clone();
+path3.scale(2.25);
+path3.rotate(200);
+path3.visible = false;
+//path3.reverse();
+
+var path4 = path.clone();
+path4.scale(3);
+path4.rotate(30);
+path4.visible = false;
+path4.reverse();
+
+/*var path5 = path.clone();
+path5.scale(3.5);
+path5.rotate(300);
+path5.visible = false;
+//path5.reverse();
+*/
+var path5 = new Path.RegularPolygon([900,900], 10, 900);
+path5.strokeColor = 'grey';
+path5.visible = false;
+path5.rotate(200);
+path5.reverse();
+
+var path6 = new Path.RegularPolygon(view.center, 10, 500);
+path6.strokeColor = 'grey';
+path6.visible = false;
+path6.rotate(200);
+
+
+
+
+var rainbowBehaviour = new Behaviour();
+rainbowBehaviour.update = function(agent, deltaTime){
+  agent.shape.fillColor.hue += .8;
+  agent.trace.strokeColor.hue += 1;
+  agent.trace.dashArray = [10,4];
+}
+
+var rainbowBehaviour2 = new Behaviour();
+rainbowBehaviour2.update = function(agent, deltaTime){
+  agent.shape.fillColor.hue += .4 * 9;
+  agent.trace.strokeColor.hue += .3 * 5;
+  agent.trace.dashArray = [2,10];
+}
+
+var rainbowBehaviour3 = new Behaviour();
+rainbowBehaviour3.update = function(agent, deltaTime){
+  agent.shape.fillColor.hue += .2 * 6;
+  agent.trace.strokeColor.hue += .9 * 2;
+  agent.trace.dashArray = [6,8];
+}
+
+var rainbowBehaviour4 = new Behaviour();
+rainbowBehaviour4.update = function(agent, deltaTime){
+  agent.shape.fillColor.hue += .2 * 2;
+  agent.trace.strokeColor.hue += .1 * 2;
+  agent.trace.dashArray = [35,8];
+}
+
+var rainbowBehaviour5 = new Behaviour();
+rainbowBehaviour5.update = function(agent, deltaTime){
+  agent.shape.fillColor.hue += .5 * 2;
+  agent.trace.strokeColor.hue += 2;
+  agent.trace.dashArray = [2,20];
+}
+
+
+var rotatingBehaviour = new Behaviour();
+rotatingBehaviour.update = function(agent, deltaTime){
+  agent.shape.rotate(4);
+}
+
+for(var i=0; i<numAgents; i++){
+var randomAgent = new Agent(view.center);
+var randomAgent2 = new Agent(view.center);
+var randomAgent3 = new Agent(view.center);
+var randomAgent4 = new Agent(view.center);
+var randomAgent5 = new Agent(view.center);
+var randomAgent6 = new Agent(view.center);
+
+var triangle = new Path.RegularPolygon(view.center,3, 2);
+triangle.fillColor = 'cyan';
+triangle.smooth();
+randomAgent.setPath(triangle);
+
+var triangle2 = new Path.RegularPolygon(view.center,3, 2);
+triangle2.fillColor = 'cyan';
+triangle2.smooth();
+randomAgent2.setPath(triangle2);
+
+var triangle3 = new Path.RegularPolygon(view.center,3, 2);
+triangle3.fillColor = 'cyan';
+triangle3.smooth();
+randomAgent3.setPath(triangle3);
+
+var triangle4 = new Path.RegularPolygon(view.center, 3, 2);
+triangle4.fillColor = 'cyan';
+triangle4.smooth();
+randomAgent4.setPath(triangle4);
+
+var triangle5 = new Path.RegularPolygon(view.center, 3, 2);
+triangle5.fillColor = 'cyan'
+triangle5.smooth();
+randomAgent5.setPath(triangle5);
+
+var triangle6 = new Path.RegularPolygon(view.center, 3, 2);
+triangle6.fillColor = 'cyan'
+triangle6.smooth();
+randomAgent6.setPath(triangle6);
+
+
+
+
+
+randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+randomAgent.addBehaviour(new Behaviour.Trace('cyan',30));
+randomAgent.addBehaviour(new Behaviour.Repulse(70));
+randomAgent.addBehaviour(new Behaviour.RepulseMouse(100));
+randomAgent.addBehaviour(rainbowBehaviour3);
+randomAgent.addBehaviour(rotatingBehaviour);
+
+randomAgent2.addBehaviour(new Behaviour.FollowPath(path2, true));
+randomAgent2.addBehaviour(new Behaviour.Trace('cyan',20));
+randomAgent2.addBehaviour(new Behaviour.Repulse(70));
+randomAgent2.addBehaviour(new Behaviour.RepulseMouse(100));
+randomAgent2.addBehaviour(rainbowBehaviour2);
+randomAgent2.addBehaviour(rotatingBehaviour);
+
+randomAgent3.addBehaviour(new Behaviour.FollowPath(path3, true));
+randomAgent3.addBehaviour(new Behaviour.Trace('cyan',75));
+randomAgent3.addBehaviour(new Behaviour.Repulse(70));
+randomAgent3.addBehaviour(new Behaviour.RepulseMouse(100));
+randomAgent3.addBehaviour(rainbowBehaviour);
+randomAgent3.addBehaviour(rotatingBehaviour);
+
+randomAgent4.addBehaviour(new Behaviour.FollowPath(path4, true));
+randomAgent4.addBehaviour(new Behaviour.Trace('cyan',20));
+randomAgent4.addBehaviour(new Behaviour.Repulse(70));
+randomAgent4.addBehaviour(new Behaviour.RepulseMouse(100));
+randomAgent4.addBehaviour(rainbowBehaviour4);
+randomAgent4.addBehaviour(rotatingBehaviour);
+
+randomAgent5.addBehaviour(new Behaviour.FollowPath(path5, true));
+randomAgent5.addBehaviour(new Behaviour.Trace('cyan', 100));
+randomAgent5.addBehaviour(new Behaviour.Repulse(70));
+randomAgent5.addBehaviour(new Behaviour.RepulseMouse(100));
+randomAgent5.addBehaviour(rainbowBehaviour3);
+randomAgent5.addBehaviour(rotatingBehaviour);
+
+randomAgent6.addBehaviour(new Behaviour.FollowPath(path6, true));
+randomAgent6.addBehaviour(new Behaviour.Trace('cyan', 50));
+randomAgent6.addBehaviour(new Behaviour.Repulse(70));
+randomAgent6.addBehaviour(new Behaviour.RepulseMouse(100));
+randomAgent6.addBehaviour(rainbowBehaviour5);
+randomAgent6.addBehaviour(rotatingBehaviour);
+
+agents.push(randomAgent);
+agents.push(randomAgent2);
+agents.push(randomAgent3);
+agents.push(randomAgent4);
+agents.push(randomAgent5);
+agents.push(randomAgent6);
+
+}
+
+function onFrame(){
+  Timeline.update();
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

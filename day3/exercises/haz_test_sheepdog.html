@@ -1,0 +1,123 @@
+<!DOCTYPE>
+<html>
+<head>
+
+<style> 
+	body{background: green;}
+</style>
+
+	<!--import paper.js file -->
+	<script type = "text/javascript" src= "js/paper.js"> //src = source</script>
+	<script type = "text/javascript" src= "js/paper-error.js"> //src = source</script> <!-- if using paper-error need to use MYCANVAS not supercanvas-->
+    <script type = "text/javascript" src= "js/paper-timeline.js"> //src = source</script>
+     <script type = "text/javascript" src= "js/paper-agents.js"> //src = source</script>
+	<script type="text/paperscript" canvas = "myCanvas"> //refer back to canvas here fcir
+
+//ASSIGN VAR ---------------------------------------------------------------------------
+
+
+	var sheepNumber =20;
+	var sheep =[];
+
+	var numPenSegments = 18;
+	var pen = new Path.RegularPolygon (view.center, numPenSegments, 350);
+	pen.rotate(300);
+	pen.strokeColor = 'red';
+	pen.strokeWidth = 2;
+	pen.visible = false;
+
+	var penReverse = pen.clone();
+	penReverse.reverse();
+	penReverse.scale(0.7);
+	penReverse.selected =true;
+
+
+
+//----------------------------------------------------------------------------------------
+	//CREATE DOGS
+
+	var dogAgent1 = new Agent(0,0);
+		dogAgent1.addBehaviour(new Behaviour.FollowPath(pen,true, 600));
+		dogAgent1.addBehaviour(new Behaviour.Repulse(50));
+		dogAgent1.fillColor = 'grey';
+
+
+	var dogAgent2 = new Agent(new Point(view.center.x, view.center.y - 300));
+		dogAgent2.addBehaviour(new Behaviour.FollowPath(penReverse,true, 500));
+		dogAgent2.addBehaviour(new Behaviour.Repulse(50));
+		dogAgent2.fillColor = 'grey';
+		
+
+
+//CREATE SHEEP
+function createSheep(){
+ 	var sheepAgent = new Agent(view.center); // create new Agent
+
+ 	var sheepBody = new Path.RegularPolygon (view.center, 17, 38);
+		sheepBody.fillColor = 'white';
+
+	var sheepHead = new Shape.Circle (view.center.x, view.center.y -38, 10);
+		sheepHead.fillColor = 'white';
+
+	var sheepNose = new Path({
+		segments: [[view.center.x-3,view.center.y-44], [view.center.x,view.center.y-46], [view.center.x +3,view.center.y-44]],
+		strokeColor:'#FFCC99',
+		strokeWidth: 1,
+		strokeCap:'round',
+});
+
+	var sheepEye1 = new Shape.Circle(view.center.x + 4.5, view.center.y -37, 2);
+		sheepEye1.fillColor = 'black';
+
+	var sheepEye2 = new Shape.Circle(view.center.x -4.5, view.center.y -37, 2);
+		sheepEye2.fillColor = 'black';
+
+		//GROUP ELEMENTS OF SHEEP
+	var sheepGroup = new Group();
+		sheepGroup.addChild(sheepBody);
+		sheepGroup.addChild(sheepHead);
+		sheepGroup.addChild(sheepEye1);
+		sheepGroup.addChild(sheepEye2);
+		sheepGroup.addChild(sheepNose);
+
+	
+	//DECREASE SIZE OF SHEEP
+	sheepGroup.scale(0.5);
+
+	//ALIGN GRAPHIC INTERPRETATION OF SHEEP TO AGENT
+	sheepAgent.setPath(sheepGroup);
+
+	//ADD BEHAVIOUR TO SHEEP
+	sheepAgent.addBehaviour(new Behaviour.RandomWalk(0.05,30));
+	sheepAgent.addBehaviour(new Behaviour.Repulse(25));
+	sheepAgent.addBehaviour(new Behaviour.Orient());
+	sheepAgent.addBehaviour(new Behaviour.Shake(5,20));
+	sheepAgent.addBehaviour(new Behaviour.RepulsePoint(dogAgent1.position, 300));
+	sheepAgent.addBehaviour(new Behaviour.RepulsePoint(dogAgent2.position, 200));
+	sheep.push(sheepAgent);
+
+		for (var i=0; i<numPenSegments; i++) {
+			sheepAgent.addBehaviour(new Behaviour.RepulsePoint(penReverse.segments[i].point, 70));
+		};
+
+}
+// CREATE ARRAY OF AGENTS
+for(var i=0;i<sheepNumber;i++){
+		createSheep();
+		console.log(sheep.position);
+		//console.log(sheep.position);
+}
+
+	function onFrame(){
+		// if(sheep.position > new Point(view.center.x + 350, view.center.y +350 )){
+		// 	sheepAgent.addBehaviour(new Behaviour.reverseRandomWalk);
+		// }
+
+	}
+
+</script>
+</head>
+<body>
+<canvas id = "myCanvas" resize></canvas>
+</body>
+</html>

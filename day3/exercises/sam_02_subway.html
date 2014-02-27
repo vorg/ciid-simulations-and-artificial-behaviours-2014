@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var style_int = {
+		fillColor: new Color(0, 0, 0),
+		strokeColor: "black",
+		strokeWidth: 2,
+	};
+
+var bg = new Shape.Rectangle(new Point(0,0), 1300, 700);
+bg.fillColor = '#D2E6D9', '0.2';
+
+var mapRect = new Shape.Rectangle(new Point(120,30), 920, 480);
+mapRect.fillColor = '#FCFCF3', '0.5';
+
+var cut1 = new Shape.Rectangle(new Point(120,30), 200,200);
+cut1.fillColor = '#D2E6D9', '0.5';
+
+var cut2 = new Path();
+cut2.add(320,30);
+cut2.add(400,30);
+cut2.add(320,120);
+cut2.closed = true;
+cut2.fillColor = '#D2E6D9', '0.5';
+
+var cut3 = new Path();
+cut3.add(120,220);
+cut3.add(120,300);
+cut3.add(150,220);
+cut3.closed = true;
+cut3.fillColor = '#D2E6D9', '0.5';
+
+var cut4 = new Path.RegularPolygon(new Point(950,90), 5,200);
+cut4.fillColor = '#D2E6D9', '0.5';
+
+var cut5 = new Path.RegularPolygon(new Point(50,500), 6,200);
+cut5.fillColor = '#D2E6D9', '0.5';
+
+var cut6 = new Path.RegularPolygon(new Point(930,600), 5,200);
+cut6.fillColor = '#D2E6D9', '0.5';
+
+var cut7 = new Shape.Rectangle(new Point(180,450), 200,200);
+cut7.fillColor = '#D2E6D9', '0.5';
+
+var cut8 = new Path.RegularPolygon(new Point(1100,580), 5,200);
+cut8.fillColor = '#D2E6D9', '0.5';
+
+//create 10 agents
+var num_wju = 5;
+var num_epp = 4;
+var num_sje = 5;
+var num_wje = 3;
+var num_wtp = 3;
+var num_soc = 4;
+
+var num_coc = 6;
+var num_ctp = 7;
+var num_cpl = 4;
+
+var num_skd = 7;
+var num_hbo = 4;
+
+var west = new Path({
+	strokeColor: '#44B77D'
+});
+
+west.strokeWidth = 10;
+west.add([150, view.size.height /2]);
+west.add([400, view.size.height /2]);
+west.add([450, view.size.height /2 +50]);
+west.add([550, view.size.height /2 +140]);
+west.add([620, view.size.height /2+80 ]);
+//west.closed = true;
+var jeToCityhall = new Path(west.segments[1],west.segments[2], west.segments[3], west.segments[4]);
+var tpToCityhall = new Path(west.segments[2], west.segments[3], west.segments[4]);
+var cityhalltoTP = new Path(west.segments[4], west.segments[3], west.segments[2]);
+
+var east = new Path({
+	strokeColor: '#44B77D'
+});
+east.strokeWidth = 10;
+east.add([1000, view.size.height /2]);
+east.add([950, view.size.height /2 +40]);
+east.add([850, view.size.height /2 +40]);
+east.add([650, view.size.height /2+80 ]);
+
+
+var cityhalltoPL = new Path(east.segments[3], east.segments[2]);
+
+var changi = new Path({
+	strokeColor: '#44B77D'
+});
+changi.strokeWidth = 10;
+changi.add([950, view.size.height /2 +40]);
+changi.add([1000, view.size.height /2 +80]);
+
+
+var south = new Path({
+	strokeColor: '#EF1C2A'
+});
+
+south.strokeWidth = 10;
+
+south.add([400, view.size.height /2 -13]);
+south.add([400, 150]);
+south.add([600, 150]);
+south.add([600, view.size.height /2+40]);
+south.add([640, view.size.height /2+80]);
+
+
+var ocToCityhall = new Path(south.segments[3], south.segments[4]);
+var cityhalltoOC = new Path(south.segments[4], south.segments[3], south.segments[2]);
+
+cityhalltoOC.smooth();
+
+var ne1 = new Path({
+	strokeColor: '#9848d6'
+});
+
+ne1.strokeWidth = 10;
+ne1.add([440, view.size.height /2+150]);
+ne1.add([484, view.size.height /2+91]);
+
+var ne2 = new Path({
+	strokeColor: '#9848d6'
+});
+
+ne2.strokeWidth = 10;
+ne2.add([500, view.size.height /2+80]);
+ne2.add([590, view.size.height /2-48]);
+
+var ne3 = new Path({
+	strokeColor: '#9848d6'
+});
+
+ne3.strokeWidth = 10;
+ne3.add([720, view.size.height /2-250]);
+ne3.add([610, view.size.height /2-68]);
+	
+for(var i=0; i<num_wju; i++) {
+	var wjuAgent = new Agent(new Point(150, view.size.height/2));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	wjuAgent.setPath(people);
+	wjuAgent.addBehaviour(new Behaviour.FollowPath(west, false));
+	wjuAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var j=0; j<num_epp; j++) {
+	var eppAgent = new Agent(new Point(1000, view.size.height/2));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	eppAgent.setPath(people);
+	eppAgent.addBehaviour(new Behaviour.FollowPath(east, false));
+	eppAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var k=0; k<num_sje; k++) {
+	var sjeAgent = new Agent(new Point(400, view.size.height /2 -13));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	sjeAgent.setPath(people);
+	sjeAgent.addBehaviour(new Behaviour.FollowPath(south, false));
+	sjeAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var l=0; l<num_wje; l++) {
+	var wjeAgent = new Agent(new Point(400, view.size.height /2));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	wjeAgent.setPath(people);
+	wjeAgent.addBehaviour(new Behaviour.FollowPath(jeToCityhall, false));
+	wjeAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var m=0; m<num_wtp; m++) {
+	var wtpAgent = new Agent(new Point(450, view.size.height /2 +50));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	wtpAgent.setPath(people);
+	wtpAgent.addBehaviour(new Behaviour.FollowPath(tpToCityhall, false));
+	wtpAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var n=0; n<num_soc; n++) {
+	var socAgent = new Agent(new Point(600, 150));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	socAgent.setPath(people);
+	socAgent.addBehaviour(new Behaviour.FollowPath(ocToCityhall, false));
+	socAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var o=0; o<num_coc; o++) {
+	var cocAgent = new Agent(new Point(640, view.size.height /2+80));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	cocAgent.setPath(people);
+	cocAgent.addBehaviour(new Behaviour.FollowPath(cityhalltoOC, false));
+	cocAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var p=0; p<num_ctp; p++) {
+	var ctpAgent = new Agent(new Point(640, view.size.height /2+80));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	ctpAgent.setPath(people);
+	ctpAgent.addBehaviour(new Behaviour.FollowPath(cityhalltoTP, false));
+	ctpAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var q=0; q<num_cpl; q++) {
+	var cplAgent = new Agent(new Point(640, view.size.height /2+80));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	cplAgent.setPath(people);
+	cplAgent.addBehaviour(new Behaviour.FollowPath(cityhalltoPL, false));
+	cplAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var r=0; r<num_skd; r++) {
+	var skdAgent = new Agent(new Point(720, view.size.height /2-250));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	skdAgent.setPath(people);
+	skdAgent.addBehaviour(new Behaviour.FollowPath(ne3, false));
+	skdAgent.addBehaviour(new Behaviour.Repulse(20));
+}
+
+for(var s=0; s<num_hbo; s++) {
+	//all created in the center
+	var hboAgent = new Agent(new Point(440, view.size.height /2+150));
+	var triangle = new Path.RegularPolygon(view.center,3,8);
+	triangle.fillColor = 'black';
+	var circle = new Path.Circle(new Point(view.center.x, view.center.y-10), 4);
+	circle.fillColor = 'black';
+	var people = new Group(circle,triangle);
+	hboAgent.setPath(people);
+	hboAgent.addBehaviour(new Behaviour.FollowPath(ne1, false));
+	hboAgent.addBehaviour(new Behaviour.Repulse(20));
+
+}
+
+function onFrame() {
+	Timeline.update();
+}
+
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

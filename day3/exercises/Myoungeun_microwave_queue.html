@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+
+var M1 = Path.Rectangle(new Point(50, view.size.height/ 2 +100), new Size(70,100));
+M1.strokeColor = 'black'; 
+M1.strokeWidth = 5;
+
+var M2 = Path.Rectangle(new Point(50, view.size.height/ 2 -200), new Size(70,100));
+M2.strokeColor = 'black'; 
+M2.strokeWidth = 5;
+
+
+
+var hungersList = [];
+var numhungers = 5;
+
+var positionList = [];
+
+for (var i = 0; i <numhungers; i++ ){
+
+	var newPoint = new Point(i*view.size.width/7+300,view.size.height/ 2 );
+
+	var Circle = new Path.Circle(newPoint, 5);
+	Circle.fillColor = 'red';
+
+ 	positionList.push(newPoint);
+ 
+   console.log(positionList);
+   }
+
+
+
+function createhungers(){ 
+
+for (var i=0; i <numhungers; i++) {
+
+	var x= 0;
+	var y= 0;
+
+	var hunger = new Path.Circle(x,y,24);
+	hunger.fillColor='black';
+
+	var dish = new Path.Circle(x-65,y,30);
+	dish.strokeColor='black';
+	dish.strokeWidth = 5;
+
+	var food = new Path.Circle(x-65,y,18);
+	food.fillColor = '#FAAC58';
+
+	var fromR = new Point(x,y+15);
+	var toR = new Point(x-55, y+30);
+	var armR = new Path.Line(fromR, toR);
+	armR.strokeColor = 'black';
+	armR.strokeWidth = 5;
+
+	var fromL = new Point(x,y-15);
+	var toL = new Point(x-55, y-30);
+	var armL = new Path.Line(fromL, toL);
+	armL.strokeColor = 'black';
+	armL.strokeWidth = 5;
+
+
+	var hungers = new Group();
+	hungers.addChild(hunger);
+	hungers.addChild(dish);
+	hungers.addChild(food);
+	hungers.addChild(armR);
+	hungers.addChild(armL);
+
+	hungersList.push(hungers);
+}
+
+
+	for (var i = 0; i <numhungers; i++){
+
+	var randomAgent = new Agent(new Point(view.size.width-100,view.size.height/ 2 ));
+		randomAgent.setPath(hungers);
+		randomAgent.addBehaviour(new Behaviour.FollowPoint(positionList[0]));
+
+	//if (hungers.position < positionList[2]) {
+	//	randomAgent.addBehaviour(new Behaviour.FollowPoint(M1.position));
+	//}
+
+
+	setInterval(function() {
+    Timeline.anim(positionList[2]).to(2, {
+      x: 50+130, 
+      y: view.size.height/ 2 +150
+    });
+  }, 1000);
+
+
+}
+}
+
+
+function onMouseDown() {
+  createhungers();
+
+	positionList.shift(newPoint);
+
+
+}
+
+function onFrame() {
+  Timeline.update();
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

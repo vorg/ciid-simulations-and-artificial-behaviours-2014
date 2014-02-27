@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+
+
+
+//backgroundColor
+var path = new Path.Rectangle(new Point(0,0),1200);
+	path.fillColor = 'lightblue';
+
+
+//Circle Object
+var circle = new Shape.Circle(new Point(100,100),20);
+circle.fillColor = 'darkblue';
+circle.position = view.center/3;
+
+//Circle Object
+var circle = new Shape.Circle(new Point(100,100),20);
+circle.fillColor = 'darkblue';
+circle.position = view.center/1;
+
+//Fish
+var numAgents = 160;
+var agents = [];
+
+for(var i=0; i<numAgents; i++) {
+  var randomAgent = new Agent(view.randomAgent);
+
+  var triangle = new Path.RegularPolygon(view.center, 3, 8);
+  triangle.segments[1].point.y -= 20;
+  triangle.fillColor = ([0.4,0.4,0.9,0.4]);
+  randomAgent.setPath(triangle);
+
+  //RandomWalk has two parameters: chance to turn 0..1, turn angle 0..90
+  randomAgent.addBehaviour(new Behaviour.RandomWalk(0.08  , 50));
+
+  //Follow mouse
+  randomAgent.addBehaviour(new Behaviour.FollowMouse());
+
+  //randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+  //Trace has one parameter: color
+  randomAgent.addBehaviour(new Behaviour.Trace([.00,.00,.00,0.00]));
+
+  //Rotates agent's shape towards walking direction
+  randomAgent.addBehaviour(new Behaviour.Orient(0.80,0.90));  
+
+  agents.push(randomAgent);
+
+
+
+}
+
+
+function onMouseDown() {
+
+randomAgent.addBehaviour(new Behaviour.RandomWalk(8,360));
+
+
+
+
+}
+
+function onFrame() {
+  Timeline.update();
+
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

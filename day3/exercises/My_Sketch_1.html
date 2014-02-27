@@ -1,0 +1,321 @@
+<!Doctype >
+<html>
+
+	<head>
+
+		<!--Import Javascript paper.js -->
+		<script type="text/javascript" src="js/paper.js"></script>
+
+		<script type="text/javascript" src="js/paper-error.js"></script>
+
+		<script type="text/javascript" src="js/paper-timeline.js"></script>
+
+		<script type="text/javascript" src="js/paper-agents.js"></script>
+
+		<audio autoplay loop><source src="sound/sound.mp3">  </audio>
+
+
+		<script type="text/paperscript" canvas="myCanvas">
+
+		
+		var textItem = new PointText(new Point(20, 30));
+		textItem.fillColor = 'black';
+		textItem.content = 'Click to put the anchor in the water.';
+			
+
+		var numBees = 100; 
+		var numBees1 = 20; 
+		var numFish = 6;
+		var agents= [];
+		var fishAgents= [];
+		var fishAgents1= [];
+		var flockAgent= [];
+		
+
+		var rainbowBehaviour = new Behaviour();
+			rainbowBehaviour.update = function(agent, deltaTime) {
+				agent.shape.fillColor.hue += 5;
+				//agent.trace.strokeColor.hue += 5;
+
+			}
+
+		var rotatingBehaviour = new Behaviour();
+		rotatingBehaviour.update = function(agent, deltaTime) {
+			agent.shape.rotate(30);
+
+		}
+
+		
+		// var flowers = new Path.Circle(view.center+[300,-200], 50);
+		// flowers.fillColor = 'grey';
+
+		var hive = new Path.Rectangle(view.center+[550,-400], new Size(80,200), 40);
+		hive.segments[2].point.x -= 15;
+		hive.segments[1].point.x -= 5;
+		hive.segments[6].point.x += 5;
+		hive.segments[5].point.x += 15;
+
+	 	hive.fillColor = 'black';
+
+// ------------------------------------------------------------------	------------------------
+				
+		for(var i=0; i<numBees; i++){
+
+				var randomAgent = new Agent(view.center+[550,-400],50);
+
+				var bee = new Path.RegularPolygon(view.center, 3, 3);
+				bee.segments[2].x = 200; 
+				bee.fillColor = 'black'; 
+
+				randomAgent.setPath(bee);
+
+				randomAgent.addBehaviour(new Behaviour.RandomWalk(100));
+				randomAgent.addBehaviour(new Behaviour.FollowPath(hive,true));
+				randomAgent.addBehaviour(new Behaviour.Repulse(50));
+				randomAgent.addBehaviour(new Behaviour.Shake(100));
+				randomAgent.addBehaviour(new Behaviour.RepulseMouse(300));
+				randomAgent.addBehaviour(new Behaviour.RepulseMouse(300));
+
+				// randomAgent.addBehaviour(rainbowBehaviour);
+				randomAgent.addBehaviour(rotatingBehaviour);
+
+				agents.push(randomAgent);
+
+			}
+// ------------------------------------------------------------------------------------------
+
+		// var fishBody = new Path.RegularPolygon(view.center, 6, 30);
+		// fishBody.segments[0].point.x -= 20;
+		// fishBody.segments[2].point.x += 50;
+		// fishBody.segments[3].point.x += 50;
+		// fishBody.segments[5].point.x -= 20;
+		// fishBody.smooth();
+		// fishBody.fillColor = 'green'; 
+
+		// var fishFinn = new Path.RegularPolygon(view.center+[0,-25], 3, 20);
+		// fishFinn.segments[0].point.x -= 10;
+		// fishFinn.segments[1].point.x += 10;
+		// fishFinn.segments[2].point.x += 15;
+		// fishFinn.smooth();
+		// fishFinn.fillColor = 'green'; 
+	
+
+		// var fishFinn1 = fishFinn.clone();
+		// fishFinn1.position = fishFinn.position+[0,50];
+		// fishFinn1.segments[2].point.x += 15;
+		// fishFinn1.rotate(180);
+
+		// var tail = new Path.Circle(view.center+[100,0], 20);
+		// tail.segments[0].point.x -= 5;
+		// tail.segments[1].point.x += 10;
+		// tail.segments[2].point.x += -10;
+		// tail.segments[3].point.x += 10;
+		// tail.smooth();
+		// tail.fillColor = 'green'; 
+
+		// var fish = new Group({
+		// 			children: [fishBody, fishFinn, fishFinn1, tail],
+		// 			position: (view.center + 310)
+
+		// 		});
+		// fish.scale(.5);
+		// fish.fillColor = 'black';
+
+		// var anotherFish = fish.clone();
+		// anotherFish.scale(.5);
+
+
+		//fish.shear(0.2,0.05);
+
+// ------------------------------------------------------------------------------------------
+
+
+		var foodPos = new Path.Circle(200,600,10);
+
+ // ------------------------------------------------------------------------------------------
+
+ 	var firstSegment = new Segment({
+	point: [10, 700],
+	handleOut: [150, 120]
+	});
+
+	var secondSegment = new Segment({
+		point: [600, 650],
+		handleIn: [-80, -100]
+	});
+
+	var thirdSegment = new Segment({
+	point: [600, 650],
+	handleOut: [80, 100]
+	});
+
+	var fourthSegment = new Segment({
+		point: [1200, 700],
+		handleIn: [-80, -150]
+	});
+
+	var flock1 = new Path({
+		segments: [firstSegment, secondSegment, thirdSegment, fourthSegment],
+		strokeColor: 'black'
+	});
+
+	var flock2 = flock1.clone();
+	flock2.position = flock2.position + [100,-80];
+
+
+		for(var i=0; i<numFish; i++){
+
+			var randomAgent = new Agent(view.center+[700,400],50);
+
+			var fish = new Path.RegularPolygon(view.center, 3, 20);
+			fish.segments[0].point.x -= 50;
+
+			fish.fillColor = [0,0,0,.3]; 
+
+			randomAgent.setPath(fish);
+
+			if (fish.position.y<600){
+
+				fish.position.y >= 650
+			} 
+
+			
+
+			randomAgent.addBehaviour(new Behaviour.RandomWalk(1,.5));
+			//randomAgent.addBehaviour(new Behaviour.FollowPath(flock1,true));
+			//randomAgent.addBehaviour(rainbowBehaviour);
+			//var fish = new Point(Math.random() * view.size.width, Math.random() * view.size.height);
+			randomAgent.addBehaviour(new Behaviour.FollowPoint(foodPos.position));
+			randomAgent.addBehaviour(new Behaviour.RepulsePoint(foodPos.position,100));
+			randomAgent.addBehaviour(new Behaviour.Shake(.09));
+			//randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+			
+			//randomAgent.addBehaviour(rotatingBehaviour);
+
+			fishAgents.push(randomAgent);
+
+		}
+
+
+
+// ------------------------------------------------------------------------------------------
+
+	var stick = new Path();
+		stick.strokeColor = 'black';
+		stick.strokeWidth = 10;
+		stick.add(new Point(0, 200), new Point(200, 100));
+
+		var string = stick.clone();
+		string.position = stick.position + [0,-15];
+		string.strokeWidth = 2;
+
+		var pulley = new Path.Circle(new Point(200,100),20);
+		pulley.fillColor = 'black';
+
+		var stringDown = new Path();
+		stringDown.strokeColor = 'black';
+		stringDown.strokeWidth = 2;
+		stringDown.add(new Point(200, 100), new Point(200, 600));
+
+
+		var food = new Shape.Ellipse({
+			size: [20, 10],
+			fillColor: 'black'
+		});
+
+		
+		food.position.x = stringDown.position.x;
+		food.position.y = stringDown.position.y+250;
+
+// ------------------------------------------------------------------------------------------
+
+	var amount = 10;
+	var height = 6;
+
+
+	var wave = new Path({
+	strokeColor: [0, 0, 0.6, 0.7],
+	//fillColor: 'lightblue'
+	strokeWidth: 1,
+	fillColor: [0, 0, 0.6, 0.3],	
+	strokeCap: 'round'
+
+	});
+
+
+	for (var i = 0; i <= amount; i++) {
+	wave.add(new Point(i / amount, 0.7) * view.size);
+				}
+
+	wave.selected = false;
+
+
+	for(var i=0; i<numBees1; i++){
+
+				var randomAgent = new Agent(view.center+[-800,0],50);
+
+				var bee = new Path.RegularPolygon(view.center, 3, 3);
+				bee.segments[2].x = 200; 
+				bee.fillColor = 'black'; 
+
+				randomAgent.setPath(bee);
+
+				randomAgent.addBehaviour(new Behaviour.RandomWalk(100));
+				randomAgent.addBehaviour(new Behaviour.FollowPath(hive,true));
+				randomAgent.addBehaviour(new Behaviour.Repulse(50));
+				randomAgent.addBehaviour(new Behaviour.Shake(90,3));
+				randomAgent.addBehaviour(new Behaviour.RepulseMouse(300));
+				//randomAgent.addBehaviour(new Behaviour.Repulse());
+				randomAgent.addBehaviour(new Behaviour.Orient(30));
+
+				// randomAgent.addBehaviour(rainbowBehaviour);
+				randomAgent.addBehaviour(rotatingBehaviour);
+
+				agents.push(randomAgent);
+
+			}
+
+	
+
+
+
+
+// ------------------------------------------------------------------------------------------
+
+
+	function onFrame(event) {
+
+			Timeline.update();
+
+			for (var i = 0; i <= amount; i++) {
+
+			 var segment = wave.segments[i];
+
+			var sinus = Math.sin(event.time * 3 + i);
+			
+			segment.point.y = sinus * height + 480;
+
+			console.log(i);
+			
+			}
+
+			
+	wave.smooth();
+
+			}
+			
+
+
+		</script>
+
+	</head>
+
+	<body>
+		<canvas id="myCanvas" resize>
+
+
+		</canvas>
+	</body>
+
+</html>	

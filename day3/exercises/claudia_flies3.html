@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/javascript" src="js/paper-agents.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+	//draw shape
+
+ 	var fly = new Path.Circle(new Point(0,0),10);
+		fly.position = view.center;
+   		fly.fillColor = "black";
+
+   	var wingOne = new Path.Circle(new Point(0,0),8);
+   		// wingOne.position = view.center +[8,0];
+   		wingOne.position.x = view.center.x + 8; 
+   		wingOne.position.y = view.center.y - 3;
+   		wingOne.fillColor = "#838B8B", 0.4;
+   		wingOne.fillColor.alpha = 0.5;
+ 
+   	var wingTwo = new Path.Circle(new Point(0,0),8);
+   		wingTwo.position.x = view.center.x - 8; 
+   		wingTwo.position.y = view.center.y - 3;
+   		wingTwo.fillColor = "#838B8B";
+   		wingTwo.fillColor.alpha = 0.5;
+
+   	var group = new Group([fly,wingOne,wingTwo]);
+   	group.position = view.center;
+
+   
+
+//////////////////////////////////////////
+
+var Flies = 100;
+for(var i=0; i<Flies; i++){
+	var fly = new Agent(view.center);
+	var flyclone = group.clone(); 
+	
+
+	fly.setPath(flyclone);
+
+    fly.addBehaviour (new Behaviour.RandomWalk(0.5, 60));
+    fly.addBehaviour(new Behaviour.RepulseMouse(150));
+}
+
+	//flyArr.push(fly);
+//always needed
+function onFrame() {
+	Timeline.update();
+	}
+
+ 	
+
+//lots of flies
+ 	// for (var i=0; i<100; i++) {
+ 	// 	var newGroup = group.clone();
+ 	// 	newGroup.position = new Point (x:Math.random()  view.size.width,y:Math.random() * view.size.height);
+ 		//var newGroup.point = new Point(0,0);
+ 		//}
+
+
+   	
+	// Timeline.anim(fly.position).to({x:100, y:100});
+	// Timeline.anim(wingOne.position).to({x:100 +8, y:100 - 3});
+	// Timeline.anim(wingTwo.position).to({x:100 -8, y:100 - 3});
+   
+	// //same as draw
+	// function onFrame(){
+	// 	Timeline.update();
+	// }
+
+	// //detect the mouse passing over the shapes
+	// function onMouseMove(event){
+	// Timeline.anim(fly.position).to(0.2, {x:event.point.x,y:event.point.y}, Timeline.Easing.Back.EaseInOut), 2;
+	// Timeline.anim(wingOne.position).to(0.2, {x:event.point.x + 8,y:event.point.y -3}, Timeline.Easing.Back.EaseInOut), 2;
+	// Timeline.anim(wingTwo.position).to(0.2, {x:event.point.x- 8,y:event.point.y -3}, Timeline.Easing.Back.EaseInOut), 2;
+	// 	}
+	// 		//var hitresult = project.activeLayer.hitTest(event.point);
+	// 		//console.log(hitresult);
+
+
+
+		
+	
+	//same as draw
+	//function onFrame(){
+	//Timeline.update();
+	//}
+
+	//detect the mouse passing over the shapes
+	//group.onMouseMove = function() {
+			//var hitresult = project.activeLayer.hitTest(event.point);
+			//console.log(hitresult);
+
+
+			//Timeline.anim(fly.position).to(0.2, {x:Math.random() * view.size.width,y:Math.random() * view.size.height}, Timeline.Easing.Back.EaseInOut), 2;
+
+		//}
+
+	</script>
+</head>
+<body>
+	<canvas id= "myCanvas" resize> </canvas>
+</body>
+</html>

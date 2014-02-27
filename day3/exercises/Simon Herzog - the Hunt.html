@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/javascript" src="js/paper-agents.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+		var reindeerCount = 45;
+		var wolfCount = 5;
+		var reindeerHerd = [];
+		var wolfPack = [];
+
+		var repelReindeer = new Behaviour();
+		repelReindeer.update = function(agent, deltaTime){
+			var repelForce = new Point();
+			var repelRadius = 200;
+			var numNeightbors = 0;
+			for(var i=0; i<reindeerHerd.length; i++) {
+				var reindeer = reindeerHerd[i];
+			//if not itself
+				if (agent != reindeer) {
+					//calculate distance vector between reindeers
+					var distVector = reindeer.position - agent.position;
+					//if distance < repel radius
+					if (distVector.length < repelRadius && distVector.length > 0.2) {
+						//add it the force
+						var repelVector = distVector.normalize();
+						repelForce -= repelVector * repelRadius / distVector.length;
+						numNeightbors++;
+					}
+				}
+			}
+			if (numNeightbors) {
+				agent.force += repelForce;
+			}
+		}
+
+		var repelWolves = new Behaviour();
+		repelWolves.update = function(agent, deltaTime){
+			var repelForce = new Point();
+			var repelRadius = 1000;
+			var numNeightbors = 0;
+			for(var i=0; i<wolfPack.length; i++) {
+				var wolf = wolfPack[i];
+					//if not itself
+					if (agent != wolf) {
+						//calculate distance vector between wolves
+						var distVector = wolf.position - agent.position;
+						//if distance < repel radius
+						if (distVector.length < repelRadius && distVector.length > 0.2) {
+							//add it the force
+							var repelVector = distVector.normalize();
+							repelForce -= repelVector * repelRadius / distVector.length;
+							numNeightbors++;
+						}
+					}
+				}
+				if (numNeightbors) {
+					agent.force += repelForce;
+				}
+			}
+
+		var hunt = new Behaviour();
+		hunt.update = function(agent, deltaTime){
+			var attractionForce = new Point();
+			var attractionRadius = 150;
+			var wolf = agent;
+
+			for(var j=0; j<reindeerHerd.length; j++) {  //look through each reindeer
+				var reindeer = reindeerHerd[j];
+
+				var distVector = wolf.position - reindeer.position; //distance vector between wolf & reindeer
+				if (distVector.length < attractionRadius && distVector.length > 5) {
+					var attractionVector = distVector.normalize();
+					attractionForce -= attractionVector * attractionRadius / distVector.length;
+					agent.force += attractionForce;
+				}
+			}
+		}
+
+
+		var flee = new Behaviour();
+		flee.update = function(agent, deltaTime){
+			var repelForce = new Point();
+			var repelRadius = 1800;
+			var reindeer = agent;
+
+			for(var i=0; i<wolfPack.length; i++) { //for each wolf
+				var wolf = wolfPack[i];
+
+				//calculate distance vector between wolves and agent
+				var distVector = reindeer.position - wolf.position;
+				//if distance < repel radius
+				if (distVector.length < repelRadius && distVector.length > 0.5) {
+					//add it the force
+					var repelVector = distVector.normalize();
+					repelForce += repelVector * repelRadius / distVector.length;
+				}
+			}
+			reindeer.force += repelForce;
+		}
+
+/*
+		var eat = new Behaviour(); //////////////////////////////////////////// eating function with hittest
+		eat.update = function(agent, deltaTime){
+			for(var j=0; j<reindeerHerd.length; j++) {  //look through each reindeer
+				var reindeer = reindeerHerd[j];
+				//var hitresult = project.activeLayer.hitTest(agent.position);
+				//if (hitresult) {
+				if (Math.abs(reindeer.position - agent.position) < 10){
+					reindeerHerd.splice(j, 1); ////////////////////////// remove reindeer 
+					console.log("eaten!");
+				
+				}
+			}
+		}
+*/		
+
+		//direction of wolf pack
+		var wolfTarget = new Agent(view.center/2);
+		wolfTarget.shape.visible = false;
+		wolfTarget.addBehaviour(new Behaviour.RandomWalk(10, 35)); //chance of turning, turnAngle
+
+		var wolfFollower = new Behaviour();
+		wolfFollower.update = function(agent, deltaTime) {
+			agent.force += (wolfTarget.position - agent.position) * 3; //speed, sort of
+		}
+
+		//direction of reindeer herd
+		var reindeerTarget = new Agent(view.center);
+		reindeerTarget.shape.visible = false;
+		reindeerTarget.addBehaviour(new Behaviour.RandomWalk(5, 45)); //chance of turning, turnAngle
+
+		var reindeerFollower = new Behaviour();
+		reindeerFollower.update = function(agent, deltaTime) {
+			agent.force += (reindeerTarget.position - agent.position) * 1; //speed, sort of
+		}
+
+		function createReindeer(){
+			var reindeer = new Agent(view.center);
+
+			//keep a distance from each other
+			reindeer.addBehaviour(repelReindeer);
+
+			//rotates shape towards walking direction
+			reindeer.addBehaviour(new Behaviour.Orient()); 
+
+			//flee
+			reindeer.addBehaviour(flee);
+
+			//follow either mouse or wolfTarget
+			reindeer.addBehaviour(new Behaviour.FollowMouse());
+			reindeer.addBehaviour(reindeerFollower);
+
+			//create reindeer shape
+			var reindeerShape = new Path.Rectangle(view.center, 5, 10); 
+			reindeerShape.segments[0].point.y -= 10; 
+			reindeerShape.segments[1].point.y -= 10; //fix shape
+			reindeerShape.fillColor = "black";
+			reindeer.setPath(reindeerShape);
+
+			reindeerHerd.push(reindeer);
+		}
+
+		function createWolf(){
+			var wolf = new Agent(view.center + [Math.random(), Math.random()]);
+
+			//keep a distance from each other
+			wolf.addBehaviour(repelWolves);
+			
+			//rotates shape towards walking direction
+			wolf.addBehaviour(new Behaviour.Orient()); 
+
+			//hunt
+			wolf.addBehaviour(hunt);
+
+			//eat
+			//wolf.addBehaviour(eat); ///////////////////////////////////////////////////////////////
+
+			//wander
+			wolf.addBehaviour(wolfFollower);
+
+			//create wolf shape
+			var wolfShape = new Path.RegularPolygon(view.center, 3, 8);
+			wolfShape.segments[1].point.y -= 10;
+			wolfShape.fillColor = "red";
+			wolf.setPath(wolfShape);
+
+			wolfPack.push(wolf);
+		}
+
+
+		for (var i=0; i<reindeerCount; i++){
+			createReindeer();
+		}
+
+		for (var i=0; i<wolfCount; i++){
+			createWolf();
+		}
+
+		function onMouseDown(){
+			createWolf();
+		}
+
+		function onFrame(){
+			Timeline.update();
+
+			//check for out of bounds
+			if (wolfTarget.position.x < 100){
+				wolfTarget.position.x += 10;
+			}
+			if (wolfTarget.position.x > view.width - 100){
+				wolfTarget.position.x -= 10;
+			}
+			if (wolfTarget.position.y < 100){
+				wolfTarget.position.y += 10;
+			}
+			if (wolfTarget.position.y > view.height - 100){
+				wolfTarget.position.y -= 10;
+			}
+			if (reindeerTarget.position.x < 100){
+				reindeerTarget.position.x += 10;
+			}
+			if (reindeerTarget.position.x > view.width - 100){
+				reindeerTarget.position.x -= 10;
+			}
+			if (reindeerTarget.position.y < 100){
+				reindeerTarget.position.y += 10;
+			}
+			if (reindeerTarget.position.y > view.height - 100){
+				reindeerTarget.position.y -= 10;
+			}
+
+			//console.log(reindeerHerd.length); //check if any are being eaten
+		}
+
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

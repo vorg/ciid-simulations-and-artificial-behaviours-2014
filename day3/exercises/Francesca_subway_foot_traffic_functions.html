@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript"  src="js/paper.js"></script>
+<script type="text/javascript"  src="js/paper-error.js"></script>
+<script type="text/javascript"  src="js/paper-timeline.js"></script>
+<script type="text/javascript"  src="js/paper-agents.js"></script>
+
+<script type="text/paperscript" canvas="myCanvas">
+
+
+/***************** STYLES ******************/
+
+var shapeStyle = {
+	fillColor: 'white',
+}
+
+var traceColor = new Color(0.8, 0.8, 0.8, 0.45);
+var personWidth = view.size.width*0.005;
+var personStyle = {
+	fillColor: new Color(0.2, 0.2, 0.2, 1),
+	strokeColor: traceColor,
+	strokeWidth: view.size.width*0.006
+}
+
+/***************** SUBWAY CARS ******************/
+
+var rectanlgeCar1 = new Rectangle(new Point(0, (view.size.height - (view.size.height*0.2)) ), new Size((view.size.width * 0.33),view.size.height*0.33));
+var car1 = new Path.Ellipse(rectanlgeCar1);
+car1.style = shapeStyle;
+
+	var car1Door = car1.segments[1].point;
+	var car1DoorLeft = new Point( (car1.segments[1].point.x - 160), (car1.segments[1].point.y+40) ); 
+	var car1DoorRight = new Point( (car1.segments[1].point.x + 160), (car1.segments[1].point.y+40) ); 
+
+var rectanlgeCar2 = new Rectangle(new Point((view.size.width * 0.33),(view.size.height - (view.size.height*0.2) )), new Size((view.size.width * 0.33), view.size.height*0.33));
+var car2 = new Path.Ellipse(rectanlgeCar2);
+car2.style = shapeStyle;
+
+	var car2Door = car2.segments[1].point;
+	var car2DoorLeft = new Point( (car2.segments[1].point.x - 160), (car2.segments[1].point.y+40) ); 
+	var car2DoorRight = new Point( (car2.segments[1].point.x + 160), (car2.segments[1].point.y+40) );
+
+var rectanlgeCar3 = new Rectangle(new Point((view.size.width * 0.66),(view.size.height - (view.size.height*0.2) )), new Size((view.size.width * 0.33), view.size.height*0.33));
+var car3 = new Path.Ellipse(rectanlgeCar3);
+car3.style = shapeStyle;
+
+	var car3Door = car3.segments[1].point;
+	var car3DoorLeft = new Point( (car3.segments[1].point.x - 160), (car3.segments[1].point.y+40) ); 
+	var car3DoorRight = new Point( (car3.segments[1].point.x + 160), (car3.segments[1].point.y+40) );
+
+
+/***************** BOTTOM MASK ******************/
+
+var bottomRectangle = new Path.Rectangle(new Point(0, view.size.height*0.83), new Size(view.size.width, view.size.height*0.17) );
+bottomRectangle.fillColor = 'white';
+
+var dash1 = new Path.Line( new Point(0, view.size.height*0.83), new Point(car1DoorLeft.x-30, view.size.height*0.83));
+dash1.strokeColor = new Color(0.45, 0.45, 0.45, 1);
+dash1.strokeWidth = 6;
+
+var dash2 = new Path.Line( new Point(car1DoorRight.x+30, view.size.height*0.83), new Point(car2DoorLeft.x-40, view.size.height*0.83));
+dash2.strokeColor = new Color(0.45, 0.45, 0.45, 1);
+dash2.strokeWidth = 6;
+
+var dash3 = new Path.Line( new Point(car2DoorRight.x+40, view.size.height*0.83), new Point(car3DoorLeft.x-30, view.size.height*0.83));
+dash3.strokeColor = new Color(0.45, 0.45, 0.45, 1);
+dash3.strokeWidth = 6;
+
+var dash4 = new Path.Line( new Point(car3DoorRight.x+30, view.size.height*0.83), new Point(view.size.width, view.size.height*0.83));
+dash4.strokeColor = new Color(0.45, 0.45, 0.45, 1);
+dash4.strokeWidth = 6;
+
+var bottomMask = new Group();
+bottomMask.addChild(bottomRectangle);
+bottomMask.addChild(dash1);
+bottomMask.addChild(dash2);
+bottomMask.addChild(dash3);
+bottomMask.addChild(dash4);
+
+
+/***************** MAIN ACTIVITY LOOP ******************/
+
+var number = 15;
+var repulseValue = 30;
+
+for( i=0; i<number; i++){
+	
+	ComingLeft();
+	ComingRight();
+
+	LeavingCar1();
+	LeavingCar2();
+	LeavingCar3();	
+}
+
+
+/***************** FUNCTIONS ******************/
+
+//Coming Points Left
+function ComingLeft(){
+	var comingPersonLeft = new Agent( new Point((Math.random()*-200), ((Math.random() * 380) + (view.size.height*0.25)) )) ;
+	
+	var person = new Path.Circle( new Point(0,0), personWidth);
+	person.style = personStyle;
+	comingPersonLeft.setPath( person );
+
+	var targetLeft = new Point( 50+(Math.random() * view.center.x), view.size.height*0.6+(Math.random()*50));
+	comingPersonLeft.addBehaviour( new Behaviour.FollowPoint( targetLeft ) );
+	comingPersonLeft.addBehaviour( new Behaviour.Repulse(repulseValue) );
+	comingPersonLeft.addBehaviour( new Behaviour.Trace(traceColor) );
+
+	//Move people down
+	Timeline.anim(targetLeft).to(0, {x: targetLeft.x, y: (view.size.height - (view.size.height*0.25)+(Math.random()*10)) }, 4);
+
+	//Move people into subway cars depending on location
+	if(targetLeft.x<car1Door.x){
+		Timeline.anim(targetLeft).to(6, {x: car1DoorLeft.x, y: car1DoorLeft.y }, 1.5);
+		Timeline.anim(targetLeft).to(7, {x: car1.position.x, y: car1.position.y }, 1);
+	} 
+	if(targetLeft.x>=car1Door.x && targetLeft.x<car2.segments[0].point.x){
+		Timeline.anim(targetLeft).to(6, {x: car1DoorRight.x, y: car1DoorRight.y }, 1.5);
+		Timeline.anim(targetLeft).to(7, {x: car1.position.x, y: car1.position.y }, 1);
+	}
+
+	if(targetLeft.x>=car2.segments[0].point.x && targetLeft.x<car2Door.x){
+		Timeline.anim(targetLeft).to(6, {x: car2DoorLeft.x, y: car2DoorLeft.y }, 1.5);
+		Timeline.anim(targetLeft).to(7, {x: car2.position.x, y: car2.position.y }, 1);
+	}
+	if(targetLeft.x>=car2Door.x && targetLeft.x<car3.segments[0].point.x){
+		Timeline.anim(targetLeft).to(6, {x: car2DoorRight.x, y: car2DoorRight.y }, 1.5);
+		Timeline.anim(targetLeft).to(7, {x: car2.position.x, y: car2.position.y }, 1);
+	}
+}
+
+
+//Coming Points Right
+function ComingRight(){
+	var comingPersonRight = new Agent( new Point((view.size.width+(Math.random()*200)), ((Math.random() * 380) + (view.size.height*0.25)) ));
+	
+	var person = new Path.Circle( new Point(0,0), personWidth);
+	person.style = personStyle;
+	comingPersonRight.setPath( person );
+
+	var targetRight = new Point( ((Math.random() * (view.center.x-50)) + view.center.x), view.size.height*0.6+(Math.random()*50));
+	comingPersonRight.addBehaviour( new Behaviour.FollowPoint( targetRight ) );
+	comingPersonRight.addBehaviour( new Behaviour.Repulse(repulseValue) );
+	comingPersonRight.addBehaviour( new Behaviour.Trace(traceColor) );
+
+	//Move people down
+	Timeline.anim(targetRight).to(0, {x: targetRight.x, y: (view.size.height - (view.size.height*0.25) +(Math.random()*10)) }, 4);
+
+	//Move people into subway cars depending on location
+	if(targetRight.x>=car2.segments[0].point.x && targetRight.x<car2Door.x){
+		Timeline.anim(targetRight).to(6, {x: car2DoorLeft.x, y: car2DoorLeft.y }, 1.5);
+		Timeline.anim(targetRight).to(7, {x: car2.position.x, y: car2.position.y }, 1);
+	}
+	if(targetRight.x>=car2Door.x && targetRight.x<car3.segments[0].point.x){
+		Timeline.anim(targetRight).to(6, {x: car2DoorRight.x, y: car2DoorRight.y }, 1.5);
+		Timeline.anim(targetRight).to(7, {x: car2.position.x, y: car2.position.y }, 1);
+	}
+
+	if(targetRight.x>=car3.segments[0].point.x && targetRight.x<car3Door.x){
+		Timeline.anim(targetRight).to(6, {x: car3DoorLeft.x, y: car3DoorLeft.y }, 1.5);
+		Timeline.anim(targetRight).to(7, {x: car3.position.x, y: car3.position.y }, 1);
+	}
+	if(targetRight.x>=car3Door.x){
+		Timeline.anim(targetRight).to(6, {x: car3DoorRight.x, y: car3DoorRight.y }, 1.5);
+		Timeline.anim(targetRight).to(7, {x: car3.position.x, y: car3.position.y }, 1);
+	} 
+}
+
+
+//Leaving Points Car1
+function LeavingCar1(){
+	var leavingPersonCar1Left = new Agent( new Point(car1.position.x, car1.position.y ));
+	
+	var person = new Path.Circle( new Point(0,0), personWidth);
+	person.style = personStyle;
+	leavingPersonCar1Left.setPath( person );
+
+	var targetCar1Left = new Point( car1.position.x, car1.position.y );
+	leavingPersonCar1Left.addBehaviour( new Behaviour.FollowPoint( targetCar1Left ) );
+	leavingPersonCar1Left.addBehaviour( new Behaviour.Repulse(repulseValue) );
+	leavingPersonCar1Left.addBehaviour( new Behaviour.Trace(traceColor) );
+
+	//Move people out of car1
+	Timeline.anim(targetCar1Left).to(6, {x: ((car1DoorLeft.x+100) + (Math.random()*120)), y: view.size.height*0.5 + (Math.random()*12*i)}, 1);
+	Timeline.anim(targetCar1Left).to(7, {x: ((car1DoorLeft.x-100) + (Math.random()*420)), y: view.size.height*0.5 + (Math.random()*12*i)}, 2);
+	Timeline.anim(targetCar1Left).to(8, {x: -200, y: ((Math.random() * view.size.height*0.33) + (view.size.height*0.25))}, 2);
+}
+
+
+//Leaving Points Car2
+function LeavingCar2(){
+
+	//Leaving Points Car2 Left	
+	if(i<(number/2)){
+		var leavingPersonCar2Left = new Agent( new Point(car2.position.x, car2.position.y ));
+		
+		var person = new Path.Circle( new Point(0,0), personWidth);
+		person.style = personStyle;
+		leavingPersonCar2Left.setPath( person );
+
+		var targetCar2Left = new Point( car2.position.x, car2.position.y );
+		leavingPersonCar2Left.addBehaviour( new Behaviour.FollowPoint( targetCar2Left ) );
+		leavingPersonCar2Left.addBehaviour( new Behaviour.Repulse(repulseValue) );
+		leavingPersonCar2Left.addBehaviour( new Behaviour.Trace(traceColor) );
+
+		//Move people out of car2 to the left
+		Timeline.anim(targetCar2Left).to(6, {x: ((car2DoorLeft.x+100) + (Math.random()*120)), y: view.size.height*0.5 + (Math.random()*12*i)}, 1);
+		Timeline.anim(targetCar2Left).to(7, {x: ((car2DoorLeft.x-100) + (Math.random()*420)), y: view.size.height*0.5 + (Math.random()*12*i)}, 2.5);
+		Timeline.anim(targetCar2Left).to(8, {x: -200, y: ((Math.random() * view.size.height*0.33) + (view.size.height*0.25))}, 2);
+	}
+
+
+	//Leaving Points Car2 Right
+	if(i>=(number/2)){
+		var leavingPersonCar2Right = new Agent( new Point(car2.position.x, car2.position.y ));
+		
+		var person = new Path.Circle( new Point(0,0), personWidth);
+		person.style = personStyle;
+		leavingPersonCar2Right.setPath( person );
+
+		var targetCar2Right = new Point( car2.position.x, car2.position.y );
+		leavingPersonCar2Right.addBehaviour( new Behaviour.FollowPoint( targetCar2Right ) );
+		leavingPersonCar2Right.addBehaviour( new Behaviour.Repulse(repulseValue) );
+		leavingPersonCar2Right.addBehaviour( new Behaviour.Trace(traceColor) );
+
+		//Move people out of car2 to the right
+		Timeline.anim(targetCar2Right).to(6, {x: ((car2DoorLeft.x+100) + (Math.random()*120)), y: view.size.height*0.5 + (Math.random()*12*i)}, 1);
+		Timeline.anim(targetCar2Right).to(7, {x: ((car2DoorLeft.x+200) + (Math.random()*420)), y: view.size.height*0.5 + (Math.random()*12*i)}, 2.5);
+		Timeline.anim(targetCar2Right).to(8, {x: view.size.width + 200, y: ((Math.random() * view.size.height*0.33) + (view.size.height*0.25))}, 2);
+	}
+}
+
+
+//Leaving Points Car3
+function LeavingCar3(){
+	var leavingPersonCar3Right = new Agent( new Point(car3.position.x, car3.position.y ));
+	
+	var person = new Path.Circle( new Point(0,0), personWidth);
+	person.style = personStyle;
+	leavingPersonCar3Right.setPath( person );
+
+	var targetCar3Right = new Point( car3.position.x, car3.position.y );
+	leavingPersonCar3Right.addBehaviour( new Behaviour.FollowPoint( targetCar3Right ) );
+	leavingPersonCar3Right.addBehaviour( new Behaviour.Repulse(repulseValue) );
+	leavingPersonCar3Right.addBehaviour( new Behaviour.Trace(traceColor) );
+
+	//Move people out of car3
+	Timeline.anim(targetCar3Right).to(6, {x: ((car3DoorLeft.x+100) + (Math.random()*120)), y: view.size.height*0.5 + (Math.random()*12*i)}, 1);
+	Timeline.anim(targetCar3Right).to(7, {x: ((car3DoorLeft.x+200) + (Math.random()*420)), y: view.size.height*0.5 + (Math.random()*12*i)}, 2);
+	Timeline.anim(targetCar3Right).to(8, {x: view.size.width + 200, y: ((Math.random() * view.size.height*0.33) + (view.size.height*0.25))}, 2);
+}
+
+
+/***************** RECALL MAIN ACTIVITY LOOP ON CLICK ******************/
+
+function onMouseDown(){
+	for( i=0; i<number; i++){
+	
+	ComingLeft();
+	ComingRight();
+
+	LeavingCar1();
+	LeavingCar2();
+	LeavingCar3();	
+	}
+}
+
+
+function onFrame(){
+	Timeline.update();
+	bottomMask.bringToFront( );
+}
+
+
+</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

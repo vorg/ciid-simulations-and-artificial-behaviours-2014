@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+// var numPairs = 5;
+
+// for(var i = 0; i < numPairs; i++) {
+//	eye background shape
+var eyeShape = new Path.Circle(new Point(view.center), 25);
+eyeShape.strokeColor = 'black';
+eyeShape.selected = false;
+
+eyeShape.segments[2].point += [21,0];
+eyeShape.segments[0].point += [-21,0];
+
+// eye, inner path
+var eyePath = new Path.Circle(new Point(view.center), 15);
+eyePath.selected = false;
+
+eyePath.segments[2].point += [21,0];
+eyePath.segments[0].point += [-21,0];
+
+eyePath.flatten(2);
+
+
+var randomAgent = new Agent(eyePath.position);
+var circleBulb = new Path.Circle(view.center, 12);
+circleBulb.fillColor = "black";
+randomAgent.setPath(circleBulb);
+
+
+randomAgent.addBehaviour(new Behaviour.FollowPath(eyePath));
+randomAgent.addBehaviour(new Behaviour.FollowMouse(0.01));
+
+// for (var i = 0; i < eyePath.segments.length; i++) {
+// 	randomAgent.addBehaviour(new Behaviour.RepulsePoint(eyePath.segments[i].point, 25));
+// }
+
+
+var eye1 = new Group();
+eye1.addChild(eyeShape);
+eye1.addChild(eyePath);
+
+
+var eye2 = eye1.clone();
+eye2.position.x = view.center.x + 150;
+
+eye2.children[1].flatten(2);
+
+var randomAgent2 = new Agent(eye2.children[1].position);
+var circleBulb2 = new Path.Circle(view.center, 10);
+circleBulb2.fillColor = "black";
+randomAgent.setPath(circleBulb2);
+
+randomAgent2.addBehaviour(new Behaviour.FollowPath(eye2.children[1], true));
+randomAgent2.addBehaviour(new Behaviour.FollowMouse(0.01));
+
+var eyePair = new Group();
+eyePair.addChild(eye1);
+eyePair.addChild(eye2);
+
+
+// eyePair.position = [Math.random() * view.size.width, Math.random() * view.size.height];
+// }
+	
+function onFrame(){	
+}
+
+
+
+
+</script>
+</head>
+<body>
+	<body style="background-color:white">
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

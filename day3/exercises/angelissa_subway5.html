@@ -1,0 +1,267 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script> <!-- animation library -->
+	<script type="text/javascript" src="js/paper-agents.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+var subway_map = new Raster({
+			source: 'image/Copenhagen_Map.png',
+			position: view.center
+		});
+
+//*********************************************************START HERE!**************************
+	
+	//***************BLUE Line ****************************************
+	var point_b1= new Point(458,304);
+	var point_b2= new Point(458,124);
+	var point_b3= new Point(503,79);
+	var point_b4= new Point(719,79);
+	var point_b5= new Point(788,147);
+	var point_b6= new Point(788,173);
+	var point_b7= new Point(629,330);
+	var point_b8= new Point(483,330);
+
+	var pathBlue = new Path();
+		pathBlue.strokeColor = "#007dc4"; //#007dc4
+		pathBlue.strokeWidth=7; //
+		pathBlue.strokeCap="round";
+		pathBlue.add(point_b1);
+		pathBlue.add(point_b2);
+		pathBlue.add(point_b3);
+		pathBlue.add(point_b4);
+		pathBlue.add(point_b5);
+		pathBlue.add(point_b6);
+		pathBlue.add(point_b7);
+		pathBlue.add(point_b8); 
+		pathBlue.closed=true;
+
+	//**********************ORANGE line***************************************
+	var point_o1= new Point(527,337);
+	var point_o2= new Point(632,337);
+	var point_o3= new Point(795,174);
+	var point_o4= new Point(795,141);
+	var point_o5= new Point(818,119);
+	var point_o6= new Point(1048,119);
+
+	var pathOrange = new Path();
+		pathOrange.strokeColor = "#f8901e"; //#007dc4
+		pathOrange.strokeWidth=7; //
+		pathOrange.strokeCap="round";
+		pathOrange.add(point_o1);
+		pathOrange.add(point_o2);
+		pathOrange.add(point_o3);
+		pathOrange.add(point_o4);
+		pathOrange.add(point_o5);
+		pathOrange.add(point_o6);
+
+	//****************************GREEN Line********************************
+	var pointg1= new Point(172,247);
+	var targetCircle=new Path.Circle(pointg1,20);
+		//targetCircle.fillColor= "green";
+
+	var pointg2= new Point(584,247);
+	var targetCircle=new Path.Circle(pointg2,20);
+		//targetCircle.fillColor= "green";
+
+	var pointg3= new Point(623,211);
+	var targetCircle=new Path.Circle(pointg3,20);
+		//targetCircle.fillColor= "green";
+
+	var pointg4= new Point(675,211);
+	var targetCircle=new Path.Circle(pointg4,20);
+		//targetCircle.fillColor= "green";
+
+	var pointg5= new Point(799,340);
+	var targetCircle=new Path.Circle(pointg5,20);
+		//targetCircle.fillColor= "green";
+
+	var pointg6= new Point(799,630);
+	var targetCircle=new Path.Circle(pointg6,20);
+		//targetCircle.fillColor= "green";
+
+	var pathGreen = new Path();
+		pathGreen.strokeColor = "#397c5d"; //#397c5d
+		pathGreen.strokeWidth=7;
+		pathGreen.strokeCap="round";
+		pathGreen.add(pointg1);
+		pathGreen.add(pointg2);
+		pathGreen.add(pointg3);
+		pathGreen.add(pointg4);
+		pathGreen.add(pointg5);
+		pathGreen.add(pointg6);
+
+	//******************YELLOW line (ex red)*********************************
+	var point1= new Point(172,237);
+	var targetCircle=new Path.Circle(point1,20);
+		//targetCircle.fillColor= "red";
+
+	var point2= new Point(582,237);
+	var targetCircle=new Path.Circle(point2,20);
+		//targetCircle.fillColor= "red";
+
+	var point3= new Point(620,201);
+	var targetCircle=new Path.Circle(point3,20);
+		//targetCircle.fillColor= "red";
+
+	var point4= new Point(672,201);
+	var targetCircle=new Path.Circle(point4,20);
+		//targetCircle.fillColor= "red";
+
+	var point5= new Point(806,335);
+	var targetCircle=new Path.Circle(point5,20);
+		//targetCircle.fillColor= "red";
+
+	var point6= new Point(916,335);
+	var targetCircle=new Path.Circle(point6,20);
+		//targetCircle.fillColor= "red";
+
+	var point7= new Point(980,398);
+	var targetCircle=new Path.Circle(point7,20);
+		//targetCircle.fillColor= "red";
+
+	var point8= new Point(980,581);
+	var targetCircle=new Path.Circle(point8,20);
+		//targetCircle.fillColor= "red";
+
+	var pathYellow = new Path();
+		pathYellow.strokeColor = "#e8c929";  //#e8c929 (ex red)
+		pathYellow.strokeWidth=7;
+		pathYellow.strokeCap="round";
+		pathYellow.add(point1);
+		pathYellow.add(point2);
+		pathYellow.add(point3);
+		pathYellow.add(point4);
+		pathYellow.add(point5);
+		pathYellow.add(point6);
+		pathYellow.add(point7);
+		pathYellow.add(point8);
+
+
+	var numAgents=8;
+	var agentsYellow=[];
+	var agentsGreen=[];
+	var agentsOrange=[];
+	var agentsBlue=[];
+
+ 
+//*************YELLOW LINE FOLLOWERS ******
+
+	for(var i=0; i< numAgents; i++){
+		var randomAgent= new Agent(new Point(view.size.width * Math.random(), view.size.height * Math.random() ));
+
+		var triangle= new Path.RegularPolygon(view.center, 3, 8);
+		triangle.segments[1].point.y -=10;
+		triangle.fillColor='blue';
+		randomAgent.setPath(triangle);
+		
+		//randomAgent.addBehaviour(new Behaviour.RandomWalk(0.05, 30));
+		randomAgent.addBehaviour(new Behaviour.FollowPath(pathYellow,true));
+		//randomAgent.addBehaviour(new Behaviour.Repulse(60));
+		
+		agentsYellow.push(randomAgent);
+	}
+
+//************GREEN LINE FOLLOWERS*********
+	var randomAgentGreen;
+	for(var j=0; j< numAgents; j++){		
+		randomAgentGreen = new Agent( new Point(view.size.width * Math.random(), view.size.height * Math.random() ));
+
+		var triangle= new Path.RegularPolygon(view.center, 3, 8);
+		triangle.segments[1].point.y -=10;
+		triangle.fillColor='blue';
+	
+		randomAgentGreen.setPath(triangle);
+
+		//randomAgentGreen.addBehaviour(new Behaviour.RandomWalk(0.05, 30));
+		randomAgentGreen.addBehaviour(new Behaviour.FollowPath(pathGreen,true));
+		//randomAgentGreen.addBehaviour(new Behaviour.Repulse(60));
+		
+		agentsGreen.push(randomAgentGreen);
+	}
+
+//****************ORANGE LINE FOLLOWERS*********
+var randomAgentOrange;
+	for(var j=0; j< numAgents; j++){		
+		randomAgentOrange = new Agent(new Point(view.size.width * Math.random(), view.size.height * Math.random()));
+
+		var triangle= new Path.RegularPolygon(view.center, 3, 8);
+		triangle.segments[1].point.y -=10;
+		triangle.fillColor='blue';
+	
+		randomAgentOrange.setPath(triangle);
+
+		//randomAgentOrange.addBehaviour(new Behaviour.RandomWalk(0.05, 30));
+		randomAgentOrange.addBehaviour(new Behaviour.FollowPath(pathOrange,true));
+		//randomAgentOrange.addBehaviour(new Behaviour.Repulse(60));
+		
+		agentsOrange.push(randomAgentOrange);
+	}
+//****************BLUE LINE FOLLOWERS*********
+var randomAgentBlue;
+	for(var j=0; j< numAgents; j++){		
+		randomAgentBlue = new Agent(new Point(view.size.width * Math.random(), view.size.height * Math.random()));
+
+		var triangle= new Path.RegularPolygon(view.center, 3, 8);
+		triangle.segments[1].point.y -=10;
+		triangle.fillColor='blue';
+	
+		randomAgentBlue.setPath(triangle);
+
+		//randomAgentBlue.addBehaviour(new Behaviour.RandomWalk(0.05, 30));
+		randomAgentBlue.addBehaviour(new Behaviour.FollowPath(pathBlue,true));
+		//randomAgentBlue.addBehaviour(new Behaviour.Repulse(60));
+		
+		agentsBlue.push(randomAgentBlue);
+	}
+
+function onFrame(){
+/*	for(var i=0; i< numAgents; i++){
+		var nearestPoint=pathGreen.getNearestPoint(agentsGreen[i].position);
+		//console.log(nearestPoint);
+
+		if((nearestPoint.x - agentsGreen[i].position.x < 20)&&
+			(nearestPoint.y - agentsGreen[i].position.y < 20)){   
+		//if((nearestPoint-agentsGreen[i]).length <20){
+			//console.log("VICINO!!!");
+			changeBehaviour();	
+		}
+	}
+	*/
+}
+
+function changeBehaviour(){
+	randomAgentGreen.addBehaviour(new Behaviour.FollowPath(pathGreen,true));
+	//download new agent and remove behaviour
+
+	//agentsGreen.push(randomAgentGreen);
+}
+//setInterval(changeBehaviour,10000);
+
+	/*for(var i=0; i< numAgents; i++){
+	if(angent.position[i] - pathGreen.position < 30){
+	
+	}*/
+	
+
+	/*if(la distanza tra agent[i].position è vicina ad un certo path ){
+		FollowPath
+	}
+    */
+
+	//monitor
+
+//}
+	
+function onMouseDown(event){
+	//console.log(event.point);
+}
+
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

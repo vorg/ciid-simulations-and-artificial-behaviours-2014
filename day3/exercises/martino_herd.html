@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<script type="text/javascript" src ="js/paper.js"></script>
+	<script type="text/javascript" src ="js/paper-error.js"></script>
+	<script type="text/javascript" src ="js/paper-timeline.js"></script>
+	<script type="text/javascript" src ="js/paper-agents.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+var numMaleAgents = 7;
+var maleAgents = [];
+
+for(var i=0; i<numMaleAgents; i++){
+	var randomAgent = new Agent(new Point(Math.random()*view.size.width, Math.random()*view.size.height));
+
+	var shape = new Shape.Circle([Math.random()*view.size.width, Math.random()*view.size.height],25,1);
+	shape.fillColor = '#dbc7a3';
+	randomAgent.setPath(shape);
+	//randomWalk has 2 parameters: chance to turn 0...1, turn angle 0...360
+randomAgent.addBehaviour(new Behaviour.RandomWalk(0.1, 270));
+
+randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+
+//Trace has one parameter:color
+//randomAgent.addBehaviour(new Behaviour.Trace('green'));
+
+//Rotate agent's shape towards walking direction
+randomAgent.addBehaviour(new Behaviour.Orient());
+
+maleAgents.push(randomAgent);
+
+}
+
+var numFemaleAgents = 14;
+var femaleAgents = [];
+
+for(var i=0; i<numFemaleAgents; i++){
+	var randomAgent = new Agent(view.center);
+
+	var shape = new Shape.Circle(view.center,18,1);
+	shape.fillColor = 'd09463';
+	randomAgent.setPath(shape);
+	
+randomAgent.addBehaviour(new Behaviour.RandomWalk(0.2, 270));
+
+randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+femaleAgents.push(randomAgent);
+
+}
+
+function onFrame(event){
+
+	if(event.count % 60 != 0) return; 
+
+	for(var i = 0; i < maleAgents.length; i++) {
+		var male1 = maleAgents[i];
+	for(var j = 0; j < maleAgents.length; j++) {
+		if(i == j) continue;
+		var male2 = maleAgents[j];
+		var d = male1.position - male2.position;
+		if(d.length < 70) {
+
+				male1.shape.fillColor = 'red';
+				//male2.shape.fillColor = 'brown';		
+			}else(male1.shape.fillColor = '#dbc7a3'); 
+		}
+	}
+}
+
+		</script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

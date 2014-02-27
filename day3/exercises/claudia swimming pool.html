@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/javascript" src="js/paper-agents.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+var path = new Path();
+path.strokeColor = 'black';
+path.add(new Point(0, view.size.height * 1/3));
+path.add(new Point(view.size.width, view.size.height * 1/3));
+path.strokeWidth = 3;
+path.dashArray = [10];
+
+
+var path2 = path.clone();
+path2.position += [0,view.size.height * 1/3];
+//----------------------------------------------//
+
+
+
+var way = new Path.Rectangle(new Point (120, 60), new Size(view.size.width - 250,140));
+	way.strokeColor = "red";
+	way.selected = true ;
+	way.closed = true;
+	way.visible = false;
+
+var circle = new Path.RegularPolygon(new Point(120,130), 20, 70);
+	circle.strokeColor = "red";
+	circle.visible = false;
+
+var circle2 = new Path.RegularPolygon(new Point(view.size.width-130,130),20, 70);
+	circle2.strokeColor = "red";
+	circle2.visible = false;
+
+var unioncircle = way.unite(circle2);
+console.log(unioncircle);
+unioncircle.strokeColor = "black";
+unioncircle.visible = false;
+
+var union = unioncircle.unite(circle);
+union.strokeColor = "black";
+union.strokeWidth = 1;	
+union.visible = false;
+
+var numExpert = 3;
+var Experts = [];
+
+	//way.smooth(1);
+for(var i=0; i<numExpert; i++){
+
+var expert = new Agent(new Point(i * 500 * Math.random() + view.size.width - 50,130));
+
+var triangle = new Path.RegularPolygon(view.center,3,30);
+triangle.segments[1].point.y -= 80;
+triangle.fillColor = "black";
+
+expert.setPath(triangle);
+	
+expert.addBehaviour (new Behaviour.FollowPath(union, true, 300));
+expert.addBehaviour(new Behaviour.Orient());
+//expert.addBehaviour(new Behaviour.Repulse(200));
+//expert.addBehaviour(new Behaviour.RepulseMouse(50));
+//expert.addBehaviour(new Behaviour.Trace("pink"));
+Experts.push(expert);
+console.log(Experts);
+}
+//__________________________________//
+
+var union1 = union.clone();
+union1.position += [0,view.size.height * 1/3 + 10];
+
+var numNormal = 5;
+var Normal = [];
+
+	//way.smooth(1);
+for(var i=0; i<numNormal; i++){
+
+var normal = new Agent(new Point(i * 500 * Math.random() + view.size.width - 50,270));
+
+var trinorm = new Path.RegularPolygon(view.center,3,40);
+trinorm.segments[1].point.y -= 20;
+trinorm.fillColor = "black";
+normal.setPath(trinorm);
+	
+normal.addBehaviour (new Behaviour.FollowPath(union1, true,200));
+normal.addBehaviour(new Behaviour.Repulse(80));
+normal.addBehaviour(new Behaviour.Orient());
+normal.addBehaviour(new Behaviour.RepulseMouse(50));
+Normal.push(normal);
+console.log(Normal)
+}
+//__________________________________//
+
+var union2 = union.clone();
+union2.position += [0,view.size.height * 2/3 -25];
+
+var numBeginner = 8;
+var Beginner = [];
+
+	//way.smooth(1);
+for(var i=0; i<numBeginner; i++){
+
+var beginner = new Agent(new Point(i * 500 * Math.random() + view.size.width - 50,700));
+
+var tribeg = new Path.RegularPolygon(view.center,3,25);
+tribeg.segments[1].point.y -= 40;
+tribeg.smooth();
+tribeg.fillColor = "black";
+beginner.setPath(tribeg);
+	
+beginner.addBehaviour (new Behaviour.FollowPath(union2, true, 150));
+beginner.addBehaviour(new Behaviour.Repulse(130));
+beginner.addBehaviour(new Behaviour.Shake(20));
+beginner.addBehaviour(new Behaviour.Orient());
+beginner.addBehaviour(new Behaviour.RepulseMouse(50));
+Beginner.push(beginner);
+console.log(Beginner)
+}
+
+
+
+
+
+
+
+function onFrame() {
+	Timeline.update();
+}
+
+</script>
+</head>
+<body>
+	<canvas id= "myCanvas" resize> </canvas>
+	<body bgcolor="#53addd">
+</body>
+</html>

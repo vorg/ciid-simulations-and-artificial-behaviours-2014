@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<!-- <link rel="stylesheet" type="text/css" href="css/style.css" media="all" /> -->
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/javascript" src="js/paper-agents.js"></script>
+	
+	<script type="text/paperscript" canvas="myCanvas">
+	var personPosition = view.center;
+	var person = new Agent(personPosition);
+	var isStationary = false;
+	var personToPet = false;
+	var isBarking = false;
+
+
+	var range = 70;
+	// var rangeCircle = Path.Circle(view.center,range);
+	// rangeCircle.fillColor= new Color(0,.2);
+
+	var head = Path.Circle(view.center,15);
+	head.fillColor= new Color(0);
+	var eye1 = Path.Circle(view.center+[7,0],3);
+	var eye2 = Path.Circle(view.center-[7,0],3);
+	eye1.fillColor= new Color(1);
+	eye2.fillColor= new Color(1);
+
+	var personGroup = new Group([head,eye1,eye2]);
+
+	person.setPath(personGroup);
+
+	function createPath() {
+		var numSegments = 2;
+		var path = new Path({
+			// strokeColor:'black'
+		});
+		for (i =0;i< numSegments;i++){
+			path.add(new Point(Math.random()*(0.9*view.size.width), Math.random()*(0.9*view.size.height)));
+		}
+
+		return path;
+	}
+
+	var path = createPath();
+	person.addBehaviour(new Behaviour.FollowPath(path));
+
+	var pet = new Agent(view.center+[10,10]);
+
+	var petHead = Path.Circle(view.center,9);
+	petHead.fillColor= new Color(0);
+	var petEye1 = Path.Circle(view.center+[4,0],2);
+	var petEye2 = Path.Circle(view.center-[4,0],2);
+	petEye1.fillColor= new Color(1);
+	petEye2.fillColor= new Color(1);
+
+	var petGroup = new Group([petHead,petEye1,petEye2]);
+
+	pet.setPath(petGroup);
+
+	// console.log(pet.shape.children[0]);
+	pet.shape.children[0].fillColor = 'turquoise';
+	// pet.shape.scale(0.7);
+
+
+	var walk = new Behaviour.RandomWalk(1,30);
+	var shake = new Behaviour.Shake(30);
+
+	var follow = new Behaviour.FollowPoint(person.position);
+	var repulse = new Behaviour.Repulse(15);
+	// var repulse10 = new Behaviour.Repulse(100);
+
+	pet.addBehaviour(walk);
+	pet.addBehaviour(follow);
+	pet.addBehaviour(repulse);
+
+	function onFrame(event){
+		if (!isStationary){
+			//person is walking
+			//pet follows person
+			console.log('walking');
+			if (person.prevPosition == person.position){
+				isStationary = true;
+				console.log('stationary');
+			}
+		} 
+		else {
+			//person is not walking
+			if (!isBarking){
+				pet.removeBehaviour(follow);			
+				console.log('wandering...');
+			}
+			else {
+				//bark!
+				console.log('barking!');
+				pet.removeAllBehaviours();
+				pet.addBehaviour(shake);
+				pet.addBehaviour(shake);
+			
+				setTimeout(function(){
+					person.removeAllBehaviours();
+					person.addBehaviour(new Behaviour.FollowPoint(pet.position));
+					console.log('goin to pet');
+				}, 1500);
+			
+				isBarking=false;
+			
+			
+
+			
+			}
+		}
+	
+		stayInBounds();	
+		Timeline.update();
+	}
+	
+	//pet checks if he's close to person
+	setInterval(function(){	
+		if (pet.position.getDistance(person.position)>range){
+			//he is not close to person. bark!!
+			console.log('freakout!');
+		    Timeline.anim(pet.shape.children[0].fillColor).to({hue:350}, 1);
+			isBarking = true;
+		}
+	
+		//person is walking to pet... pet checks to see if he's close to person
+		if (person.position.getDistance(pet.position)<5) {
+			console.log('hey');
+		    Timeline.anim(pet.shape.children[0].fillColor).to({hue:180}, .25);
+			person.removeAllBehaviours();
+			pet.removeAllBehaviours();
+			var path = createPath();
+			person.addBehaviour(new Behaviour.FollowPath(path));
+			pet.addBehaviour(walk);
+			pet.addBehaviour(follow);
+			isStationary=false;
+		
+		}	
+	},3000);
+
+	setInterval(function() {
+		Timeline.anim(person.shape.children[1]).to({scale:.1},.1).to({scale:1},.1);
+		Timeline.anim(person.shape.children[2]).to({scale:.1},.1).to({scale:1},.1);
+	},2500)
+	setInterval(function() {
+		Timeline.anim(pet.shape.children[1]).to({scale:.1},.1).to({scale:1},.1);
+		Timeline.anim(pet.shape.children[2]).to({scale:.1},.1).to({scale:1},.1);
+	},2200)
+
+	function stayInBounds(){
+		if (pet.position.x < 0){
+			pet.position.x = 0;
+		} 
+		if (pet.position.y < 0){
+			pet.position.y = 0;
+		} 
+		if (pet.position.x > view.size.width){
+			pet.position.x = view.size.width;
+		} 
+		if (pet.position.y > view.size.height){
+			pet.position.y = view.size.height;
+		} 
+	}
+
+	</script>
+	<script type="text/javascript" src="js/pte-lib.js"></script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

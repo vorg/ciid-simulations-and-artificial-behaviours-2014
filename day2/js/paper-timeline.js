@@ -155,9 +155,7 @@ Timeline.prototype.applyValues = function() {
     if (this.time >= propertyAnim.startTime && !propertyAnim.hasStarted) {
       propertyAnim.startValue = this.getValue(propertyAnim.target, propertyAnim.propertyName)
       propertyAnim.hasStarted = true;
-      if (propertyAnim.parent.onStartCallback) {
-        propertyAnim.parent.onStartCallback(propertyAnim);
-      }
+      propertyAnim.onStart();
     }
     var t = (this.time - propertyAnim.startTime)/(propertyAnim.endTime - propertyAnim.startTime);
     t = Math.max(0, Math.min(t, 1));
@@ -173,9 +171,7 @@ Timeline.prototype.applyValues = function() {
 
     if (this.time >= propertyAnim.endTime && !propertyAnim.hasEnded) {
       propertyAnim.hasEnded = true;
-      if (propertyAnim.parent.onEndCallback) {
-        propertyAnim.parent.onEndCallback(propertyAnim);
-      }
+      propertyAnim.onEnd();
     }
 
     if (t == 1) {
@@ -203,6 +199,7 @@ Timeline.Anim = function(name, target, timeline) {
   this.name = name;
   this.target = target;
   this.timeline = timeline;
+  this.animGroups = [];
 }
 
 //delay, properties, duration, easing
@@ -244,8 +241,11 @@ Timeline.Anim.prototype.to = function() {
     easing = Timeline.Easing.Linear.EaseNone;
   }
 
+  var animGroup = [];
+  var nop = function() {}
+
   for(var propertyName in properties) {
-    this.timeline.anims.push({
+    var animInfo = {
       hasStarted: false,
       timeline: this.timeline,
       targetName: this.name,
@@ -256,20 +256,33 @@ Timeline.Anim.prototype.to = function() {
       startTime: this.timeline.time + delay + this.endTime,
       endTime: this.timeline.time + delay + this.endTime + duration,
       easing: easing,
-      parent: this
-    });
+      parent: this,
+      onStart: nop,
+      onEnd: nop
+    };
+    this.timeline.anims.push(animInfo);
+    animGroup.push(animInfo);
   }
+  this.animGroups.push(animGroup);
   this.endTime += delay + duration;
   return this;
 };
 
 Timeline.Anim.prototype.onStart = function(callback) {
-  var self = this;
-  this.onStartCallback = function() {
-    if (!self.onStartCallbackCalled) {
-     callback();
+  var currentAnimGroup = this.animGroups[this.animGroups.length-1];
+  if (!currentAnimGroup) return;
+
+  var called = false;
+
+  currentAnimGroup.forEach(function(anim) {
+    anim.onStart = function() {
+      if (!called) {
+        called = true;
+        callback();
+      }
     }
-  };
+  })
+
   return this;
 }
 
@@ -282,12 +295,20 @@ Timeline.Anim.prototype.onUpdate = function(callback) {
 }
 
 Timeline.Anim.prototype.onEnd = function(callback) {
-  var self = this;
-  this.onEndCallback = function() {
-    if (!self.onEndCallbackCalled) {
-     callback();
+  var currentAnimGroup = this.animGroups[this.animGroups.length-1];
+  if (!currentAnimGroup) return;
+
+  var called = false;
+
+  currentAnimGroup.forEach(function(anim) {
+    anim.onEnd = function() {
+      if (!called) {
+        called = true;
+        callback();
+      }
     }
-  };
+  })
+
   return this;
 }
 

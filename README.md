@@ -61,7 +61,7 @@ Include signals library
 		console.log(email.avgValue);
 		console.log(email.delta);
 		console.log(email.count);
-		glucose.onEmail = function(count) {
+		email.onEmail = function(count) {
 			console.log('You've got a message!')
 		}
 	}

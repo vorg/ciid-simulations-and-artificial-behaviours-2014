@@ -27,17 +27,17 @@ Include signals library
 
 **Example:**
 
-	```javascript
-	var bitcoin = new BitcoinSignal();
+```javascript
+var bitcoin = new BitcoinSignal();
 	
-	function onFrame(event) {
-		bitcoin.update(event.time)
-		console.log(bitcoin.value);
-		console.log(bitcoin.avgTime);
-		console.log(bitcoin.delta);
-		console.log(bitcoin.price);
-	}
-	```
+function onFrame(event) {
+	bitcoin.update(event.time)
+	console.log(bitcoin.value);
+	console.log(bitcoin.avgTime);
+	console.log(bitcoin.delta);
+	console.log(bitcoin.price);
+}
+```
 
 ### Glucose
 	

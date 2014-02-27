@@ -51,7 +51,7 @@ Agent.prototype.removeBehaviour = function(behaviour) {
    var i = this.behaviours.indexOf(behaviour);
    if(i > -1) {
     this.behaviours.splice(i,1);
-   }   
+   }
 }
 
 Agent.prototype.removeAllBehaviours = function() {
@@ -219,7 +219,8 @@ Behaviour.RepulseMouse = function(radius) {
   }
 }
 
-Behaviour.RepulsePoint = function(point) {
+Behaviour.RepulsePoint = function(point, radius) {
+  radius = radius || 50
   this.update = function(agent, deltaTime, frame) {
     var force = new Point(0, 0);
     var dist = point.subtract(agent.position);

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var weather = new WeatherSignal();
+
+var rect = new Path.Rectangle(new Size(10, 300));
+rect.fillColor = 'red';
+rect.position = view.center;
+
+var oldRotation = 0;
+
+function onFrame(event) {
+  weather.update(event.time);
+
+  var newRotation = weather.windDirection;
+  var rotation = oldRotation - newRotation;
+
+  rect.rotate(rotation);
+
+  oldRotation = newRotation;
+
+  rect.fillColor.red = weather.value;
+}
+
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library 0.1 -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var target = new Point(view.center.x, view.center.y);
+
+var circle = new Path.Circle(new Point(0, 0), 10);
+circle.position = target;
+circle.fillColor = 'red';
+
+var radius = 100;
+
+
+var squares = [];
+for(var i=0; i<5; i++) {
+  var square = new Path.Rectangle(new Point(0, 0), new Size(5, 5));
+  square.position = target;
+  square.fillColor = 'blue';
+  squares.push(square);
+}
+
+function onFrame(event) {
+  target.x = view.center.x + radius * Math.cos(event.time * 1 + i) + i * radius / 2 * Math.sin(event.time * 0.2)  + radius * Math.cos(event.time * 2);
+  target.y = view.center.y + radius * Math.sin(event.time * 1 + 5) + radius / 4 * Math.sin(event.time * 0.5);
+  circle.position = target;
+
+  for(var i=0; i<squares.length; i++) {
+    squares[i].position.x = view.center.x + radius * Math.cos(event.time * 1 + 5*i) + radius * Math.sin(event.time * 1 * 5*i);
+    squares[i].position.y = view.center.y + radius * Math.sin(event.time * 1 + 5*i);
+  }
+
+  radius *= 0.99;
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

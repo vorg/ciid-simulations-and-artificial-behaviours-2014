@@ -32,7 +32,7 @@ Include signals library
 	function onFrame(event) {
 		bitcoin.update(event.time)
 		console.log(bitcoin.value);
-		console.log(bitcoin.avgTime);
+		console.log(bitcoin.avgValue);
 		console.log(bitcoin.delta);
 		console.log(bitcoin.price);
 	}
@@ -58,7 +58,7 @@ Include signals library
 	function onFrame(event) {
 		email.update(event.time)
 		console.log(email.value);
-		console.log(email.avgTime);
+		console.log(email.avgValue);
 		console.log(email.delta);
 		console.log(email.count);
 		glucose.onEmail = function(count) {
@@ -88,7 +88,7 @@ Example:
 	function onFrame(event) {
 		glucose.update(event.time)
 		console.log(glucose.value);
-		console.log(glucose.avgTime);
+		console.log(glucose.avgValue);
 		console.log(glucose.delta);
 		console.log(glucose.level);
 		glucose.onFood = function(carbs) {
@@ -114,12 +114,12 @@ Events:
 Example:
 
 
-	var weather = new GlucoseSignal();
+	var weather = new WeatherSignal();
 	
 	function onFrame(event) {
 		weather.update(event.time)
 		console.log(weather.value);
-		console.log(weather.avgTime);
+		console.log(weather.avgValue);
 		console.log(weather.delta);
 		console.log(weather.windSpeed);
 		console.log(weather.windDirection);

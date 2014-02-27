@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../libs/paper.js"></script>
+<script type="text/javascript" src="../libs/paper-timeline.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+var rect = new Path.Rectangle(new Size(200, 200));
+rect.position = view.center;
+rect.fillColor = 'red';
+
+function onFirstDone() {
+  console.log('onFirstDone');
+}
+
+function onSecondStarted() {
+  console.log('onSecondStarted');
+}
+
+function onAllDone() {
+  console.log('onAllDone');
+}
+
+Timeline.anim(rect).to({rotation:45}, 0.5).onEnd(onFirstDone).to(1, {rotation:90}, 0.5).onStart(onSecondStarted).to(1, {rotation:270}, 0.5).onEnd(onAllDone);
+
+function onFrame() {
+  Timeline.update();
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" width="800" height="500"></canvas>
+</body>
+</html>

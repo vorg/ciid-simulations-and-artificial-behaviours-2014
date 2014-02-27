@@ -1,0 +1,7 @@
+Task for today
+- choose a real life situation which involves agents 
+- e.g. people walking in the streets, playing sports, animals mating, etc..
+- draw it using simple shapes
+- add advanced behaviour using agent simulations
+
+mail you html file to: dviid@gauthiier.info

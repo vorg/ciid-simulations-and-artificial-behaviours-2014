@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js">
+	</script>
+	<script type="text/javascript" src="js/paper-error.js">
+	</script>
+	<script type="text/javascript" src="js/paper-timeline.js">
+	</script>
+	<script type="text/javascript" src="js/paper-agents.js">
+	</script>
+
+	<script type="text/paperscript" canvas="myCanvas">
+		
+		var numAgents = 50;	
+		
+		var rainbowBehaviour = new Behaviour();
+		rainbowBehaviour.update = function( startPoint, deltaTime){
+		startPoint.shape.fillColor.hue += Math.random() * 5;
+		startPoint.trace.strokeColor.hue +=Math.random() * 5;
+		}
+
+		var rotatingBehaviour =  new Behaviour(); 
+		rotatingBehaviour.update = function( startPoint, deltaTime){
+		startPoint.shape.rotate(10);
+		}
+
+		var startPointArray = [];
+
+
+		for (var i=0; i<numAgents; i++){
+			var f_X = Math.random() * view.size.width;
+			var f_Y = Math.random() * view.size.height;
+		
+			var startPoint = new Agent(0,0);
+			startPoint.position.x = view.center.x+Math.random()*50;
+			startPoint.position.y = view.center.y+500+Math.random()*50;
+
+			var fireworkPoint = new Path.Star(view.center,5 , 5,10);
+			fireworkPoint.fillColor = 'red';
+			startPoint.setPath(fireworkPoint);
+
+			startPoint.addBehaviour(new Behaviour.Repulse(10));
+			startPoint.addBehaviour(new Behaviour.Trace('blue'));
+
+
+			var target = new Point(view.center.x,view.center.y-160);
+
+			startPoint.addBehaviour(new Behaviour.FollowPoint(target));
+
+			startPoint.addBehaviour(rainbowBehaviour);
+			startPoint.addBehaviour(rotatingBehaviour);
+			
+
+			Timeline.anim(target)
+			.to(6, {x: f_X, y: f_Y},1,Timeline.Easing.Cubic.EaseInOut)
+			.to(3,{x: f_X, y: f_Y+600},10,Timeline.Easing.Quadratic.EaseInOut)
+
+			//var targetCircle = new Path.Circle(target,5);
+			//targetCircle.strokeColor = 'red';
+
+
+			startPointArray.push(startPoint);
+		
+		}
+		
+
+		function onFrame(){
+
+			Timeline.update();
+			
+		}
+
+	</script>
+
+</head>
+<body>
+<canvas id="myCanvas" resize>
+</canvas>
+
+</body>
+</html>

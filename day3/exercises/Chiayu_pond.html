@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>chiayu</title>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/javascript" src="js/paper-agents.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+	var agents = [];
+	var targets = [];
+
+		//draw
+
+	    for(var i=0; i<20; i++)
+	    {
+		    var green = Path.Circle(view.center,40);
+		    var rb = Math.random()*0.5;
+		    green.fillColor = new Color(rb, 0.5, rb);
+		    var cut = new Path.RegularPolygon(new Point(view.center.x, view.center.y+35), 3, 11);
+		    cut.segments[1].point.y -= 15;
+		    cut.fillColor = '#00AEAE';
+		    var groupG = new Group([green, cut]);
+		    groupG.scale(Math.random()+0.9);
+		    groupG.rotate(Math.random()*360);
+		    groupG.position = new Point(Math.random()*view.size.width,Math.random()*view.size.height);
+	    }
+
+	    
+
+
+//--------
+
+
+
+	for (var i=0; i<10; i++){
+
+
+	   var head = new Path.Circle(view.center,20);
+	    head.fillColor = 'white';
+	    head.segments[1].point.y -= 10;
+	    head.segments[3].point.y += 40;
+	    var tail0 = new Path.Circle(view.center,4);
+	    tail0.fillColor = new Color(Math.random(), Math.random(), Math.random());
+	    tail0.segments[1].point.y -= 10;
+	    tail0.segments[3].point.y += 40;
+	    var tail = new Path.RegularPolygon(new Point(view.center.x, view.center.y+75), 3, 5);
+	    tail.segments[1].point.y -= 30;
+	    tail.fillColor = 'white';
+	    var tail2 =tail.clone();
+	    tail2.rotate(25);
+	    tail2.position = new Point(view.center.x-18, view.center.y+7);
+	    var tail3 =tail.clone();
+	    tail3.rotate(-25);
+	    tail3.position = new Point(view.center.x+18, view.center.y+7);
+	    var groupFish = new Group([head, tail, tail2, tail3, tail0]);
+	    groupFish.scale(0.6);
+
+
+		var randomMouse = new Agent(new Point(Math.random()*view.size.width,Math.random()*view.size.height));
+	    randomMouse.setPath(groupFish);
+
+
+		//Follow given path, parameters: path, loop (true/false)
+		//randomMouse.addBehaviour(new Behaviour.RandomWalk(0.8, 20));
+
+		//Trace has one parameter: color
+		//randomMouse.addBehaviour(new Behaviour.Trace());
+
+		//Rotates agent's shape towards walking direction
+		randomMouse.addBehaviour(new Behaviour.Orient());
+
+		//Repulse has one parameter: spread distance
+		//randomMouse.addBehaviour(new Behaviour.Repulse(50));
+
+		//Avoid mouse cursos, has one parameter: distance to cursos
+		randomMouse.addBehaviour(new Behaviour.RepulseMouse(50));
+
+		agents.push(randomMouse);
+	}
+
+		for (var i=0 ; i<10 ; i++) {
+			targets.push(new Point(view.center));
+		}
+
+		var flag = 0;
+		var xx, yy;
+
+		for (var i=0 ; i<agents.length ; i++) {
+			agents[i].addBehaviour(new Behaviour.FollowPoint(targets[i]));
+		}
+
+
+		function makeRipple(){
+
+			var ripple = new Path.Circle(new Point(xx,yy), 10);
+  			ripple.fillColor = 'white';
+  			ripple.fillColor.alpha = 0.3;
+  			Timeline.anim(ripple).to(0, { scale:1 }, 0.2).to({ scale: 10}, 7);
+	    	Timeline.anim(ripple.fillColor).to({alpha: 0.01},8).onEnd(function() { ripple.remove() });
+	    	
+  			ripple2 =ripple.clone();
+  			ripple2.scale(0.8);
+  			ripple2.fillColor.alpha = 0.3;
+  			Timeline.anim(ripple2).to(0, { scale:1 }, 0.2).to({ scale: 10}, 7);
+  			Timeline.anim(ripple2.fillColor).to({alpha: 0.01},8).onEnd(function() { ripple2.remove() });
+    		
+		}
+
+		function onFrame(event) {
+			Timeline.update();	
+			//mouses.run(mouses); 
+
+			
+			if(flag == 1){
+				for( var i=0 ; i<10 ; i++) {
+					targets[i].x = xx;
+					targets[i].y = yy;
+				}
+				//console.log("targetSet:"+xx+":"+yy);
+			}
+			else{
+				for (var i=0 ; i<10 ; i++) {
+					targets[i].x = view.center.x+i*(-10) + Math.sin(event.time*0.4*(i*(-0.1)+1))*500+Math.cos(event.time*0.1)*20;
+					targets[i].y = view.center.y+i*(-5) + Math.sin(event.time*0.2*(i*0.1+1))*200;
+				}
+				//console.log("target:"+target);
+			}
+			
+		}
+		
+		function onMouseDown(event){
+				flag = 1;
+				xx = event.point.x;
+				yy = event.point.y;
+				makeRipple();
+		}
+		function onMouseMove(event){
+			if(event.point.y > view.size.height-20 || event.point.y < 20 || event.point.x > view.size.width-20 ||event.point.x <20)
+			{
+				flag = 0;
+			}
+		}
+
+
+
+
+	</script>
+	<style>
+		body {
+			background: #00AEAE;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE>
+<html>
+	<head>
+
+	<style>
+		body{background: #66CD00;}
+	</style>
+
+	<!--import paper.js file -->
+	<script type = "text/javascript" src= "js/paper.js"></script>
+	<script type = "text/javascript" src= "js/paper-error.js"></script>
+	<script type = "text/javascript" src= "js/paper-timeline.js"></script>
+	<script type = "text/javascript" src= "js/paper-agents.js"></script>
+
+	<script type="text/paperscript" canvas = "myCanvas">
+
+		var numSegments = 300;
+		var busPosition = view.center;
+
+		var roadPath = new Path.RegularPolygon(view.center, numSegments, 300);	
+		roadPath.strokeColor = 'grey';
+		roadPath.strokeWidth = 70;
+		roadPath.position = view.center
+
+		var roadLinePath = new Path.RegularPolygon(view.center, numSegments, 300);	
+		roadLinePath.position = view.center;
+		roadLinePath.strokeColor = 'white';
+		roadLinePath.strokeWidth = 5;
+		roadLinePath.dashArray = [10, 10];
+
+		var cornerSize = new Size(5, 5);
+		var busWheel = new Rectangle(new Point(0, 0), new Size(30, 30));	
+		
+		var busWheelPath1 = new Path.Rectangle(busWheel,cornerSize);
+		busWheelPath1.fillColor = "black";
+		busWheelPath1.position = busPosition+[-40,+30];
+
+		var busWheelPath2 = new Path.Rectangle(busWheel,cornerSize);
+		busWheelPath2.fillColor = "black";
+		busWheelPath2.position = busPosition+[+40,+30];
+
+		var busWheelPath3 = new Path.Rectangle(busWheel,cornerSize);
+		busWheelPath3.fillColor = "black";
+		busWheelPath3.position = busPosition+[-40, -30];
+
+		var busWheelPath4 = new Path.Rectangle(busWheel,cornerSize);
+		busWheelPath4.fillColor = "black";
+		busWheelPath4.position = busPosition+[+40,-30];
+
+		var busTop = new Rectangle(new Point(0, 0), new Size(150, 75));	
+		var busTopPath = new Path.Rectangle(busTop);
+		busTopPath.fillColor = "yellow";
+		busTopPath.position = busPosition;
+
+		var busWindowFront = new Rectangle(new Point(0, 0), new Size(5, 65));	
+		var busWindowFrontPath = new Path.Rectangle(busWindowFront);
+		busWindowFrontPath.fillColor = "blue";
+		busWindowFrontPath.position = busPosition-[+72.5,0];
+
+		var busWindow = new Rectangle(new Point(0, 0), new Size(30, 30));	
+		var busWindowPath1 = new Path.Rectangle(busWindow,10,10);
+		busWindowPath1.fillColor = "blue";
+		busWindowPath1.position = busPosition+[+35,0];
+
+		var busWindowPath2 = new Path.Rectangle(busWindow,10,10);
+		busWindowPath2.fillColor = "blue";
+		busWindowPath2.position = busPosition+[-35,0];
+
+		var bus = new Group({
+		children: [busWheelPath1, busWheelPath2, busWheelPath3, busWheelPath4, busTopPath, busWindowFrontPath, busWindowPath1, busWindowPath2]});
+		bus.rotate(90);
+		bus.scale(0.5);
+
+		var busAgent = new Agent(view.center);
+		busAgent.addBehaviour(new Behaviour.FollowPath(roadPath, true));
+		busAgent.addBehaviour(new Behaviour.Orient());
+		busAgent.setPath(bus);
+
+		var pasangerArm = new Rectangle(new Point(0,0), new Size(110, 30));
+		var cornerSize = new Size(5, 5);
+		var pasangerArmPath = new Path.Rectangle(pasangerArm, cornerSize);
+		pasangerArmPath.fillColor = '#800000';
+		pasangerArmPath.position = view.center;
+
+		var pasangerBody = new Rectangle(new Point(0,0), new Size(95, 40));
+		var cornerSize = new Size(10, 10);
+		var pasangerBodyPath = new Path.Rectangle(pasangerBody, cornerSize);
+		pasangerBodyPath.fillColor = '#A52A2A';
+		pasangerBodyPath.position = view.center;
+
+		var pasangerHead = new Path.Circle(new Point(0,0), 25);
+		pasangerHead.fillColor = "#ffe1f0";
+		pasangerHead.position = view.center;
+
+		var person = new Group({
+		children: [pasangerArmPath, pasangerBodyPath, pasangerHead]
+		});
+		person.scale(0.2);
+
+		var pasanger = new Agent(view.center);
+		pasanger.setPath(person);
+		pasanger.addBehaviour(new Behaviour.Orient());
+		pasanger.addBehaviour(new Behaviour.FollowPath(busTopPath));
+
+		for (var i = 0; i < numSegments; i++) {
+			pasanger.addBehaviour(new Behaviour.RepulsePoint(roadPath.segments[i].point));
+		}
+
+		function onFrame () {
+		}
+
+	</script>
+	</head>
+
+	<body>
+		<canvas id ="myCanvas" resize></canvas>
+	</body>
+
+</html>

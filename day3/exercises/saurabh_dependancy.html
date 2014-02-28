@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link href='http://fonts.googleapis.com/css?family=Roboto:900' rel='stylesheet' type='text/css'>
+
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents lib -->
+<script type="text/paperscript" canvas="myCanvas">
+
+//---------------====FATHER FIGURE STARTING====---------------------//
+var father = new Path.RegularPolygon(new Point(0, 0), 4, 25);
+    father.position = [100, 520];
+    father.fillColor ='green';
+
+var fatherText = new PointText(new Point(20, 5));
+    fatherText.content = "father";
+    fatherText.fillcolor = "black"; 
+    fatherText.fontSize = 15;
+    fatherText.font = "Roboto";
+    fatherText.position = [100, 490];
+//---------------====FATHER FIGURE ENDING====---------------------//
+
+
+//---------------====SOME MAN FIGURE STARTING====---------------------//
+var someMan = new Path.RegularPolygon(new Point(0, 0), 4, 25);
+    someMan.position = [100, 120];
+    //var style_fill = {fillColor: new Color(0.65, 0.69, 0.24), strokeColor: new Color(0.65, 0.69, 0.24)};
+    someMan.fillColor = 'blue';
+
+var someManText = new PointText(new Point(20, 5));
+    someManText.content = "unknown";
+    someManText.fillcolor = "black"; 
+    someManText.fontSize = 15;
+    someManText.font = "Roboto";
+    someManText.position = [98, 90];
+//---------------====SOME MAN FIGURE ENDING====---------------------//
+
+
+//----====path of rotation of son when he meets his father====----//
+var shapeFig = new Path.RegularPolygon(new Point(0, 0), 60, 100);
+shapeFig.position = [130, 500];
+shapeFig.strokeColor = 'white';
+//----====####====-----//
+
+
+//---------------====MOTHER FIGURE STARTING====---------------------//
+//-----mother's text-----//
+var motherText = new PointText(new Point(20, 5));
+    motherText.content = "mother";
+    motherText.fillcolor = "black"; 
+    motherText.fontSize = 15;
+    motherText.font = "Roboto";
+
+//-----mother's shape---//
+   var motherPath = new Path.Circle(new Point(0,0), 20);
+       motherPath.fillColor = 'green';
+
+//-----mother's group---//
+     var motherGroup = new Group();
+         motherGroup.addChild(motherPath);
+         motherGroup.addChild(motherText);
+
+//-------mother's agent reacting to mouse-------//
+var motherAgent = new Agent(view.center);
+    motherAgent.addBehaviour(new Behaviour.FollowMouse()); 
+    motherAgent.setPath(motherGroup);
+
+//---------------====MOTHER FIGURE ENDING====---------------------//
+
+
+//---------------====SON FIGURE STARTING====---------------------//
+//-----son's text-----//
+var sonText = new PointText(new Point(12, 0));
+    sonText.content = "kid";
+    sonText.fillcolor = "black"; 
+    sonText.fontSize = 15;
+    sonText.font = "Roboto";
+
+//-----son's shape---//
+   var sonPath = new Path.RegularPolygon(new Point(0, 0), 4, 15);
+       sonPath.fillColor =  new Color(0.03, 0.14, 0.16, 0.8);
+
+//-----son's group---//
+      var sonGroup = new Group();
+          sonGroup.addChild(sonPath);
+          sonGroup.addChild(sonText); 
+
+//-------son's agent reacting to mouse-------//
+var sonAgent = new Agent(view.center);
+    sonAgent.addBehaviour(new Behaviour.FollowMouse());
+    sonAgent.addBehaviour(new Behaviour.RepulseMouse(60)); 
+    sonAgent.setPath(sonGroup);
+//---------------====SON FIGURE ENDING====---------------------//
+
+// new behaviour of son following the family after they unite
+// and we'll call it after dome time when the mother and son move closer to father.  
+var behave = new Behaviour.FollowPath(shapeFig, true);
+ 
+
+
+function onMouseMove(motherGroup){
+	var motherX = motherGroup.point.x;
+	var motherY = motherGroup.point.y;
+	console.log("motherX: ", motherX, "motherY: ", motherY);
+
+	if(motherX <= 250 && motherY >= 300){
+		//animate mother
+		//animate son
+		//animate father
+		var hueValue = Math.random() * 360;
+            
+		    Timeline.anim(father)
+		        .to({ scale: 1}, 0.2)
+		        .to({ scale: 0.6}, 0.2)
+		        .to({ scale: 1}, 0.2)
+		        .to({ scale: 0.6}, 0.2)
+		        .to({ scale: 1}, 0.2);
+		 
+		    Timeline.anim(father.fillColor)
+		        .to({hue: hueValue}, 0.5)
+		        .to({hue: 'green'}, 0.5);// correct it here and set it to green back
+
+		    Timeline.anim(father)
+		        .to({rotation: 660}, 1)
+		        .to({rotation: 0}, 1);
+
+		    Timeline.anim(motherPath)
+		        .to({ scale: 1}, 0.2)
+		        .to({ scale: 0.6}, 0.2)
+		        .to({ scale: 1}, 0.2)
+		        .to({ scale: 0.6}, 0.2)
+		        .to({ scale: 1}, 0.2);
+
+		    Timeline.anim(motherPath.fillColor)
+		        .to({hue: hueValue}, 0.5)
+		        .to({hue: 'green'}, 0.5);// correct it here and set it to green back
+
+		    Timeline.anim(sonPath)
+		        .to({rotation: 360}, 0.7)
+		        .to({rotation: -360}, 0.7)
+		        .to({rotation: 360}, 0.7)
+		        .to({rotation: -360}, 0.7)
+		        .to({rotation: 360}, 0.7)
+		        .to({rotation: -360}, 0.7);
+
+          sonPath.fillColor = 'green';
+		  sonAgent.addBehaviour(behave);
+
+		}else if(motherX <= 250 && motherY <= 200){
+                
+            Timeline.anim(someMan)
+                .to({scale: 1}, 0.5)
+                .to({scale: 0.6}, 0.5)
+                .to({scale: 1}, 0.5)
+                .to({scale: 0.6}, 0.5)
+                .to({scale: 1}, 0.5);
+
+            Timeline.anim(motherPath.fillColor)
+		        .to({hue: 'black'}, 0.5)
+		        .to({hue: 'red'}, 0.5);
+
+		    Timeline.anim(motherPath)
+		        .to({ scale: 1}, 0.2)
+		        .to({ scale: 0.6}, 0.2)
+		        .to({ scale: 1}, 0.2)
+		        .to({ scale: 0.6}, 0.2)
+		        .to({ scale: 1}, 0.2);
+
+		    Timeline.anim(sonPath)
+		        .to({scale: 1.5}, 0.4)
+		        .to({scale: 0.5}, 0.4)
+		        .to({scale: 1.5}, 0.4)
+		        .to({scale: 0.3}, 0.4);
+		        //.to({scale: 1}, 0.4);
+
+                
+        }else{
+			sonPath.fillColor = new Color(0.03, 0.14, 0.16, 0.8);
+		    sonAgent.removeBehaviour(behave);
+
+		    someMan.fillColor = 'blue';
+		    father.fillColor ='green';
+		    motherPath.fillColor = 'green';
+		    Timeline.anim(sonPath)
+		      .to({scale: 1}, 0.5);
+
+		}
+
+	}
+	
+    
+
+function onFrame(){
+	Timeline.update();
+}
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

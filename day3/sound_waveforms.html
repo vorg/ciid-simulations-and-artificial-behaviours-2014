@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/Audiolet.min.js"></script><!-- synth -->
+	<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+	<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+	<script type="text/paperscript" canvas="myCanvas">
+
+		// create audiolet object
+		var audiolet = new Audiolet();
+
+		// create sound wave
+		//var wave = new Sine(audiolet, 330);
+		//var wave = new Saw(audiolet, 330);
+		//var wave = new Square(audiolet, 330);
+		var wave = new Triangle(audiolet, 330);
+
+		// connnect wavefor to output
+		wave.connect(audiolet.output);
+
+	</script>
+
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

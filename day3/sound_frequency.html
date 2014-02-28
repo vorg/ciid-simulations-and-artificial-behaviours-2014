@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/Audiolet.min.js"></script><!-- synth -->
+	<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+	<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+	<script type="text/paperscript" canvas="myCanvas">
+
+		// create audiolet object
+		var audiolet = new Audiolet();
+
+		// create sound wave
+		var wave = new Sine(audiolet, 75);
+
+		var wave1 = new Sine(audiolet, 150);
+
+		// connnect wavefor to output
+		wave.connect(audiolet.output);
+		wave1.connect(audiolet.output);
+
+
+		function onMouseMove(event) {
+			//wave.frequency.value = event.point.x;
+		}
+
+		function onMouseDown(event) {
+			Timeline.anim(wave.frequency)
+				.to({value: 150}, 3)
+				.to({value: 75});
+
+			Timeline.anim(wave1.frequency)
+				.to({value: 75}, 3)
+				.to({value: 150});
+
+		}
+
+		function onFrame() {
+			Timeline.update();
+		}
+
+
+
+	</script>
+
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

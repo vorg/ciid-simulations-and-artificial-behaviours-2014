@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript" src="js/paper.js"></script>
+  <script type="text/javascript" src="js/paper-timeline.js"></script><!--animation library-->
+  <script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library -->
+  <script type="text/paperscript" canvas="myCanvas">
+
+
+var url = 'nest.png'
+	var img2 = new Raster(url);
+	img2.position = new Point(530, 300);
+	img2.scale(0.4);
+
+
+  var numAnts = 4;
+  var agents = [];
+
+ var path1 = new Path.Circle(new Point(374, 146), 40);
+ path1.strokeColor = 'yellow';
+
+ var path2 = new Path.Circle(new Point(540, 440), 40);
+ path2.strokeColor = 'red';
+
+ console.log(path2.position)
+
+
+ var border3 = new Path.RegularPolygon(new Point(view.center.x/2 + 100, view.center.y + 30), 3, 200);
+	//border3.strokeColor.alpha = 0.5;
+	//border.rotate = 45;
+
+var border0 = new Path.RegularPolygon(new Point(view.center.x + 190, view.center.y + 30), 3, 200);
+	//border0.strokeColor.alpha = 0.1;
+
+var border1 = new Path.RegularPolygon(new Point(view.center.x/2 + 120, view.center.y + 30), 6, 150);
+	//border1.strokeColor.alpha = 1;
+
+var border2 = new Path.RegularPolygon(new Point(view.center.x + 150, view.center.y + 10), 10, 200);
+	//border2.strokeColor= 'white'
+
+
+	var circle2 = new Path.Circle(view.center, 5);
+			circle2.fillColor = 'red';
+
+	var circle1 = new Path.Circle(view.center, 5);
+			circle1.fillColor = 'red';
+
+	circle1.position = circle2.position + [7, 0];
+
+
+		//ant 
+			var cu1 = circle1.translate([0,0]);
+			var cu2 = circle2.translate([0,0]);
+			var ant = cu1.unite(cu2);
+
+		//union.selected = true;
+
+
+
+	for (var i=0; i<1; i++){
+
+		var randomAgent0 = new Agent(new Point(540, 440));
+		// var ant1 = ant.clone();
+		// randomAgent0.setPath(ant);
+
+		var ant = cu1.unite(cu2);
+		ant.fillColor = 'red';
+		randomAgent0.setPath(ant);
+
+		//Follow given path, parameters: path, loop (true/false)
+		randomAgent0.addBehaviour(new Behaviour.FollowPath(border0, true)); //random walk // followPoint-call target
+		randomAgent0.addBehaviour(new Behaviour.Repulse(60));
+
+
+
+		//Trace has one parameter: color
+		//randomAgent.addBehaviour(new Behaviour.Trace('cyan'));
+
+		// //Rotates agent's shape towards walking direction
+		// randomAgent.addBehaviour(new Behaviour.Orient());
+
+		// //Repulse has one parameter: spread distance
+		// randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+		// //Avoid mouse cursos, has one parameter: distance to cursos
+		// randomAgent.addBehaviour(new Behaviour.RepulseMouse(50));
+
+		// randomAgent.addBehaviour(rainbowBehaviour);
+		// randomAgent.addBehaviour(rotatingBehaviour);
+
+
+		agents.push(randomAgent0);
+	}
+
+for (var i=0; i<1; i++){
+
+		var randomAgent1 = new Agent(new Point(540, 440));
+		// var ant1 = ant.clone();
+		// randomAgent1.setPath(ant);
+
+		var ant = cu1.unite(cu2);
+		ant.fillColor = 'red';
+		randomAgent1.setPath(ant);
+
+		//Follow given path, parameters: path, loop (true/false)
+		randomAgent1.addBehaviour(new Behaviour.FollowPath(border1, true)); //random walk // followPoint-call target
+		randomAgent1.addBehaviour(new Behaviour.Repulse(60));
+
+
+
+		//Trace has one parameter: color
+		//randomAgent.addBehaviour(new Behaviour.Trace('cyan'));
+
+		// //Rotates agent's shape towards walking direction
+		// randomAgent.addBehaviour(new Behaviour.Orient());
+
+		// //Repulse has one parameter: spread distance
+		// randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+		// //Avoid mouse cursos, has one parameter: distance to cursos
+		// randomAgent.addBehaviour(new Behaviour.RepulseMouse(50));
+
+		// randomAgent.addBehaviour(rainbowBehaviour);
+		// randomAgent.addBehaviour(rotatingBehaviour);
+
+
+		agents.push(randomAgent1);
+	}
+
+	for (var i=0; i<1; i++){
+
+		var randomAgent2 = new Agent(new Point(540, 440));
+		// var ant1 = ant.clone();
+		// randomAgent2.setPath(ant);
+
+		var ant = cu1.unite(cu2);
+		ant.fillColor = 'red';
+		randomAgent2.setPath(ant);
+
+		//Follow given path, parameters: path, loop (true/false)
+		randomAgent2.addBehaviour(new Behaviour.FollowPath(border2, true)); //random walk // followPoint-call target
+		randomAgent2.addBehaviour(new Behaviour.Repulse(60));
+
+
+
+		//Trace has one parameter: color
+		//randomAgent.addBehaviour(new Behaviour.Trace('cyan'));
+
+		// //Rotates agent's shape towards walking direction
+		// randomAgent.addBehaviour(new Behaviour.Orient());
+
+		// //Repulse has one parameter: spread distance
+		// randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+		// //Avoid mouse cursos, has one parameter: distance to cursos
+		// randomAgent.addBehaviour(new Behaviour.RepulseMouse(50));
+
+		// randomAgent.addBehaviour(rainbowBehaviour);
+		// randomAgent.addBehaviour(rotatingBehaviour);
+
+
+		agents.push(randomAgent2);
+	}
+
+
+
+
+
+
+
+	for (var i=0; i<1; i++){
+
+		var randomAgent3 = new Agent(new Point(540, 440));
+		// var ant1 = ant.clone();
+		// randomAgent3.setPath(ant);
+
+		var ant = cu1.unite(cu2);
+		ant.fillColor = 'red';
+		randomAgent3.setPath(ant);
+
+		//Follow given path, parameters: path, loop (true/false)
+		randomAgent3.addBehaviour(new Behaviour.FollowPath(border3, true)); //random walk // followPoint-call target
+		randomAgent3.addBehaviour(new Behaviour.Repulse(60));
+
+
+
+		//Trace has one parameter: color
+		//randomAgent.addBehaviour(new Behaviour.Trace('cyan'));
+
+		// //Rotates agent's shape towards walking direction
+		// randomAgent.addBehaviour(new Behaviour.Orient());
+
+		// //Repulse has one parameter: spread distance
+		// randomAgent.addBehaviour(new Behaviour.Repulse(50));
+
+		// //Avoid mouse cursos, has one parameter: distance to cursos
+		// randomAgent.addBehaviour(new Behaviour.RepulseMouse(50));
+
+		// randomAgent.addBehaviour(rainbowBehaviour);
+		// randomAgent.addBehaviour(rotatingBehaviour);
+
+
+		agents.push(randomAgent3);
+	}
+
+
+
+	function onFrame() {
+		var distance = (randomAgent1.position - path1.position).length;
+		
+		if (distance <75){
+			console.log(distance);
+			randomAgent1.shape.scale(1.05);
+
+
+		} 
+
+
+		var distance = (randomAgent3.position - path1.position).length;
+		
+		if (distance <75){
+			console.log(distance);
+			randomAgent3.shape.scale(1.02);
+		} 
+
+	}
+
+
+
+
+function onMouseMove(event){
+
+	//console.log(event.point.x, event.point.y);
+}
+		//console.log(hexagone.style);
+
+
+
+
+		//call this piece of code every 5 seconds
+  //setInterval(function() {
+    //Timeline.anim(target).to(5, {
+      //x: Math.random() * view.size.width,
+      //y: Math.random() * view.size.height
+    //});
+  //}, 5000);
+
+
+
+
+//var hu = hexagone.clone().translate([view.center.x / 2, 0]);
+		//var cu = circle.clone().translate([view.center.x / 2, 0]);
+		//var union = hu.unite(cu);
+		//union.style = style_blue;
+		//union.selected = true;
+
+
+ </script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

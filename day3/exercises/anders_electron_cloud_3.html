@@ -1,0 +1,243 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js">	</script>
+	<script type="text/javascript" src="js/paper-error.js"> </script>
+	<script type="text/javascript" src="js/paper-timeline.js"> </script>
+	<script type="text/javascript" src="js/paper-agents.js"> </script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+var numAgents = 5;
+var agents = [];
+
+var path1 = new Path.Ellipse({
+	point: [20, 20],
+	size: [200, 60],
+	position: [view.center.x,view.center.y],
+	//strokeColor: 'black'
+});
+path1.flatten(1.50);
+
+var path2 = path1.clone();
+path2.rotate(90);
+
+var path3 = path1.clone();
+path3.rotate(50);
+
+var path4 = path1.clone();
+path4.rotate(-50);
+
+var path5 = path1.clone();
+path5.rotate(25);
+var path6 = path1.clone();
+path6.rotate(-25);
+var path7 = path1.clone();
+path7.rotate(50);
+var path7 = path1.clone();
+path7.rotate(-50);
+
+
+
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(new Point(view.center.x - Math.random()*2000, view.center.y - Math.random()*2000));
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+	var hueValue = Math.random()*360;
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(path1,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	//Timeline.anim(randomAgent.trace.strokeColor).to(2, {hue: hueValue});
+	agents.push(randomAgent);
+
+}
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(new Point(view.center.x - Math.random()*2000, view.center.y + Math.random()*2000));
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(path2,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+
+}
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(new Point(view.center.x + Math.random()*2000, view.center.y + Math.random()*2000));
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(path3,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+
+}
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(new Point(view.center.x + Math.random()*2000, view.center.y - Math.random()*2000));
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(path4,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+}
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(new Point(view.center.x + Math.random()*2000, view.center.y + Math.random()*2000));
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(path5,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+}
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(new Point(view.center.x + Math.random()*2000, view.center.y - Math.random()*2000));
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(path6,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+}
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(new Point(view.center.x + Math.random()*2000, view.center.y - Math.random()*2000));
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(path7,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+}
+
+
+var numAgents = 2;
+var agents = [];
+
+var core1 = new Path.Ellipse({
+	point: [20, 20],
+	size: [60, 60],
+	position: [view.center.x,view.center.y],
+	//strokeColor: 'black'
+});
+core1.flatten(1);
+
+var core2 = new Path.Ellipse({
+	point: [20, 20],
+	size: [50, 60],
+	position: [view.center.x,view.center.y],
+	});
+core2.flatten(2);
+
+var core3 = new Path.Ellipse({
+	point: [20, 20],
+	size: [40, 60],
+	position: [view.center.x,view.center.y],
+	});
+core3.flatten(2);
+
+var core4 = new Path.Ellipse({
+	point: [20, 20],
+	size: [20, 60],
+	position: [view.center.x,view.center.y],
+	});
+core4.flatten(2);
+
+
+
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(view.center);
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(core1,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+
+}
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(view.center);
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(core2,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+
+}
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(view.center);
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(core3,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+
+}
+
+for (var i=0; i<numAgents; i++) {
+	var randomAgent = new Agent(view.center);
+	var electron = new Shape.Circle(view.center, 2);
+	electron.fillColor = 'black';
+	randomAgent.setPath(electron);
+
+	randomAgent.addBehaviour(new Behaviour.FollowPath(core4,true));
+	randomAgent.addBehaviour(new Behaviour.Trace('black'));
+	randomAgent.addBehaviour(new Behaviour.Repulse(100));
+	agents.push(randomAgent);
+
+
+}
+
+
+
+var groupCore = new Group([core1,core2,core3,core4]);
+var groupPaths = new Group([path1,path2,path3,path4]);
+
+
+function onFrame() {
+//path1.rotate(0.1,view.center);
+//path2.rotate(0.1,view.center);
+//path3.rotate(0.1,view.center);
+//path4.rotate(0.1,view.center);
+Timeline.update();
+groupCore.rotate(0.5);
+}
+
+function onMouseDown() {
+Timeline.anim(groupCore).to({scale:1.2},2).to({scale:1},2);
+//Timeline.anim(groupPaths).to({scale:2},10).to({scale:2},1);
+
+}
+
+</script>
+</head>
+<body>
+<canvas id="myCanvas" resize> </canvas>
+
+</body>

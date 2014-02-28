@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents library 0.1 -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var numAgents = 50;
+
+
+for (var i=0; i<numAgents; i++){
+var startPoint = new Agent(0,0);
+startPoint.position.x = view.center.x-700;
+startPoint.position.y = view.center.y+Math.random();
+
+var Birdflock = new Path.RegularPolygon(view.center, 3, 5);
+Birdflock.fillColor = 'black';
+startPoint.setPath(Birdflock);
+
+var target = new Point(view.center.x,view.center.y-100);
+		var targettree = new Path.RegularPolygon(target,3,100);
+		targettree.fillColor = 'green';
+		targettree.strokeColor = 'black';
+		var targetstem = new Path.Rectangle([target.x-15,target.y+50],new Size(30,120));
+		targetstem.fillColor = 'brown';
+		targetstem.strokeColor = 'black';
+		startPoint.addBehaviour(new Behaviour.FollowPoint(target));
+		startPoint.addBehaviour(new Behaviour.Repulse(50));
+		startPoint.addBehaviour(new Behaviour.Orient());
+	}
+
+
+for (var j=0; j<numAgents; j++){
+var endPoint = new Agent(0,0);
+endPoint.position.x = view.center.x-900;
+endPoint.position.y = view.center.y;
+
+var Birdflock2 = new Path.RegularPolygon(view.center,3, 5);
+Birdflock2.fillColor='black';
+endPoint.setPath(Birdflock2);
+var target2 = new Point(view.center.x,view.center.y-100);
+		var targetCircle = new Path.Circle(target2,2);
+	    targetCircle.strokeColor = 'black';
+		endPoint.addBehaviour(new Behaviour.FollowPoint(target2));
+		endPoint.addBehaviour(new Behaviour.Repulse(250));
+		endPoint.addBehaviour(new Behaviour.Orient());
+		endPoint.addBehaviour(new Behaviour.RepulseMouse(200));
+
+}
+
+function onFrame() {
+
+  
+}
+
+
+</script>
+</head>
+<body>
+  <canvas id="myCanvas" resize></canvas>
+</body>
+</html>

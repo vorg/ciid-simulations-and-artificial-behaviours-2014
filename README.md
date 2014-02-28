@@ -54,6 +54,10 @@ Include signals library
 **Example:**
 
 	var email = new EmailSignal();
+
+	email.onEmail = function(count) {
+		console.log('You've got a message!')
+	}
 		
 	function onFrame(event) {
 		email.update(event.time)
@@ -61,9 +65,7 @@ Include signals library
 		console.log(email.avgValue);
 		console.log(email.delta);
 		console.log(email.count);
-		email.onEmail = function(count) {
-			console.log('You've got a message!')
-		}
+		
 	}
 
 ### Glucose
@@ -84,6 +86,10 @@ Example:
 
 
 	var glucose = new GlucoseSignal();
+
+	glucose.onFood = function(carbs) {
+		console.log('mniam mniam!')
+	}
 	
 	function onFrame(event) {
 		glucose.update(event.time)
@@ -91,9 +97,6 @@ Example:
 		console.log(glucose.avgValue);
 		console.log(glucose.delta);
 		console.log(glucose.level);
-		glucose.onFood = function(carbs) {
-			console.log('mniam mniam!')
-		}
 	}
 
 ### Weather

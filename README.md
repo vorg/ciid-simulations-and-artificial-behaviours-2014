@@ -3,6 +3,8 @@ Simulations and Artificial Behaviours
 
 Workshop at [CIID](http://ciid.dk), Copenhagen, February 2014 by [David Gauthier](http://gauthiier.info) & [Marcin Ignac](http://marcinignac.com)
 
+This workshop investigates the potential of software as ground for design observations, explorations and artistic utterances. It focuses on concepts and techniques of computer simulations and artificial behaviour modelling, that is, the ways computation may be used to impart machines with anthropomorphic and naturalistic traits, character, actions and reactions. 
+
 
 ## Day 4: Signals
 

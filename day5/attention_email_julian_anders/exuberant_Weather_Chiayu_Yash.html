@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+
+
+<script type="text/paperscript" canvas="myCanvas">
+
+  var weather = new WeatherSignal();
+
+  var numBees = 100; 
+  var numBees1 = 50; 
+  var agents= [];
+
+  var path1 = new Path.Ellipse({
+    point: [20, 20],
+    size: [200, 200],
+    position: [view.center.x,view.center.y],
+    rotate: 1800,
+    //
+    strokeColor: 'red'
+
+  });
+  path1.visible = false;
+
+  var dogAgent = new Agent(0,0);
+    dogAgent.addBehaviour(new Behaviour.FollowPath(path1,true,6000));
+    //dogAgent.addBehaviour(new Behaviour.Repulse(100));
+    dogAgent.fillColor = 'blue';
+    dogAgent.visible = true;
+
+// ------------------------------------------------WEATHER TEMPERATURE--------------------------------------------------------------
+var hue = [90,0,180];
+var hueColor1 = [90,0,180];
+var hueColor2 = [180,90,0];
+if(hue == hueColor1){ 
+  hue -= hueColor1;
+}
+if(hue ==hueColor2){ 
+  hue -= hueColor2;
+}
+
+console.log(hue);
+
+  var rainbowBehaviour = new Behaviour();
+      rainbowBehaviour.update = function(agent, deltaTime) {
+        agent.shape.fillColor.hue+= 0.7;
+        agent.shape.fillColor.alpha += 0.1;
+
+      }
+
+  for(var i=0; i<numBees1; i++){
+
+        var rectAgent = new Agent(view.center);
+        var back = new Path.Rectangle(view.center,512);
+        back.segments[2].x = 200; 
+        back.fillColor = [0,68,255]; 
+
+        rectAgent.setPath(back);
+        console.log(back);
+
+        var temperature = weather.data[i].temperature;
+
+        rectAgent.addBehaviour(rainbowBehaviour);
+
+
+        agents.push(rectAgent);
+
+      }
+
+// ------------------------------------------------WIND DIRECTION-------------------------------------------------------------------
+
+  var traceColor1 = [255,255,0,0.9];
+
+  for(var i=0; i<numBees; i++){
+
+    var randomAgent = new Agent(view.center);
+    var bee1 = new Path.RegularPolygon(view.center, 3, 3);
+    bee1.segments[2].x = 200; 
+    bee1.rotate(windDirection);
+   // bee1.(windSpeed);
+    if(value>0){
+          bee1.fillColor = 'red';
+        }else if(value<0){
+          bee1.fillColor = 'blue';
+        } else {bee1.fillColor = 'white';
+      }
+
+
+    randomAgent.setPath(bee1);
+    console.log(bee1);
+
+    var windDirection = weather.data[i].windDirection;
+    var windSpeed = weather.data[i].windSpeed;
+
+    var point = new Point(200,300);
+    var value = weather.getValue(i/100);
+
+    randomAgent.addBehaviour(rainbowBehaviour);
+    randomAgent.addBehaviour(new Behaviour.Trace(traceColor1,200));
+    randomAgent.addBehaviour(new Behaviour.SplitWalk(point, 1000, 60 , 4, 300 * windDirection));
+    randomAgent.addBehaviour(new Behaviour.FollowPoint(point*value/2));
+    randomAgent.addBehaviour(new Behaviour.Repulse(240));
+    randomAgent.addBehaviour(new Behaviour.Shake(30));
+    
+
+    // randomAgent.addBehaviour(new Behaviour.Shake(500));
+    // randomAgent.addBehaviour(new Behaviour.Orient(.01));
+
+
+    agents.push(randomAgent);
+
+      }
+
+
+// ----------------------------------------------WEATHER AVE-VALUE-------------------------------------------------------------------------
+
+  for(var i=0; i<numBees; i++){
+
+        var randomAgent = new Agent(view.center);
+        var value = weather.getValue(i/100);
+
+        var bee1 = new Path.RegularPolygon(0,3,4);
+        bee1.fillColor = 'white'; 
+
+
+        randomAgent.setPath(bee1);
+        console.log(bee1);
+
+        var traceColor = [0,0.07];
+        
+
+        randomAgent.addBehaviour(new Behaviour.Trace(traceColor,5000));
+        randomAgent.addBehaviour(new Behaviour.RandomWalk(2*windSpeed,360*value));
+        randomAgent.addBehaviour(new Behaviour.RepulsePoint(dogAgent.position));
+
+        agents.push(randomAgent);
+
+      }
+
+// ------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+      
+
+
+// var rect = new Path.Rectangle(new Point(0, 100), new Size(500, 200));
+// rect.fillColor = new Color(1, 0, 0, 1);
+
+// var rect2 = new Path.Rectangle(new Point(0, 300), new Size(500, 200));
+// rect2.fillColor = new Color(1, 0, 0, 1);
+
+// var rect3 = new Path.Rectangle(new Size(5, 20));
+// rect3.position = new Point(250, 250);
+// rect3.fillColor = new Color(1, 1, 0, 1);
+
+// var lineValues = [];
+// var line = new Path();
+// line.strokeColor = 'white';
+// for(var i=0; i<100; i++) {
+//   var value = weather.getValue(i/100);
+//   var p = new Point(i/100*view.size.width, 100 - value * 100);
+//   line.add(p);
+// }
+
+// var scanLine = new Path.Line(new Point(0, 0), new Point(0, 100));
+// scanLine.strokeColor = 'green';
+
+// for(var i=0; i<288; i++) {
+//   if (i % 5 != 0) continue;
+//   var windDirection = weather.data[i].windDirection;
+//   var windRect = new Path.Rectangle(new Point(0, 100), new Size(1, 20));
+//   windRect.position = new Point(i/288*view.size.width, 50);
+//   windRect.fillColor = new Color(1, 0, 1, 1);
+//   windRect.rotate(windDirection)
+// }
+
+// for(var i=0; i<288; i++) {
+//   if (i % 5 != 0) continue;
+//   var temperature = weather.data[i].temperature;
+//   var windRect = new Path.Rectangle(new Point(0, 100), new Size(3, 20));
+//   windRect.position = new Point(i/288*view.size.width, 100);
+//   windRect.fillColor = new Color(1, 1, 0, 1);
+//   windRect.scale(temperature)
+// }
+// ------------------------------------------------------------------------------------------------------------------------------------
+
+
+function onFrame(event) {
+  Timeline.update();
+  weather.update(event.time);
+  bee1.fillColor.red = weather.value;
+  bee1.fillColor.red = weather.avgValue;
+  // rect3.position.x = view.size.width/2 + view.size.width/2 * weather.delta * 5;
+
+  // scanLine.position.x = (event.time/60 % 1) * view.size.width;
+
+  // if (weather.delta > 0) bee1.fillColor = 'green';
+  // else rect3.fillColor = 'yellow';
+}
+</script>
+
+
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var glucose = new GlucoseSignal();
+var glucoseProcess = false;
+
+var prevValue =0;
+
+var bg = new Path.Rectangle(new Point(0, 0), new Size(500, 500));
+bg.fillColor = 'black';
+
+var ball = new Path.Circle((view.center), 150, 150);
+ball.fillColor = 'white';
+
+var initial_ball = ball.clone();
+initial_ball.visible = false;
+
+var previousState = '';
+
+function NormalGL() {
+  if(glucoseProcess == false) {
+    if (previousState != 'normal') reset();
+    previousState = 'normal';
+    console.log('normal');
+    bg.fillColor = '#BAFF78';
+    glucoseProcess = true;
+      Timeline.anim(ball)
+    .to({scale:1.1}, 0.6, Timeline.Easing.Cubic.easeIn)
+    .to({scale:1}, 0.6, Timeline.Easing.Cubic.easeOut)
+   .onEnd(function() {glucoseProcess = false});     
+  }
+}
+
+function HighGL() {
+  if(glucoseProcess == false) {
+    if (previousState != 'high') reset();
+    previousState = 'high';
+    console.log('high');
+    bg.fillColor = '#FF4785';
+    glucoseProcess = true;
+    Timeline.anim(ball)
+        .to({scale:2}, 0.3)
+        .to({scale:1}, 0.3)
+        .onEnd(function() {glucoseProcess = false});  
+        ;
+    Timeline.anim(ball.position)
+          .to({x:view.center.x, y:view.center.y-100}, 0.3)
+      .to({x:view.center.x+20, y:view.center.y+80}, 0.3)
+       
+  }
+}
+
+function LowGL() {
+  if(glucoseProcess == false) {
+    if (previousState != 'low') reset();
+    previousState = 'low';
+    console.log('low')
+    bg.fillColor = '#FAF670'
+    Timeline.anim(ball.segments[1].point).to({y:100}, 0.5).to({y:50}, 0.5);
+    Timeline.anim(ball.segments[3].point).to({y:400}, 0.5).to({y:450}, 0.5)
+    Timeline.anim(ball.segments[0].point).to({x:100}, 0.5).to({x:230}, 0.5);
+    Timeline.anim(ball.segments[2].point).to({x:400}, 0.5).to({x:270}, 0.5)
+    .onEnd(function() {glucoseProcess = false});  
+    glucoseProcess = true;
+  }
+}
+
+
+function reset() {
+  console.log('reset');
+  //Timeline.getGlobalInstance().anims = [];
+Timeline.anim(ball.segments[1].point).to({x:initial_ball.segments[1].point.x, y:initial_ball.segments[1].point.y}, 0);
+Timeline.anim(ball.segments[0].point).to({x:initial_ball.segments[0].point.x, y:initial_ball.segments[0].point.y}, 0);
+Timeline.anim(ball.segments[2].point).to({x:initial_ball.segments[2].point.x, y:initial_ball.segments[2].point.y}, 0);
+Timeline.anim(ball.segments[3].point).to({x:initial_ball.segments[3].point.x, y:initial_ball.segments[3].point.y}, 0);
+}
+
+var shearfactor = 0.02;
+var total = 0;
+
+
+
+function onFrame(event) {
+  console.log(glucose.value)
+  glucose.update(event.time);
+  Timeline.update();
+
+  //healthy
+if (glucose.value <0.45 && glucose.value >0.25) {
+    if(prevValue >0.45 || prevValue<0.25) {
+      //reset();
+    } else {
+      NormalGL();
+    }
+}
+// //high
+else if (glucose.value >=0.45) {
+
+    if(prevValue < 0.45) {
+      //reset();
+    } else {
+      HighGL();
+    }
+}
+//low
+else if (glucose.value <=0.25) {
+
+  if(prevValue >0.25) {
+    //reset();
+  } else {
+
+     LowGL();
+    total += shearfactor; 
+    //ball.shear(shearfactor, shearfactor);
+
+    if(total > 0.1) {
+      shearfactor = -0.02;
+    } else if(total < -0.1) {
+      shearfactor = 0.02;
+    ;
+    }
+ }
+
+}
+  prevValue = glucose.value;
+
+}
+
+
+</script>
+</head>
+
+  <canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+</body>
+</html>

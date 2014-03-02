@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+
+var weather = new WeatherSignal();
+
+var amount = 3;
+
+var height = 60;
+
+var temp1_max = -100;
+var temp2_max = -100;
+var temp3_max = -100;
+var temp4_max = -100;
+var temp5_max = -100;
+var temp6_max = -100;
+
+var freq1 = 0;
+var freq2 = 0;
+var freq3 = 0;
+var freq4 = 0;
+var freq5 = 0;
+var freq6 = 0;
+
+
+var path = new Path({
+	strokeColor: 'blue',
+	strokeWidth: 140,
+	strokeCap: 'square'
+});
+
+console.log('blue hue = ' + path.strokeColor.hue);
+
+var path2 = new Path({
+	strokeColor: 'blue',
+	strokeWidth: 140,
+	strokeCap: 'square'
+});
+
+var path3 = new Path({
+	strokeColor: 'red',
+	strokeWidth: 140,
+	strokeCap: 'square'
+
+});
+
+//console.log('red hue = ' + path3.strokeColor.hue);
+
+var path4 = new Path({
+	strokeColor: 'red',
+	strokeWidth: 140,
+	strokeCap: 'square'
+
+});
+
+var path5 = new Path({
+	strokeColor: 'blue',
+	strokeWidth: 140,
+	strokeCap: 'square'
+
+});
+
+var path6 = new Path({
+	strokeColor: 'blue',
+	strokeWidth: 140,
+	strokeCap: 'square'
+});
+
+
+
+
+path.waveY = 650;
+path2.waveY = 650;
+path3.waveY = 650;
+path4.waveY = 650;
+path5.waveY = 650;
+path6.waveY = 650;
+
+for (var i = 0; i <= amount; i++) {
+	path.add(new Point(i / amount, 1) * view.size);
+	path2.add(new Point(i / amount, 1) * view.size);
+	path3.add(new Point(i / amount, 1) * view.size);
+	path4.add(new Point(i / amount, 1) * view.size);
+	path5.add(new Point(i / amount, 1) * view.size);
+	path6.add(new Point(i / amount, 1) * view.size);
+}
+path.selected = false;
+
+function map(x, in_min, in_max, out_min, out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+
+function onFrame(event) {
+	weather.update(event.time);
+
+	var temp = weather.temperature;
+
+	if(event.time < 10) {
+		if(temp > temp1_max) {
+			temp1_max = temp;
+			freq1 = map(temp, -0.3, 2.5, 2.0, 8.0);
+
+			path.strokeColor.hue = map(temp, -0.3, 2.5, 240, 0);
+		}	
+	} else if(event.time < 20) {
+		if(temp > temp2_max) {
+			temp2_max = temp;
+			freq2 = map(temp, -0.3, 2.5, 2.0, 8.0);
+
+			path2.strokeColor.hue = map(temp, -0.3, 2.5, 240, 0);
+		}	
+	} else if(event.time < 30) {
+		if(temp > temp3_max) {
+			temp3_max = temp;
+			freq3 = map(temp, -0.3, 2.5, 2.0, 8.0);
+
+			path3.strokeColor.hue = map(temp, -0.3, 2.5, 240, 0);
+		}
+	} else if(event.time < 40) {
+		if(temp > temp4_max) {
+			temp4_max = temp;
+			freq4 = map(temp, -0.3, 2.5, 2.0, 8.0);
+
+			path4.strokeColor.hue = map(temp, -0.3, 2.5, 240, 0);
+		}	
+	} else if(event.time < 50) {
+		if(temp > temp5_max) {
+			temp5_max = temp;
+			freq5 = map(temp, -0.3, 2.5, 2.0, 8.0);
+
+			path5.strokeColor.hue = map(temp, -0.3, 2.5, 240, 0);
+
+		console.log('50');	
+		}	
+	} else if(event.time < 60) {
+		if(temp > temp6_max) {
+			temp6_max = temp;
+			freq6 = map(temp, -0.3, 2.5, 2.0, 8.0);
+
+			path6.strokeColor.hue = map(temp, -0.3, 2.5, 240, 0);
+
+		console.log('60');	
+		}	
+	}
+
+
+	Timeline.update();
+	for (var i = 0; i <= amount; i++) {
+		var segment = path.segments[i];
+		var segment2 = path2.segments[i];
+		var segment3 = path3.segments[i];
+		var segment4 = path4.segments[i];
+		var segment5 = path5.segments[i];
+		var segment6 = path6.segments[i];
+
+
+		var sinus = Math.sin(event.time * freq1 + i);
+		segment.point.y = sinus * height + path.waveY;
+
+		var sinus2 = Math.sin(event.time * freq2 + i);
+		segment2.point.y = sinus2 * height + path2.waveY;
+
+		var sinus3 = Math.sin(event.time * 6 + i);
+		segment3.point.y = sinus3 * height + path3.waveY;
+
+		var sinus4 = Math.sin(event.time * 8 + i);
+		segment4.point.y = sinus4 * height + path4.waveY;
+
+		var sinus5 = Math.sin(event.time * 4 + i);
+		segment5.point.y = sinus5 * height + path5.waveY;
+
+		var sinus6 = Math.sin(event.time * 2 + i);
+		segment6.point.y = sinus6 * height + path6.waveY;
+
+		/*for(var i=0; i<288; i++) {
+  if (i % 5 != 0) continue;
+  var temperature = weather.data[i].temperature;
+  var windRect = new Path.Rectangle(new Point(0, 100), new Size(3, 20));
+  windRect.position = new Point(i/288*view.size.width, 100);
+  windRect.fillColor = new Color(1, 1, 0, 1);
+  windRect.scale(temperature)
+
+  function onFrame(event) {
+  weather.update(event.time);
+  rect.fillColor.red = weather.value;
+  rect2.fillColor.red = weather.avgValue;
+  rect3.position.x = view.size.width/2 + view.size.width/2 * weather.delta * 5;
+
+  scanLine.position.x = (event.time/60 % 1) * view.size.width;
+
+  if (weather.delta > 0) rect3.fillColor = 'green';
+  else rect3.fillColor = 'yellow'; */
+
+	}
+path.smooth();
+path2.smooth();
+path3.smooth();
+path4.smooth();
+path5.smooth();
+path6.smooth();
+
+path.opacity = 0.9;
+path2.opacity = 0.7;
+path3.opacity = 0.7;
+path4.opacity = 0.85;
+path5.opacity = 0.7;
+path6.opacity = 0.8;
+
+}
+
+Timeline.anim(path).to({waveY:520})
+Timeline.anim(path2).to(10, {waveY:420})
+Timeline.anim(path3).to(20, {waveY:320})
+Timeline.anim(path4).to(30, {waveY:220})
+Timeline.anim(path5).to(40, {waveY:120})
+Timeline.anim(path6).to(50, {waveY:20})
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:white;"></canvas>
+</body>
+</html>

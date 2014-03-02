@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<script type="text/javascript" src ="js/paper.js"></script>
+	<script type="text/javascript" src ="js/paper-error.js"></script>
+	<script type="text/javascript" src ="js/paper-timeline.js"></script>
+	<script type="text/javascript" src ="js/paper-agents.js"></script>
+	<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+    <script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+	<script type="text/paperscript" canvas="myCanvas">
+
+var numBirds = 100;
+var birds = [];
+
+var weather = new WeatherSignal();
+
+var target = new Point(view.center.x, view.center.y);
+
+var circle = new Path.Circle(new Point(0, 0), 10);
+	circle.position = target;
+	circle.fillColor = 'white';
+
+	//var radius = 100;
+
+
+function createBirds(){
+
+	//weather.update(event.time);
+    //console.log(weather.temperature)
+
+	var birdAgent = new Agent(view.center); //new Point(Math.random()*view.size.width, Math.random()*view.size.height));
+	
+
+var hexagon = new Path.RegularPolygon(new Point(0,0),6, 10);
+   		hexagon.fillColor = 'grey';
+   		hexagon.position =100,100;
+
+   		var rectangle = new Path.Rectangle(new Point(0,0), 2, 10);
+   		rectangle.fillColor = 'grey';
+   		rectangle.position = hexagon.position + [0,15];
+
+   		var rectangle2 = new Path.Rectangle(new Point(0,0), 2, 10);
+   		rectangle2.fillColor = 'grey';
+   		rectangle2.position = rectangle.position + [0,10];
+
+
+   		var particle = new Group();
+   		particle.addChild(hexagon);
+	    particle.addChild(rectangle);
+	    particle.addChild(rectangle2);
+
+	    particle.position=(view.center);
+	    particle.scale(0.25);
+
+		birdAgent.setPath(particle);
+
+		birdAgent.target = new Point(0,0);
+
+		birdAgent.position = target;
+		//birdAgent.addBehaviour(new Behaviour.RandomWalk(0.1, 30));
+
+
+		birdAgent.addBehaviour(new Behaviour.FollowPoint(birdAgent.target));
+		birdAgent.addBehaviour(new Behaviour.Repulse(80));
+		birdAgent.addBehaviour(new Behaviour.Shake(30,20));
+
+		birds.push(birdAgent);
+
+}
+
+for(var i=0; i<numBirds; i++){
+	createBirds();
+} 
+
+
+var radius = 100;
+var oldmin_n = -0.3;
+var oldmax_n = 2;
+var newmin_n = 0;
+var newmax_n = 150;
+
+function map(val, oldmin, oldmax, newmin, newmax) {
+	return newmin + (val - oldmin)/(oldmax - oldmin) * (newmax - newmin);
+}
+
+
+function onFrame(event) {
+  
+    weather.update(event.time);
+
+    //console.log(weather.temperature);
+
+    //child.fillColor = 'red';
+    // // 	})
+    // // })
+
+    // for(var i=0; i<birds.length; i++) {
+    // 	var bird = birds[i];
+    // 	for(var j=0; j<bird.shape.children; j++) {
+    // 		//if (j == 0) continue; //skip first shape
+    // 		var child = bird.shape.children[j];
+
+    		
+    // }
+
+      birds.forEach(function(bird){
+        bird.shape.children.forEach(function(child){
+        if (weather.temperature > 0.5){
+    		child.fillColor = new Color(Math.random(),Math.random(),Math.random());
+		  	} else { 
+        child.fillColor = 'grey';
+        }
+      }); 
+    }); 
+    	
+
+    var newvalue = map(weather.temperature, oldmin_n, oldmax_n, newmin_n, newmax_n);
+    radius = newvalue;
+
+    //for each agent get agent.shape
+    //for each child in agent.shape.children
+    //modify child.fillColor
+
+ 
+
+   
+
+    //console.log(radius);
+
+  for(var i=0; i<birds.length; i++) {
+
+	 //    birds[i].target.x = view.center.x + radius * Math.cos(event.time * 2 + i) + radius * Math.sin(event.time * 0.2)  + radius * Math.cos(event.time * 2);
+	// birds[i].target.y = view.center.y + radius * Math.sin(event.time * 2 + 5) + radius / 4 * Math.sin(event.time * 0.5);
+
+    birds[i].target.x = view.center.x + radius * Math.cos(event.time * 1 + 5*i);
+    birds[i].target.y = view.center.y + radius * Math.sin(event.time * 1 + 5*i);
+
+    
+  }
+  
+  //radius *= .98;
+  //console.log(radius);
+}
+
+		</script>
+</head>
+<body>
+	<canvas id="myCanvas" width ="500" height = "500" style= "background:white;"></canvas>
+	
+</body>
+</html>

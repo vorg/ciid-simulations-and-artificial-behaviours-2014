@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head> 
+
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/javascript" src="js/audiolet_app.js"></script>
+<script type="text/javascript" src="js/Audiolet.min.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+var email = new EmailSignal();
+
+  var wire1 = new Path.Arc({
+  from: [0, 100],
+  through: [250, 125],
+  to: [500, 100],
+  strokeColor: 'black'
+  });
+
+  var wire2 = new Path.Arc({
+  from: [0, 225],
+  through: [250, 250],
+  to: [500, 225],
+  strokeColor: 'black'
+  });
+
+  var wire3 = new Path.Arc({
+  from: [0, 350],
+  through: [250, 375],
+  to: [500, 350],
+  strokeColor: 'black'
+  });
+
+  var leg1 = new Path.Line({
+  from: view.center,
+  to: view.center+[30, 60],
+  strokeColor: 'black',
+  strokeWidth: 5
+  });
+
+  var leg2 = new Path.Line({
+  from: view.center,
+  to: view.center+[0, 60],
+  strokeColor: 'black',
+  strokeWidth: 5
+  });
+  
+  var birdBody = new Path.Circle(new Point(0,0), 50);
+  birdBody.position = view.center;
+  birdBody.fillColor = "darkblue";
+  birdBody.segments[2].point += [50,0];
+  birdBody.rotate(15);
+
+  var birdWing = new Path.Circle(new Point(0,0), 50);
+  birdWing.position = birdBody.position;
+  birdWing.fillColor = "darkgreen";
+  birdWing.segments[2].point += [50,0];
+  birdWing.rotate(15);
+  birdWing.scale(0.5);
+
+  var birdBeek = new Path.Circle(birdBody.position-[40,80], 35);
+  birdBeek.fillColor = "yellow";
+  birdBeek.segments[0].point += [-40,0];
+
+  var birdHead = new Path.Circle(birdBeek.position+[30,0], 35);
+  birdHead.fillColor = "darkblue";
+
+  var birdEye = new Path.Circle(birdHead.position-[5,10], 10);
+  birdEye.fillColor = "white";
+
+  var birdPupil = new Path.Circle(birdEye.position, 5);
+  birdPupil.fillColor = "black";
+
+  var bird = new Group([leg1, leg2, birdBody, birdWing, birdBeek, birdHead, birdEye, birdPupil]);
+  bird.scale(0.3);
+  //bird.rotate(230);
+
+  Behaviour.FollowPointFast = function(point) {
+  var ratio = 5.9
+  this.update = function(agent, deltaTime, frame) {
+    agent.force = agent.force.add(point.subtract(agent.position).scale(ratio));
+  }
+}
+
+  var rotatingPoint = birdWing.bounds.topLeft;
+
+  var landingWire1 = new Point(250, 125);
+  var landingWire2 = new Point(250, 250);
+  var landingWire3 = new Point(250, 375);
+  
+  var farvel1 = new Point(-100, 0);
+  var farvel2 = new Point(-100, 150);
+  var farvel3 = new Point(-100, 250);              
+
+  var agentBird1 = new Agent(new Point(550,0));
+  agentBird1.setPath(bird);
+
+  var agentBird2 = new Agent(new Point(550,150));
+  agentBird2.setPath(bird.clone());
+
+  var agentBird3 = new Agent(new Point(550,250));
+  agentBird3.setPath(bird.clone());
+
+  email.onEmail = function(numEmails) {
+  var emailCount = 0;
+  emailCount = numEmails;
+  
+  if (emailCount == 1) {
+    landingWire = Math.random();
+    if (landingWire <= 0.3) {
+      agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire1-[0,25]));
+      playExample();
+      emailCount = 0;
+    };
+
+    if (landingWire >= 0.3 && landingWire <= 0.6) {
+      agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire2-[0,25]));
+      playExample();
+      emailCount = 0;
+    };
+
+    if (landingWire >= 0.6 && landingWire <= 1) {
+      agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire3-[0,25]));
+      playExample();
+      emailCount = 0;
+    };
+  };
+
+  if (emailCount == 2) {
+    landingWire = Math.random();
+    if (landingWire <= 0.3) {
+      agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire1-[0,25]));
+      agentBird2.addBehaviour(new Behaviour.FollowPointFast(landingWire3-[0,25]));
+      emailCount = 0;
+      playExample();
+    };
+
+    if (landingWire >= 0.3 && landingWire <= 0.6) {
+      agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire2-[0,25]));
+      agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire1-[0,25]));
+      emailCount = 0;
+      playExample();
+    };
+
+    if (landingWire >= 0.6 && landingWire <= 1) {
+      agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire3-[0,25]));
+      agentBird2.addBehaviour(new Behaviour.FollowPointFast(landingWire1-[0,25]));
+      emailCount = 0;
+      playExample();
+    };
+  };
+
+  if (emailCount == 3) {
+    agentBird1.addBehaviour(new Behaviour.FollowPointFast(landingWire1-[0,25]));
+    agentBird2.addBehaviour(new Behaviour.FollowPointFast(landingWire2-[0,25]));
+    agentBird3.addBehaviour(new Behaviour.FollowPointFast(landingWire3-[0,25]));
+    emailCount = 0;
+    playExample();
+  };
+}
+
+  function onFrame(event) {
+    //birdWing.rotate(Math.sin(frame.time*5), rotatingPoint);
+    Timeline.update();
+    email.update(event.time/2);
+    if (agentBird1.position.x < 252) {
+        agentBird1.removeAllBehaviours();
+        agentBird1.addBehaviour(new Behaviour.FollowPointFast(farvel1));
+        if (agentBird1.position.x < -98 ) {
+          agentBird1.removeAllBehaviours();
+          agentBird1.position = new Point(600,0);
+        };
+    };
+
+    if (agentBird2.position.x < 252) {
+        agentBird2.removeAllBehaviours();
+        agentBird2.addBehaviour(new Behaviour.FollowPointFast(farvel2));
+        if (agentBird2.position.x < -98 ) {
+          agentBird2.removeAllBehaviours();
+          agentBird2.position = new Point(600,150);
+        };
+    };
+
+    if (agentBird3.position.x < 252) {
+        agentBird3.removeAllBehaviours();
+        agentBird3.addBehaviour(new Behaviour.FollowPointFast(farvel3));
+        if (agentBird3.position.x < -98 ) {
+          agentBird3.removeAllBehaviours();
+          agentBird3.position = new Point(600,250);
+        };
+    };
+  }
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:lightblue;"></canvas>
+</body>
+</html>

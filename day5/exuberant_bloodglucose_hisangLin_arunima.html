@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js">
+	</script>
+	<script type="text/javascript" src="js/paper-error.js">
+	</script>
+	<script type="text/javascript" src="js/paper-timeline.js">
+	</script>
+	<script type="text/javascript" src="js/Audiolet.min.js">
+	</script>
+	<script type="text/javascript" src="js/signals-data.js">
+	</script>
+	<script type="text/javascript" src="js/signals.js">
+	</script>
+
+	<script type="text/paperscript" canvas="myCanvas">
+
+     var glucose = new GlucoseSignal();
+
+
+     function createAgent(){
+         var humanStyle = { 
+          fillColor: new Color(0, 0, 0)
+      };
+
+      var humanStyle2 = { 
+         strokeColor : new Color(0, 0, 0),
+         strokeWidth: 3
+     };
+
+
+     var belly = new Path.Circle(new Point(250,250), 20 );
+     belly.style = humanStyle;
+
+     var head = new Path.Circle(new Point(250,130), 15 );
+     head.style = humanStyle;
+
+     var body = new Path.Line(new Point(250,135), new Point(250,320) );
+     body.style = humanStyle2;
+
+     var legR = new Path.Line(new Point(250,320), new Point(300,370) );
+     legR.style = humanStyle2;
+
+     var legL = new Path.Line(new Point(250,320), new Point(200,370) );
+     legL.style = humanStyle2;
+
+     var eyeR = new Path.Circle(new Point(255,130), 2 );
+     eyeR.fillColor = 'white';
+
+     var eyeL = eyeR.clone();
+     eyeL.position = [245,130];
+
+       // var handR = new Path.Line(new Point(250,175), new Point(300,200) );
+       // handR.style = humanStyle2;
+
+       // var handL = new Path.Line(new Point(250,175), new Point(200,200) );
+       // handL.style = humanStyle2;
+
+       // var handPoint = new Point(250,175);
+
+
+       var audiolet = new Audiolet();
+
+       var wave = new Triangle(audiolet, 100);
+
+       var valume = new Gain(audiolet,0.1);
+        var F = 0;
+
+
+
+        wave.connect(valume);
+        valume.connect(audiolet.output);
+
+        // Timeline.anim(valume.gain)
+        // .to({value: 0 }, 0.1);
+
+
+
+       setInterval(function(){
+           if (glucose.value<0.7){
+
+               if (glucose.value>0){
+
+
+                   Timeline.anim(belly).to({scale:glucose.value*11},5
+                    , Timeline.Easing.Elastic.EaseInOut);
+
+                   Timeline.anim(eyeR).to({scale:1+glucose.value * 5},2).to({scale:0.5+glucose.value});
+                   Timeline.anim(eyeL).to({scale:1+glucose.value * 5},2).to({scale:0.5+glucose.value});
+
+                   //if (glucose.value >0.1){
+
+                    F = (glucose.value  * 200) + 150;
+
+                    //console.log(F);
+                    //console.log(glucose.value);
+                   
+
+                    Timeline.anim(valume.gain)
+                    .to({value: 0.5 }, 1);
+                    
+                    Timeline.anim(wave.frequency)
+                    .to({value: F },2) .to({value: F },2);
+
+                    //Timeline.anim(wave.frequency).to({value:F},1),200;
+
+                    //.to({value:50},3);
+
+                    //Timeline.anim(valume.gain)
+                    //.to({value:0.1});
+                  
+
+                //}
+            }
+        }
+
+    },5000);
+
+       
+    //    if (belly.Radius >25){
+    //     console.log(belly.Radius);
+
+    //     handR.rotate(-45, handPoint);
+    // } else if (belly.radius < 20){
+    //     handR.rotate(45, handPoint);
+
+    // }
+}
+
+
+createAgent();
+
+
+
+
+	//..............................................
+	
+
+	
+	
+
+
+		// wave.connect(valume);
+		// valume.connect(audiolet.output);
+
+
+		// function onMouseMove(event){
+			
+		// 	// var v = event.point.x / view .size.width;
+		// 	// volume.gain.value = v;
+
+		// 	//wave.frequency.value = event.point.x;
+		// }
+
+		// function onMouseDown(event){
+		// 	Timeline.anim(wave.frequency)
+		// 		.to({value:150},5)
+		// 		.to({value:50});
+
+		// 	Timeline.anim(valume.gain)
+		// 		.to({value:0},1)
+  //               .to({value:0.5},5)
+		// 		.to({value:0});
+
+
+
+
+
+		//}
+
+		function onFrame(event){
+
+			glucose.update(event.time)
+          //console.log(glucose.value);
+
+          Timeline.update();
+      }
+
+
+
+  </script>
+
+</head>
+<body style="background:#444444">
+ <canvas id="myCanvas" width="500" height="500" style="background:pink;">
+ </canvas>
+</body>
+</html>

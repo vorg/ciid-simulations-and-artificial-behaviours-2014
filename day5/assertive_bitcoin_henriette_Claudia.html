@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/javascript" src="js/Audiolet.min.js"></script><!-- Synth -->
+<script type="text/paperscript" canvas="myCanvas">
+
+
+var bitcoin = new BitcoinSignal();
+
+// var from = new Point(250, 500);
+// var to = new Point(250, 400);
+
+var worm = new Path();
+worm.add(new Point(view.size.width/2, view.size.height));
+worm.add(new Point(view.size.width/2, view.size.height - 5));
+worm.add(new Point(view.size.width/2, view.size.height-10));
+worm.strokeColor = "red";
+worm.strokeWidth = 5;
+worm.strokeCap = 'round';
+// worm.selected = true;
+
+//worm.smooth();
+//worm.flatten(50);
+//worm.strokeColor.brightness = 0.3;
+
+var bottom = view.size.height;
+
+function grow () {
+	if(bitcoin.avgValue > 0) {
+	Timeline.anim(worm.segments[1].point).to({y:bottom-(160 * bitcoin.avgValue)}).to({y:bottom-250},Timeline.Easing.Bounce.EaseOut);
+	 Timeline.anim(worm.segments[2].point).to({y:bottom-(320 * bitcoin.avgValue)}).to({y:bottom-500},Timeline.Easing.Bounce.EaseOut);
+	}
+}
+
+function wormColor () {
+	Timeline.anim(worm.strokeColor).to({alpha: bitcoin.value});
+	
+}
+
+// function bending () {}
+// for(var i=0; i<worm.segments.length; i++) {
+//   Timeline.anim(worm.segments[i].point)
+//   .to({x:view.size.width/2 + i*i* bitcoin.value * 20})
+//   .to({x:view.size.width/2})
+//   .to({x:view.size.width/2 + i*i* bitcoin.value * -20})
+//   .to({x:view.size.width/2})
+
+// }
+
+function wormWidth (){
+	Timeline.anim(worm).to({strokeWidth: 400 * bitcoin.value}, 0.5).to({strokeWidth: 10});
+}
+
+ 
+
+//////////// Audio
+
+var audiolet = new Audiolet();
+
+	var waveUp = new Sine(audiolet, 200);
+	waveUp.connect(audiolet.output);
+
+
+
+	// var waveLow = new Sine(audiolet, 150)
+	// waveLow.connect(audiolet.output);
+
+
+
+
+function onFrame(event) {
+	bitcoin.update(event.time);
+    Timeline.update();
+    grow();
+    wormWidth();
+    wormColor();
+    // bending();
+
+    Timeline.anim(waveUp.frequency).to({value: bitcoin.avgValue * 200});
+ 
+}
+
+
+
+</script>
+</head>
+<body style="background:#ffffff">
+  <canvas id="myCanvas" width="500" height="500" style="background:pink";"></canvas>
+</body>
+</html>

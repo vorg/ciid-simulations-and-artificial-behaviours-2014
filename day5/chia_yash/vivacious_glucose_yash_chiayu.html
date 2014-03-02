@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>chiayu</title>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+	<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+	<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+	<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+	<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+	<audio id="my-music" src="sound.mp3" loop></audio>
+	<script type="text/paperscript" canvas="myCanvas">
+	
+	var glucose = new GlucoseSignal();
+	var agents = [];
+	var targets = [];
+	//bg----
+
+			var grass = new Path.Rectangle(new Point(0,view.center.y-20), 512, 280);
+			grass.fillColor = '#9ACD32'; 
+			var path = new Path.RegularPolygon(new Point(view.center.x,view.center.y+200), 3, 300);
+			path.fillColor = '#CDC673'; 
+			var skybg = new Path.Rectangle(new Point(0,0), 512, 240);
+			skybg.fillColor = '#4F94CD'; 
+			var sky = new Path.Rectangle(new Point(0,0), 512, 240);
+			sky.fillColor = '#C6E2FF'; 
+			
+	//obj---
+			//wave
+			var amount = 8;
+			var height = 20;
+			var wave = new Path({
+				strokeColor: '#C6E2FF',
+				strokeWidth: 10,
+				strokeCap :'round'
+			});
+			for (var i = 0; i <= amount; i++) {
+				wave.add(new Point(i / amount, 10) *512);
+			}
+			wave.smooth();
+			//body
+  			var center = view.center;
+			var points = 25;
+			var radius1 = 36;
+			var radius2 = 40;
+			var theBody = new Path.Star(center, points, radius1, radius2);
+			//theBody.segments[20].point.y +=20;
+			//theBody.segments[24].point.y +=20;
+			theBody.fillColor='#FFFFF0';
+			var eye1 = new Path.Circle(new Point(view.center.x-12,view.center.y-10), 3);
+			eye1.fillColor='black';
+			var eye2 = new Path.Circle(new Point(view.center.x+12,view.center.y-10), 3);
+			eye2.fillColor='black';
+			var mouth = new Path.Circle(new Point(view.center.x,view.center.y+22), 16, 12);
+			mouth.segments[1].point.y +=10;
+			mouth.name = 'theMouth';
+
+			var groupMan = new Group([theBody, eye1, eye2]);
+			groupMan.scale(1.8,2);
+			
+		var randomMan = new Agent(new Point(view.size.width/2,view.size.height/2));
+		randomMan.setPath(groupMan);
+		randomMan.addBehaviour(new Behaviour.Shake(30, 10));
+	
+		//flybug
+		var flybugAmount=2;
+		for (var i=0; i<flybugAmount; i++){
+			var flyBug = new Path.RegularPolygon(new Point(view.center.x,view.center.y+200), 3, 4);
+			flyBug.segments[1].point.y-=2;
+			flyBug.fillColor='black';
+			var randomFly = new Agent(view.center);
+			randomFly.setPath(flyBug);
+			randomFly.addBehaviour(new Behaviour.Orient());
+			randomFly.addBehaviour(new Behaviour.RandomWalk(30,30));
+			randomFly.addBehaviour(new Behaviour.RepulseMouse(100));
+			randomFly.addBehaviour(new Behaviour.Shake(30, 30));
+			agents.push(randomFly);
+
+		}
+		for (var i=0 ; i<flybugAmount ; i++) {
+			targets.push(new Point(view.center));
+		}
+
+		for (var i=0 ; i<agents.length ; i++) {
+			agents[i].addBehaviour(new Behaviour.FollowPoint(targets[i]));
+		}
+			
+		var added=false;
+	    function onFrame(event) {
+			Timeline.update();	
+			glucose.update(event.time);
+			/*glucose.onFood = function(carbs) {
+        		console.log('mniam mniam!');
+    		}*/
+	//glucose.onFood :when patient eats food -> open mouth		
+			groupMan.addChild(mouth);
+    		if(glucose.carbs != 0){
+    			groupMan.children['theMouth'].fillColor = '#CD2626';
+    		}else{groupMan.children['theMouth'].fillColor = '#FFFFF0';}
+			
+    //glucose.delta : glucose level change, if add glucose, shaking run
+			if(glucose.delta>0){
+				groupMan.rotate(Math.sin((event.count ) / 2) * 3);
+			}
+	//glucose.value: flybugs movement
+			for (var i=0 ; i<flybugAmount; i++) {
+				targets[i].x = view.center.x+50+ Math.sin(event.time*5)*(-3)*glucose.value*1000*(i+1)+Math.sin(event.time*5)*3*100;
+				targets[i].y = view.center.y-80+ Math.cos(event.time*5)*(-3)*glucose.value*600*(i+1);
+				}
+
+    	  	document.getElementById("my-music").defaultPlaybackRate = 0.5;
+ 		 	document.getElementById("my-music").play();
+
+ 	//glucose.value: flyBug & Obj position(scale) , and music speed
+			if (glucose.value<=0.05)
+			{
+				Timeline.anim(flyBug).to({scale: (glucose.value+0.01)*20 }, 6);
+				Timeline.anim(groupMan).to({scale: (glucose.value+0.01)*20 }, 6);
+
+  				document.getElementById("my-music").playbackRate = 0.5;
+			}
+			else if (glucose.value> 0.35)
+			{	
+				/*
+				groupMan.addChild(mouth);
+				if (glucose.value< 0.8 && added == true) {
+					groupMan.children['theMouth'].fillColor = '#FFFFF0';
+					added = false;
+				}
+				if (glucose.value> 0.8){
+					if (!added) {	
+						groupMan.children['theMouth'].fillColor = '#CD2626';
+						added = true;
+					}
+				}*/
+
+				Timeline.anim(flyBug).to({scale: (glucose.value+0.01)*6 }, 6);
+				Timeline.anim(groupMan).to({scale: (glucose.value+0.01)*6}, 6);
+
+  				document.getElementById("my-music").playbackRate = 2;
+			}
+			else
+			{	
+				Timeline.anim(flyBug).to({scale: (glucose.value+0.01)*10 }, 6);
+				Timeline.anim(groupMan).to({scale: (glucose.value+0.01)*10}, 6);
+
+  				document.getElementById("my-music").playbackRate = 1;
+			}
+
+
+
+	//glucose.avgValue: wave speed and shape
+			for (var i = 0; i <= amount; i++) {
+				var segment = wave.segments[i];
+				var sinus = Math.sin(event.time * glucose.avgValue*50 + i);
+				segment.point.y = sinus * height + glucose.avgValue*240+10;
+			}
+			Timeline.anim(sky.fillColor).to({alpha: glucose.value},5);
+		}
+
+	</script>
+</head>
+<body>
+	<canvas id="myCanvas" width="512" height="512"></canvas>
+	<div style="font-family:arial; color:white; font-size:12px;">
+	<p>open mouth: when patient eats food. (glucose.onFood, glucose.carbs)</p>
+	<p>shaking run: glucose level change. (glucose.delta)</p>
+	<p>flybugs' movement: glucose level . (glucose.value)</p>
+	<p>run forward: simulate speed by glucose level. (glucose.value)</p>
+	<p>music speed: glucose level. (glucose.value)</p>
+	<p>background wave & color: avg glucose level. (glucose.avgValue)</p>
+	</div>
+</body>
+</html>

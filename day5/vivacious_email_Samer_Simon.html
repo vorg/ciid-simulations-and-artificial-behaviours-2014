@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script>
+	<script type="text/javascript" src="js/paper-timeline.js"></script>
+	<script type="text/javascript" src="js/paper-agents.js"></script>
+	<script type="text/javascript" src="js/Audiolet.min.js"></script>
+	<script type="text/javascript" src="js/signals-data.js"></script>
+	<script type="text/javascript" src="js/signals.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+
+		var audiolet = new Audiolet();
+		var gain = new Gain(audiolet, 0);
+		var noise = new WhiteNoise(audiolet);
+		var LPF = new LowPassFilter(audiolet, 5000);
+		var HPF = new HighPassFilter(audiolet, 1000);
+
+		noise.connect(gain);
+		gain.connect(LPF);
+		LPF.connect(HPF);
+		HPF.connect(audiolet.output);
+		
+		//set initial level to 0
+		Timeline.anim(gain.gain).to({value: 0}, 0);
+ 
+		var bubbleSound = function(){
+			console.log('pop');
+			//open gain for a tenth of a second
+			Timeline.anim(gain.gain).to({value: 0.9}, 0.05).to(0.1, {value: 0}, 0.05);
+		}
+
+		var email = new EmailSignal();
+		
+		var emailTotal = 0;
+		var background = new Path.Rectangle(new Point(0,0), new Size(500));
+		var backgroundAlpha = 1;
+		//var air = new Path.Rectangle(new Point(0,0), 500, 50);
+		//air.fillColor = new Color(0.48, 0.74, 0.95);
+
+		//add behaviour: pop
+		var pop = new Behaviour();
+		pop.update = function(agent, deltaTime){
+			if(agent.position.y == 20){
+				//var popping = new Shape.Circle(agent.position, 30);
+
+				agent.shape.remove();
+				bubbleSound();
+			}
+		}
+
+		function createBubble(count, randomX){
+			var bubbleSize = count * 20;
+			var bubbleStart = new Point(Math.random()*470, 550);
+			var bubbleX = Math.random() * 100;
+		
+			var bubble = new Agent(bubbleStart);
+
+			//move bubbles up
+			Timeline.anim(bubble.position).to({x: bubble.position.x , y: 20}, 12);
+			//shaking
+			bubble.addBehaviour(new Behaviour.Shake(120, 8));
+			//pop when they reach the top
+			bubble.addBehaviour(pop);
+
+			var bubbleShape = new Shape.Circle(bubbleStart, bubbleSize);
+			bubbleShape.fillColor = new Color(0.62, 0.85, 0.94);
+			
+			var halo = new Shape.Circle(bubbleStart, bubbleSize + 1);
+			halo.fillColor = new Color("#00536f", 0.4);
+
+			var circlReflection = new Shape.Circle(bubbleStart + [0, -(bubbleSize/5)], bubbleSize/1.3);
+			circlReflection.fillColor = new Color(0.79, 0.91, 0.96);
+
+			var reflectionSquare = new Path.RegularPolygon(bubbleStart + [(bubbleSize/1.8), -bubbleSize/2.6], 40, bubbleSize/3);
+			reflectionSquare.fillColor = new Color(0.90, 0.98, 0.99);
+
+			var finalBubble = new Group();
+			finalBubble.addChild(halo);
+			finalBubble.addChild(bubbleShape);
+			finalBubble.addChild(circlReflection);
+			finalBubble.addChild(reflectionSquare);
+			bubble.setPath(finalBubble);
+
+		}
+
+		email.onEmail = function(count) {
+			createBubble(count);
+		}
+
+
+		function onFrame(event) {
+			backgroundAlpha = Math.sqrt(email.avgValue)*5; //previously email.avgValue * 10;
+			background.fillColor = new Color(0.11, 0.42, 0.68, backgroundAlpha);
+			
+			Timeline.update();
+		    email.update(event.time);
+
+		    //console.log("email value " + email.value);
+		    //console.log("email avg. value: " + email.avgValue);
+		    //console.log("background: " + background.fillColor);
+		    //console.log("email delta " + email.delta);
+		    //console.log("email count " + email.count);
+		    //console.log("randomX: " + randomX);
+		    //console.log("bubbleX: " + bubbleX);
+
+		}
+
+	</script>
+</head>
+<body>
+	<!--set canvas size-->
+	<canvas id="myCanvas" width="500" height="500"></canvas>
+</body>
+</html>

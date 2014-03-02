@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var glucose = new GlucoseSignal();
+
+var isLowBlood = false;
+var isStable = false;
+var isHighBlood = false;
+
+var agentNumber = 19;
+var agents = [];
+var randomWalks = [];
+var crazyHighBloods = [];
+var followStables = [];
+
+var radius = 150;
+var circle = new Path.Circle( view.center, radius);
+//circle.strokeColor = 'black';
+circle.flatten(agentNumber/2);
+
+var startingCircle = new Path.RegularPolygon( view.center, agentNumber, radius*1.4);
+
+function crazyPath(){
+	var path = new Path();
+	for(j=0; j<circle.segments.length; j++){
+		var index = Math.floor(Math.random()*circle.segments.length);
+		path.add(circle.segments[index].point);
+	}
+	return path;
+}
+
+var agentRepulse = new Behaviour.Repulse(150);
+
+for (i=0; i<agentNumber; i++){
+  var randomWalk = new Behaviour.RandomWalk(0.5,70);
+  var crazyHighBlood = new Behaviour.FollowPath(crazyPath(), true, 220);
+  var circleClone = circle.clone();
+  circleClone.rotate(i*360/agentNumber);
+  var followStable = new Behaviour.FollowPath(circleClone, true, 220);
+
+  var agent = new Agent(startingCircle.segments[i].point);
+  
+  var traceColor = new Color(0.2, 0.1);
+	var agentShape = new Path.Circle(view.center,5);
+	agentShape.fillColor = new Color(0.6, 1);
+	agent.setPath(agentShape);
+	agent.addBehaviour(new Behaviour.Trace(traceColor));
+	agents.push(agent);
+	
+	randomWalks.push(randomWalk);
+	agent.addBehaviour(randomWalks[i]);
+	crazyHighBloods.push(crazyHighBlood);
+	followStables.push(followStable);
+	
+}
+
+Behaviour.RepulseCenter = function(radius, point) {
+  this.update = function(agent, deltaTime, frame) {
+    var force = new Point(0, 0);
+    var dist = point.subtract(agent.position);
+    var len = dist.length;
+    if (len < radius) {
+      if (len > 0.2) {
+        force = force.subtract(dist.scale(radius/len));
+      }
+    }
+    agent.force  = agent.force.add(force);
+  }
+}
+
+var repulseLowBlood = new Behaviour.RepulseCenter(radius+60, view.center);
+
+var traceLow = new Behaviour.Trace(new Color(0.2, 0.1));
+var traceStable = new Behaviour.Trace(new Color(0.2, 0.1));
+var traceHigh = new Behaviour.Trace(new Color(0, 1));
+
+//Low Blood Sugar
+function LowBloodSugar(){
+
+	if(!isLowBlood){
+		if(glucose.value<0.1){
+			for (i=0; i<agentNumber; i++){
+
+				agents[i].removeAllBehaviours();
+
+				var agentShapeLow = new Path.Circle(view.center,5);
+				agentShapeLow.fillColor = new Color(0.6, 1);
+				agents[i].setPath(agentShapeLow);
+				agents[i].addBehaviour(traceLow);
+
+				agents[i].addBehaviour(randomWalks[i]);
+				agents[i].addBehaviour(repulseLowBlood);
+				agents[i].addBehaviour(agentRepulse);
+				agents[i].addBehaviour(new Behaviour.Orient());
+			}
+			isLowBlood = true;
+			isStable = false;
+			isHighBlood = false;
+		}
+	}
+}
+
+
+//Stable Blood Sugar
+function StableBloodSugar(){
+	
+	if(!isStable){
+		if(glucose.value>=0.1 && glucose.value<0.6){
+			for (i=0; i<agentNumber; i++){
+
+				agents[i].removeAllBehaviours();	
+
+				var agentShapeStable = new Path.Circle(view.center,5);
+				agentShapeStable.segments[1].point += [0,-3];
+				agentShapeStable.fillColor = new Color(0.5, 1);
+				agents[i].setPath(agentShapeStable);
+				agents[i].addBehaviour(traceStable);
+
+				agents[i].addBehaviour(followStables[i]);
+				agents[i].addBehaviour(new Behaviour.Orient());
+			}
+			isLowBlood = false;
+			isStable = true;
+			isHighBlood = false;
+		}
+	}
+}
+
+
+//High Blood Sugar
+function HighBloodSugar(){
+	
+	if(!isHighBlood){
+		if(glucose.value>=0.6){
+			for (i=0; i<agentNumber; i++){
+
+				agents[i].removeAllBehaviours();
+
+				var agentShapeHigh = new Path.RegularPolygon(view.center,3,7);
+				agentShapeHigh.segments[1].point += [0,-7];
+				agentShapeHigh.fillColor = new Color(0.4, 1);
+				agents[i].setPath(agentShapeHigh);
+
+				agents[i].addBehaviour(traceHigh);
+
+				agents[i].addBehaviour(crazyHighBloods[i]);
+				agents[i].addBehaviour(new Behaviour.Orient());
+			}
+			isLowBlood = false;
+			isStable = false;
+			isHighBlood = true;
+		}
+	}
+}
+
+//Debug
+// var testAgent = new Agent( view.center );
+// var testShape = new Path.Circle(view.center, 5);
+// testShape.fillColor = 'red';
+// testShape.segments[1].point += [0,-10];
+// testAgent.setPath(testShape);
+// testAgent.addBehaviour(new Behaviour.FollowPath(circle));
+// testAgent.addBehaviour(new Behaviour.Orient());
+
+
+function stayInBoundary(){
+	for (i=0; i<agentNumber; i++){
+		
+		if(agents[i].position.x<20){
+			agents[i].position.x = 20;
+		}
+
+		if(agents[i].position.y<20){
+			agents[i].position.y = 20;
+		}
+
+		if(agents[i].position.x>view.size.width-20){
+			agents[i].position.x = view.size.width-20;
+		}
+
+		if(agents[i].position.y>view.size.height-20){
+			agents[i].position.y = view.size.height-20;
+		}
+
+	}
+}
+
+
+function onFrame(event) {
+  glucose.update(event.time);
+			  console.log(glucose.value);
+  LowBloodSugar();
+  StableBloodSugar();
+  HighBloodSugar();
+
+  stayInBoundary();
+}
+
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:white;"></canvas>
+</body>
+</html>

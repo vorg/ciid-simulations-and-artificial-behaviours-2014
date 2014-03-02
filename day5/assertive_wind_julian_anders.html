@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/signals-data.js"></script>
+<script type="text/javascript" src="js/signals.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+
+// VARIABLES
+var weather = new WeatherSignal();
+var size = 250;
+var easing = 0.2;
+var windScale = 7.5;
+
+var lightAngle = 7.5;
+var targetLightAngle = 7.5;
+var targetBG = 300;
+
+var minus = 0;
+var plus = 0;
+
+var point1 = new Point(view.center.x-size*0.5, view.center.y-size*0.5);
+var point2 = new Point(view.center.x+size*0.5, view.center.y-size*0.5);
+var point3 = new Point(view.center.x+size*0.5, view.center.y+size*0.5);
+var point4 = new Point(view.center.x-size*0.5, view.center.y+size*0.5);
+var center = new Point(view.center.x, view.center.y);
+
+
+// CREATE BACKGROUND
+//changeBackground();
+var background = new Path([0,0], [0,view.size.height], [view.size.width,view.size.height], [view.size.width,0]);
+background.fillColor = new Color(255,0,0);
+background.fillColor.hue = targetBG;
+background.fillColor.saturation = 0.5;
+background.fillColor.brightness = 0.8;
+
+
+// CREATE SHADOWS
+var shadow1 = new Path(point1, point2, center);
+var shadow2 = new Path(point2, point3, center);
+var shadow3 = new Path(point3, point4, center);
+var shadow4 = new Path(point4, point1, center);
+
+shadow1.fillColor = shadow2.fillColor = shadow3.fillColor = shadow4.fillColor = new Color(0,0.25);
+
+
+// CREATE MOUNTAIN
+var side1 = new Path(point1, point2, center);
+var side2 = new Path(point2, point3, center);
+var side3 = new Path(point3, point4, center);
+var side4 = new Path(point4, point1, center);
+
+side1.fillColor = side2.fillColor = side3.fillColor = side4.fillColor = new Color(255,255,255);
+
+// DEBUG INFORMATION
+var oldAngle = 0;
+var debugWindDirection = new Path.Rectangle(new Size(10,size*0.5));
+//debugWindDirection.fillColor = 'red';
+debugWindDirection.position = new Point(view.center.x,view.center.y);
+
+
+// CALL THIS FUNCTION EVERY SECOND
+setInterval(myUpdate, 2500);
+
+
+// UPDATE FUNCTION
+function myUpdate() {
+	
+	// CALCULATE NEW MOUNTAIN CENTER POINT
+	center.x = Math.cos(weather.windDirection*Math.PI/180)*weather.windSpeed*windScale + view.center.x;
+	center.y = Math.sin(weather.windDirection*Math.PI/180)*weather.windSpeed*windScale + view.center.y;
+
+	// CALCULATE NEW BACKGROUND COLOR
+	targetBG = weather.temperature;
+	targetBG += 0.3;
+	targetBG *= 40;
+	targetBG += 240;
+
+	// CHANGE LIGHT ANGLE
+	targetLightAngle += 15;
+}
+
+function onFrame(event) {
+    weather.update(event.time)
+
+	// probably used
+    //console.log("windspeed 0-1: ", weather.value);
+    //console.log("windspeed: ", weather.windSpeed);
+    //console.log("winddirection: ", weather.windDirection);
+    //console.log("temperature: ", weather.temperature);
+
+	// not used
+    //console.log(weather.avgValue);
+    //console.log(weather.delta);
+	
+	
+	// GET LOWEST / HIGHTEST VALUE
+	if (weather.temperature > plus) { plus = weather.temperature};
+	if (weather.temperature < minus) { minus = weather.temperature};
+	
+	
+	// BACKGROUND COLOR
+	var newBG = background.fillColor.hue;
+	var dBG = targetBG - newBG;
+	newBG = newBG + dBG * easing;
+	background.fillColor.hue = newBG;
+	
+	/*side1.fillColor.hue = side2.fillColor.hue = side3.fillColor.hue = side4.fillColor.hue = newBG;
+	side1.fillColor.saturation = side2.fillColor.saturation = side3.fillColor.saturation = side4.fillColor.saturation = 0.1;*/
+	
+	
+	// MOUNTAIN MOVEMENT
+	var targetX = center.x;
+	var newX = side1.segments[2].point.x;
+	var dX = targetX - newX;
+	newX += dX * easing;
+	
+	var targetY = center.y;
+	var newY = side1.segments[2].point.y;
+	var dY = targetY - newY;
+	newY += dY * easing;
+	
+    side1.segments[2].point = side2.segments[2].point = side3.segments[2].point = side4.segments[2].point = new Point(newX,newY);
+	
+	
+	// CHECK IF OUT OF BOUNDS
+	if (newX < view.center.x-0.5*size) { side4.fillColor.alpha = 0; }
+	else { side4.fillColor.alpha = 1; }
+	if (newX > view.center.x+0.5*size) { side2.fillColor.alpha = 0; }
+	else { side2.fillColor.alpha = 1; }
+	if (newY < view.center.y-0.5*size) { side1.fillColor.alpha = 0; }
+	else { side1.fillColor.alpha = 1; }
+	if (newY > view.center.y+0.5*size) { side3.fillColor.alpha = 0; }
+	else { side3.fillColor.alpha = 1; }	
+	
+	
+	// SHADOW MOVEMENT
+	/*var shadowCenter = new Point(newX, (newY-size*0.5)*0.5 + 1.5*size);*/
+	
+	var dLightAngle = targetLightAngle - lightAngle;
+	lightAngle += dLightAngle * easing;	
+	
+	var faktor = 0.5*(Math.cos((lightAngle*2)*Math.PI/180)+1); 
+	//var faktor = 3 * ( Math.sin((lightAngle*2)*Math.PI/180) + 1) / 8 + 0.25;
+	
+	var shadowX = view.center.x + 0.9*size*Math.cos((lightAngle+180)*Math.PI/180) + (1-faktor)*(newX - view.center.x);
+	var shadowY = view.center.y + 0.9*size*Math.sin((lightAngle+180)*Math.PI/180) + (faktor)*(newY - view.center.y);
+	var shadowCenter = new Point(shadowX, shadowY);
+    shadow1.segments[2].point = shadow2.segments[2].point = shadow3.segments[2].point = shadow4.segments[2].point = shadowCenter;
+	
+	console.log("lightAngle: ", lightAngle);
+	console.log("faktor: ", faktor);
+	
+	
+	// COLOR OF SIDES
+	side1.fillColor.brightness = 0.5*(0.5*(Math.sin((lightAngle+180)*Math.PI/180)+1)+1);
+	side2.fillColor.brightness = 0.5*(0.5*(Math.sin((lightAngle+90)*Math.PI/180)+1)+1);
+	side3.fillColor.brightness = 0.5*(0.5*(Math.sin((lightAngle+0)*Math.PI/180)+1)+1);
+	side4.fillColor.brightness = 0.5*(0.5*(Math.sin((lightAngle+270)*Math.PI/180)+1)+1);
+	
+	
+	// DEBUG INFORMATION
+	var newAngle = weather.windDirection;
+	var angle = newAngle - oldAngle;
+	debugWindDirection.rotate(angle);
+	oldAngle = newAngle;
+}
+
+
+</script>
+</head>
+<body style="padding:0px; margin:0px; overflow:hidden">
+  <canvas margin="0" id="myCanvas" resize></canvas>
+</body>
+</html>

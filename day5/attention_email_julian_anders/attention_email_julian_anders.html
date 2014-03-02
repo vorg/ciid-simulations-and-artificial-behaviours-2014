@@ -1,0 +1,158 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js">	</script>
+	<script type="text/javascript" src="js/paper-error.js"> </script>
+	<script type="text/javascript" src="js/Audiolet.min.js"> </script>
+	<script type="text/javascript" src="js/paper-timeline.js"> </script>
+	<script type="text/javascript" src="js/paper-agents.js"> </script>
+	<script type="text/javascript" src="js/signals-data.js"></script>
+	<script type="text/javascript" src="js/signals.js"></script>
+	<script type="text/paperscript" canvas="myCanvas">
+
+	var email = new EmailSignal();
+	var flieCount = 0;
+	var numFlies = 1
+
+	var border = new Path.Rectangle(new Point(0,0), new Size(500, 500));
+	border.strokeColor = 'black';
+	border.strokeWidth = 10;
+
+FlieRandomWalk = function(probabilty, angle) {
+  var direction = new Point(0, -50);
+  var angle = angle || 90;
+  var probabilty = probabilty || 0.05;
+
+  this.update = function(agent, deltaTime, frame) {
+    //if (frame % 30 == 0) {
+    if (Math.random() > 1 - probabilty) {
+
+    	var olddir = direction;
+
+      	direction = direction.rotate(angle * Math.floor(Math.random()*3-1))
+	    var where = agent.position + direction;
+
+	    
+    	if(where.x <= 10 || where.x >= 490 || where.y <= 10 || where.y >= 490) {
+    		console.log(where);
+    		direction = -olddir;
+    	} 
+
+
+	}
+
+		agent.force = agent.force.add(direction);
+	}
+    
+}
+		
+	function onFrame(event) {
+		Timeline.update();
+		email.update(event.time);
+		//email.update(event.time)
+		//console.log(email.value);
+		//console.log(email.avgValue);
+		//console.log(email.delta);
+		//console.log(email.count);
+		email.onEmail = function(count) {
+			console.log('email');
+			flieCount++;
+			if (flieCount <= 18){
+				drawFlie();
+				numFlies++;			
+			}
+		}
+	}
+
+	function drawFlie() {
+
+//Drawing & animating wings
+		var wing1 = new Path.Ellipse(new Point(view.center.x,view.center.y-3), new Size(20,5));
+		wing1.fillColor = new Color(0.8);
+		var wing2 = new Path.Ellipse(new Point(view.center.x-21,view.center.y-3), new Size(20,5));
+		wing2.fillColor = new Color(0.8);
+
+		setInterval(function(){	
+			Timeline.anim(wing1).to({rotation: 30},0.2).to({rotation: -30},0.2);
+			Timeline.anim(wing2).to({rotation: -30},0.2).to({rotation: 30},0.2);
+		},250);
+
+
+		// Drawing legs
+		var segments = [
+		new Point(243, 262), new Point(240, 258), 
+		new Point(247, 256), new Point(253, 256),
+		new Point(260, 258), new Point(257, 262)];
+
+		var leg1 = new Path(segments);
+		leg1.strokeColor = 'black';
+
+		var leg2 = leg1.clone();
+		leg2.scale(0.5);
+		leg2.position = (new Point(view.center.x,view.center.y+9));
+
+//Drawing body
+		var body = new Path.Circle(new Point(view.center),8);
+		body.fillColor = 'black';
+		
+//Drawing & animating eyes
+		var eye1 = new Path.Ellipse(new Point(view.center.x-6,view.center.y-3), new Size(5,5));
+		eye1.fillColor = 'white';
+		var eye2 = new Path.Ellipse(new Point(view.center.x+1,view.center.y-3), new Size(5,5));
+		eye2.fillColor = 'white';
+
+		setInterval(function(){	
+			Timeline.anim(eye1).to(0.5, { scale : 1.2 }).to({ scale:0.1}, 0.1).to({ scale : 1}, 0.2);
+			Timeline.anim(eye2).to(0.5, { scale : 1.2 }).to({ scale:0.1}, 0.1).to({ scale : 1}, 0.2);
+		},2000);
+
+// Drawing pupiles (If there's time, make them move randomly inside the eyes)
+		var pupile1 = new Path.Circle(new Point(view.center.x+2,view.center.y),1);
+		pupile1.fillColor = 'black';
+		var pupile2 = new Path.Circle(new Point(view.center.x-2,view.center.y),1);
+		pupile2.fillColor = 'black';
+
+// Drawing mouth
+		var mouth = new Path.Ellipse(new Point(view.center.x-1,view.center.y+3), new Size(2,2));
+		mouth.fillColor = 'white';
+
+		setInterval(function(){	
+			Timeline.anim(mouth).to(2, { scale : 2 }).to({ scale : 1}, 0.2);
+		},2500);
+
+// Adding Sounds
+		var audiolet = new Audiolet();
+		var wave = new Saw(audiolet, 300);
+		var volume = new Gain(audiolet, 0.5);
+
+		wave.connect(volume); 
+		volume.connect(audiolet.output);
+
+		setInterval(function(){	
+			Timeline.anim(wave.frequency)
+				.to({value: 310},0.1)
+				.to({value: 300},0.1);
+			},200);
+
+		volume.gain.value = (numFlies * 2)/10;
+
+// Generating groups
+		var flie = new Group([wing1,wing2,body,eye1,eye2,pupile1,pupile2,mouth,leg1,leg2]);
+
+// Random animation
+		var randomAgent = new Agent(view.center);
+		randomAgent.setPath(flie);
+		randomAgent.addBehaviour(new FlieRandomWalk(0.1,100));
+
+// Follow canvas with repulse
+	
+		//randomAgent.addBehaviour(new Behaviour.FollowPath(border,true));
+		randomAgent.addBehaviour(new Behaviour.Repulse(40));
+}
+
+</script>
+</head>
+<body>
+<canvas id="myCanvas" width ='500' height='500' style = 'background: white'> </canvas>
+
+</body>

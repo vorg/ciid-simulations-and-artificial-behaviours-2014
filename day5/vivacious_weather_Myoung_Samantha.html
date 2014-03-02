@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+
+var weather = new WeatherSignal();
+
+
+function onFrame(event) {
+  weather.update(event.time);
+
+var rect = new Path.Rectangle(new Point(0, 0), new Size(500, 500));
+rect.fillColor = '#9AFEFF';
+
+var rayHue = weather.value;
+
+  for(var i=0; i<20; i++){
+
+
+  var rayWidth = new Point(Math.sin(event.time*3)*100, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*500, 500);
+  var rayWidth2 = new Point(Math.sin(event.time*3)*500, 500) - new Point(Math.sin(event.time*3)*250, 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.8);
+  ray.fillColor.hue = 75*rayHue ;
+
+  var rayWidth = new Point(Math.sin(event.time*3), 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*300+rayHue , 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.1);
+  ray.fillColor.hue = 80*rayHue  ;
+
+  var rayWidth = new Point(Math.sin(event.time*3)*2+200, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*900+rayHue*50 , 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.03);
+  ray.fillColor.hue = 80*rayHue  ;
+
+  var rayWidth = new Point(Math.sin(event.time*3)*100+130, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*500, 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.8);
+  ray.fillColor.hue = 75*rayHue ;
+
+
+  var rayWidth = new Point(Math.sin(event.time*3)*230+130, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*500+rayHue *50, 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.1);
+  ray.fillColor.hue = 80*rayHue ;
+
+  var rayWidth = new Point(Math.sin(event.time*3)+130, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*900+rayHue*50 , 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.05);
+  ray.fillColor.hue = 80*rayHue  ;
+
+  var rayWidth = new Point(Math.sin(event.time*3)*200, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*250*3, 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, i, 0.3);
+  ray.fillColor.hue = 90*rayHue ;
+
+  var rayWidth = new Point(Math.sin(event.time*3)*480, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*510 , 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, i, 0.6);
+  ray.fillColor.hue = 100*rayHue ;
+
+  var rayWidth = new Point(Math.sin(event.time*3)*420, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*480+rayHue , 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.1);
+  ray.fillColor.hue = 210*rayHue ;
+
+    var rayWidth = new Point(Math.sin(event.time*3)*320, 500);
+  var rayWidth1 = new Point(Math.sin(event.time*3)*640+rayHue*2 , 500);
+  var ray = new Path(new Point(0,0), rayWidth1, rayWidth);
+  ray.fillColor = new Color(i, i, 0, 0.1);
+  ray.fillColor.hue = 180*rayHue ;
+}
+
+//}
+
+//createRays();
+//createRays(new Point(300,512));
+
+}
+
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+</body>
+</html>

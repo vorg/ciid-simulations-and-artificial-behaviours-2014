@@ -1,0 +1,100 @@
+<!DOCTYPE>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type ="text/javascript" src = "js/Audiolet.min.js"></script>
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+//-----------------------------------------------------------------–––––––––––––––––––––––––––––
+	var audiolet = new Audiolet();
+	
+	
+	var email = new EmailSignal();
+	var newFrequency = email.count;
+
+	//create triangle
+	var triangle = new Path.RegularPolygon(view.center, 17, 100);
+	triangle.fillColor = 'white';
+	triangle.flatten(6); //add segment point every 6 pixels
+	//triangle.selected = false;
+
+	//create ghost triangle
+	var ghostTriangle = triangle.clone();
+	ghostTriangle.fillColor = 'blue';
+	ghostTriangle.visible =false;
+
+
+	var wave = new Triangle(audiolet,300); //10
+	var wave1 = new Sine (audiolet,20); //200
+	
+	var gain = new Gain(audiolet, 50);
+	
+	wave.connect(gain);
+	wave1.connect(gain);
+	gain.connect(audiolet.output);
+
+	Timeline.anim(gain.gain).to({value:0}, 1);
+
+
+function addEventSound(){
+	Timeline.anim(gain.gain).to({value:10}, 0.1)
+	.to(0.1, {value: 0.2}, 0.1); //go from 0 to 0.9 in 0.5seconds, then wait 0.2 go back to 0 in 0.5 seconds
+	
+}
+
+
+function triangleShake(event){
+	 // we get new email
+	for(var i=0; i<triangle.segments.length; i++){
+		var segment = triangle.segments[i];
+		//link ghosttriangle shape to original segments
+		var originalSegment = ghostTriangle.segments[i] ;
+		//shake the segment points a shit tonne
+		if(email.value >0){
+			segment.point.x = originalSegment.point.x + Math.cos(event.time *10+ i *Math.random()) *400;
+			segment.point.y = originalSegment.point.y + Math.sin(event.time * 10+ i* 10) *400;
+
+		}
+
+		else {
+	 		segment.point.x = originalSegment.point.x + Math.cos(event.time*10+i*2);
+	 		segment.point.y = originalSegment.point.y + Math.sin(event.time *10+i*2)*150;
+	 	
+	 	}
+	}	
+}
+
+function changeColor(event){
+	if(email.value >0){
+		triangle.fillColor = new Color(Math.random(), Math.random(), Math.random(),1);
+	}
+	else{triangle.fillColor = 'white'};
+}
+
+email.onEmail = function(count){
+	addEventSound();
+}
+
+function onFrame(event) {
+	Timeline.update();
+
+	triangle.rotate(0.03);
+	email.update(event.time);
+	triangleShake(event);
+	changeColor();
+	
+}
+
+
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+</body>
+</html>

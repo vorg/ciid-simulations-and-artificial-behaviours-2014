@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agents lib -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/javascript" src="js/Audiolet.min.js"></script>
+<script type="text/paperscript" canvas="myCanvas">
+
+//creating weather object
+var weather = new WeatherSignal();
+//var dir=0;
+
+//make a kite shape
+var kite = new Path.RegularPolygon(new Point(0, 0), 4, 60);
+    kite.fillColor = new Color(0.04, 0.1, 0.2, 0.5);  
+    kite.position = view.center;
+    kite.rotate(45);
+
+//making strings
+var fromOne = new Point(view.center.x , view.center.y+120);
+var toOne = new Point(view.center.x, view.center.y+35);
+var stringOne = new Path.Line(fromOne, toOne);
+    stringOne.strokeColor = 'white';
+    stringOne.strokeWidth = 10; 
+
+var fromTwo = new Point(view.center.x, view.center.y-120);
+var toTwo = new Point(view.center.x, view.center.y-35);
+var stringTwo = new Path.Line(fromTwo, toTwo);
+    stringTwo.strokeColor = 'white';
+    stringTwo.strokeWidth = 10; 
+
+//grouping
+var totalKite = new Group();
+        totalKite.addChild(stringOne);
+        totalKite.addChild(stringTwo);
+        totalKite.addChild(kite);
+
+
+var point = new Point(view.center.x, view.center.y);
+
+function onFrame(event) {
+
+	weather.update(event.time);
+
+  stringOne.strokeWidth = weather.value*10;
+  stringTwo.strokeWidth = weather.value*10;
+
+  var newRotation = 9 + weather.windSpeed;
+  totalKite.rotate(newRotation, point);
+
+  kite.fillColor = new Color(0.04, 0.08+weather.temperature, 0.2);
+
+
+  //cleanAgents();
+  var dir = weather.windDirection;
+
+
+  if(dir >= 110 && dir < 120 && event.count % 10 == 0){
+
+    //cleanAgents();
+
+    var westAgentOne = new Agent(new Point(0 , view.center.y+Math.random()*50));
+    var westAgentThree = new Agent(new Point(0 , view.center.y-Math.random()*50));
+
+        var targetEast = new Point(view.size.width + 70, view.center.y);
+
+        westAgentOne.addBehaviour(new Behaviour.FollowPoint(targetEast));
+        westAgentThree.addBehaviour(new Behaviour.FollowPoint(targetEast));
+
+        westAgentOne.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+        westAgentThree.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+
+        westAgentOne.addBehaviour(new Behaviour.Repulse(20));
+        westAgentThree.addBehaviour(new Behaviour.Repulse(20));
+
+        westAgentOne.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+        westAgentThree.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+
+        //westAgentOne.addBehaviour(new Behaviour.RepulsePoint(view.center));
+        //westAgentTwo.addBehaviour(new Behaviour.RepulsePoint(view.center));
+  
+}
+
+  if(dir >= 120 && dir < 130 && event.count % 10 ==0){
+
+    //cleanAgents();
+
+    var EastAgentOne = new Agent(new Point(view.size.width+10 , view.center.y+Math.random()*50));
+    //var EastAgentTwo = new Agent(new Point(view.size.width+10 , view.center.y;
+    var EastAgentThree = new Agent(new Point(view.size.width+10 , view.center.y-Math.random()*50));
+
+    var targetWest = new Point(-70, view.center.y);
+
+        EastAgentOne.addBehaviour(new Behaviour.FollowPoint(targetWest));
+        //EastAgentTwo.addBehaviour(new Behaviour.FollowPoint(targetWest));
+        EastAgentThree.addBehaviour(new Behaviour.FollowPoint(targetWest));
+
+        EastAgentOne.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+        //EastAgentTwo.addBehaviour(new Behaviour.Trace());
+        EastAgentThree.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+
+        EastAgentOne.addBehaviour(new Behaviour.Repulse(20));
+        //EastAgentTwo.addBehaviour(new Behaviour.Repulse(10));
+        EastAgentThree.addBehaviour(new Behaviour.Repulse(20));
+
+       EastAgentOne.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+       EastAgentThree.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+
+
+  }
+   if(dir >= 130 && dir < 140 && event.count%10 == 0){
+
+    //cleanAgents();
+
+      var NorthAgentOne = new Agent(new Point(view.center.x + Math.random()*50, -70));
+      var NorthAgentThree = new Agent(new Point(view.center.x - Math.random()*50, -70));
+
+      var targetSouth = new Point(view.center.x , view.size.height +70);
+
+      NorthAgentOne.addBehaviour(new Behaviour.FollowPoint(targetSouth));
+      NorthAgentThree.addBehaviour(new Behaviour.FollowPoint(targetSouth));
+
+      NorthAgentOne.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+      NorthAgentThree.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+
+      NorthAgentOne.addBehaviour(new Behaviour.Repulse(20));
+      NorthAgentThree.addBehaviour(new Behaviour.Repulse(20));
+
+      NorthAgentOne.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+      NorthAgentThree.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+
+   }
+   
+
+   if(dir >= 140 && dir < 150 && event.count%10 == 0){
+
+      //cleanAgents();
+
+   var SouthAgentOne = new Agent(new Point(view.center.x + Math.random()*50, view.size.height + 70));
+   var SouthAgentThree = new Agent(new Point(view.center.x - Math.random()*50, view.size.height + 70));
+   var targetNorth = new Point(view.center.x, -70);
+
+   SouthAgentOne.addBehaviour(new Behaviour.FollowPoint(targetNorth));
+   SouthAgentThree.addBehaviour(new Behaviour.FollowPoint(targetNorth));
+
+   SouthAgentOne.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+   SouthAgentThree.addBehaviour(new Behaviour.Trace(new Color(0.04, 0.08+weather.temperature, 0.2, 0.5)));
+
+   SouthAgentOne.addBehaviour(new Behaviour.Repulse(20));
+   SouthAgentThree.addBehaviour(new Behaviour.Repulse(20));
+
+   SouthAgentOne.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+   SouthAgentThree.addBehaviour(new Behaviour.RepulsePoint(view.center, 50));
+
+   }
+//console.log(weather.avgValue);
+}
+
+
+/*function cleanAgents() {
+
+  var len = Agent.list.length;
+
+  while(len-- > 0){
+    var a = Agent.list[len];
+    if(a.position.x < -0 || a.position.x > 510 ) {
+      Agent.list.splice(len, 1);
+      console.log('remove agent X ' + len);
+    }
+
+    if(a.position.y < -0 || a.position.y > 510){
+      Agent.list.splice(len, 1);
+      console.log('remove agent Y ' + len);
+    }
+  }
+}*/
+
+</script>
+</head>
+<body style="background:white">
+  <canvas id="myCanvas" width="512" height="512" style="background: black"></canvas>
+</body>
+</html>

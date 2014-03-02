@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+	
+
+	var greyColor = new Color (0.3,0.3,0.3);
+	var glucose = new GlucoseSignal();
+	//var angle = 0;
+
+	var face = new Path.Circle(new Point(300,300), 200);
+	face.position = view.center;
+	face.fillColor = 'yellow';
+
+	//happy face
+	
+
+  //lash.position = view.center;
+	var eye1 = new Path.Circle(view.center.x+70,view.center.y-50, 25);
+	eye1.fillColor = greyColor;
+
+	var eye2 = new Path.Circle(view.center.x-70,view.center.y-50, 25);
+	eye2.fillColor = greyColor;
+
+	var browL = Path.Rectangle(view.center.x-105, view.center.y-110, 70, 5);
+	browL.fillColor = greyColor;
+
+	var browR = Path.Rectangle(view.center.x+40, view.center.y-110, 70, 5);
+	browR.fillColor = greyColor;
+
+  /*var hair = new Path.Circle(view.center.x+145,view.center.y-250, 200);
+  hair.fillColor = 'blue';
+  hair.fillColor.alpha = 0.5;*/
+
+
+
+	/*var brow3 = Path.Rectangle(view.center.x-105, view.center.y-110, 70, 5);
+	brow3.fillColor = greyColor;
+	brow3.rotate(30);*/
+
+	
+	var mouthCirc = new Path.Circle(view.center.x, view.center.y+30, 100);
+	var mouthRect = new Path.Rectangle(view.center.x-100, view.center.y+30, 200, 200);
+	var intersection = mouthRect.intersect(mouthCirc);
+
+  var lash = new Path.RegularPolygon(view.center, 3, 10);
+  //lash.fillColor = [0.3,0.3,0.3,0.5];
+
+  lash.position = [view.center.x-70, view.center.y-80];
+  lash.fillColor = greyColor;
+  //clone eyelash
+  var clonelash1 = lash.clone().rotate(45).translate([view.center.x-230, view.center.y-242]);
+  var clonelash2 = lash.clone().rotate(-45).translate([view.center.x-270, view.center.y-242]);
+
+  var clonelash3 = lash.clone().rotate(0).translate([view.center.x-110, view.center.y-250]);
+  var clonelash4 = lash.clone().rotate(45).translate([view.center.x-90, view.center.y-242]);
+  var clonelash5 = lash.clone().rotate(-45).translate([view.center.x-130, view.center.y-242]);
+
+   var group = new Group();
+  group.addChild(lash);
+  group.addChild(clonelash1);
+  group.addChild(clonelash2);
+  group.addChild(clonelash3);
+  group.addChild(clonelash4);
+  group.addChild(clonelash5);
+
+ // group.fillColor = new Color (;
+
+
+  
+  
+
+
+
+  //intersection.position.x = view.center+20;
+  //intersection.position.y = view.center; 
+
+	//Timeline.anim(intersection.position).to({x:400, y:100});
+	//Timeline.anim(intersection.rotation).to(180);
+
+
+
+	//var interC = intersection.clone().translate([0, -10]);
+	
+	//var interC = intersection.clone().rotate(180);
+	//interC.fillColor = 'grey';
+	//intersection.clone().rotate(180);
+	//mouthCirc.fillColor = 'black';
+	//mouthRect.fillColor = new Color(0.33,0.86,0.87,0.7);
+	//intersection.selected = true;
+	intersection.fillColor = greyColor;
+	//intersection.position += [,+100]	
+
+  var mood = 'unknown';
+
+	function moveBrowHappy (event){
+		//var angle = 0;
+		//angleDirection = 1; //this should be +1 or -1
+    //var result=null;
+    //0 neutral
+    //1 happy
+    //2 mad
+
+    //1.if glucose is between 0.8 and 0.9 and i'm not alreayd happy and animating
+
+    //.2
+
+    //console.log(glucose.value, glucose.value > 0.0, glucose.value < 0.9, mood != 'happy')
+
+    if(glucose.value > 0.0 && glucose.value < 0.2 && mood != 'sad') {
+      mood = 'sad';      
+      Timeline.anim(browL).to({rotation: 45}, 2);
+      Timeline.anim(face.fillColor).to('red');
+      Timeline.anim(face.fillColor).to({hue:0}, 2);
+      Timeline.anim(browR).to({rotation: -45}, 2);
+      Timeline.anim(intersection).to({rotation:-180});
+      //Timeline.anim(intersection).to({scale:1.0});
+      //Timeline.anim(intersection.position).to(1, {x:view.center.x, y:view.center.y+50}, 1);
+    }
+
+    if(glucose.value > 0.2 && glucose.value < 0.4 && mood != 'neutral') {
+      mood = 'neutral';      
+      Timeline.anim(browL).to({rotation: 0}, 2);
+      Timeline.anim(browR).to({rotation: 0}, 2);
+      Timeline.anim(intersection).to({rotation:0});
+      Timeline.anim(face.fillColor).to({hue:60}, 2);
+     // Timeline.anim(group.fillColor).to({alpha:0.0});
+      Timeline.anim(intersection).to({scale:1.0});
+      //Timeline.anim(intersection).to({scale:1.0});
+    }
+
+    if(glucose.value > 0.4 && glucose.value < 0.6 && mood != 'happy') {
+      mood = 'happy';      
+      Timeline.anim(browL).to({rotation: -45}, 2);
+      Timeline.anim(browR).to({rotation: 45}, 2);
+      Timeline.anim(intersection).to({rotation:0});
+      Timeline.anim(face.fillColor).to({hue:60}, 2);
+      //Timeline.anim(face.fillColor).to({hue:-0.5}, 2);
+      //Timeline.anim(intersection).to({scale:1.0});
+      //Timeline.anim(group.fillColor).to({alpha:1.0});
+      Timeline.anim(intersection).to({scale:1.0});
+       //turn off yellow
+    }
+
+    if(glucose.value > 0.6 && glucose.value < 0.8 && mood != 'neutral') {
+      mood = 'neutral';      
+      Timeline.anim(browL).to({rotation: 0}, 2);
+      Timeline.anim(browR).to({rotation: 0}, 2);
+      Timeline.anim(intersection).to({rotation:0});
+      Timeline.anim(face.fillColor).to({hue:60}, 2);
+      //Timeline.anim(face.fillColor).to({hue:-0.5}, 2).to({hue:1.0});
+      //Timeline.anim(face).to({brightness:0.5});
+      //Timeline.anim(greenCircle.fillColor).to(12, {brightness:1});
+      Timeline.anim(intersection).to({scale:0.4});
+    }
+
+    if(glucose.value > 0.8 && glucose.value < 1.0 && mood != 'sad') {
+      mood = 'sad';      
+      Timeline.anim(browL).to({rotation: 45}, 2);
+      Timeline.anim(browR).to({rotation: -45}, 2);
+      Timeline.anim(face.fillColor).to({hue:0}, 2);
+       Timeline.anim(face.fillColor).to({hue:0}, 2);
+      //Timeline.anim(intersection).to({scale:0.0});
+      //Timeline.anim(intersection).to({scale:1.0});
+      Timeline.anim(intersection).to({rotation:-180});
+      Timeline.anim(intersection).to({scale:1.0});
+      Timeline.anim(group).to({alpha:0.0});
+    }
+
+    /*if(glucose.value > 0.4 && glucose.value < 0.9 && mood == 'happy') {
+      mood = 'sad';      
+      //eye1.fillColor = 'red';
+      var hueValue = 300;
+      Timeline.anim(eye1).tofillColor = ({hue:hueValue});
+      Timeline.anim(eye2).tofillColor = ({hue:hueValue});
+      Timeline.anim(browL).to({rotation: 45}, 2);
+      Timeline.anim(browR).to({rotation: -45}, 2);
+    }*/
+
+    
+
+
+		/*
+    if(glucose.value > 0.9 && glucose.value < 0.8 && mood == 'neutral'){
+
+      Timeline.anim(browL).to({rotate: -45});
+      Timeline.anim(browR).to({rotate: 45});
+      mood = 'happy';
+    }
+
+    if(glucose.value > 0.2 && glucose.value < 0.4 && mood = 'happy'){
+
+      Timeline.anim(browL).to({rotate: 90});
+      Timeline.anim(browR).to({rotate: -90});
+      mood = 'sad';
+    }
+
+    if(glucose.value > 0.4 && glucose.value < 0.6 && mood = 'sad'){
+
+      Timeline.anim(browL).to({rotate: 90});
+      Timeline.anim(browR).to({rotate: -90});
+      mood = 'neutral';
+    }
+    */
+}
+
+    //happy
+
+		/*if(glucose.value > 0.4 && glucose.value < 0.6)
+		{
+			if(abs(angle) < 45) {
+				brow1.rotate(-angleDirection);
+				brow2.rotate(angleDirection);
+				angle = angle +1;
+			}
+			else if (abs(angle) > 45) {
+				angleDirection = angleDirection * (-1);
+        //do i have to return the angle??
+			}
+
+    //sad
+    if(glucose.value > 0.2 && glucose.value < 0.4)
+    {
+      if(abs(angle) < 45) {
+        brow1.rotate(angleDirection);
+        brow2.rotate(-angleDirection);
+        angle = angle +1;
+      }
+      else if (abs(angle) > 45) {
+        angleDirection = angleDirection * (-1);
+        //do i have to return the angle??
+      }
+    }
+    */
+
+
+		
+		
+	
+		
+
+		
+
+	
+
+	
+
+	/*var brow2 = Path.Rectangle(new Point(600,620), new Size(100,20));
+	mouth.fillColor = 'black';
+
+	var mouth = Path.Rectangle(new Point(600,620), new Size(20,20));
+	mouth.fillColor = 'black';*/
+
+
+	function onFrame(event) {
+    Timeline.update();
+
+		glucose.update(event.time);
+		
+			moveBrowHappy();
+		
+		
+		}	
+	
+
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background-color:#222222;"></canvas>
+</body>
+</html>
+</html>

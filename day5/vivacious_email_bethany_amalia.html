@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/Audiolet.min.js"></script><!-- synth -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var email = new EmailSignal();
+
+var numAgents1 = 2;
+var numAgents2 = 2;
+var numAgents3 = 3;
+var numAgents4 = 2;
+var numAgents5 = 5;
+var numAgents6 = 12;
+var numAgents7 = 13;
+var numAgents8 = 10;
+var numAgents9 = 3;
+var numAgents10 = 3;
+var numAgents11 = 2;
+var numAgents12 = 5;
+
+
+var agents = [];
+
+var path1 = new Path.RegularPolygon(view.center, 5, 20);
+path1.strokeColor = 'black';
+path1.fillColor = 'grey';
+path1.visible = true;
+path1.opacity = .30;
+path1.dashArray = [5,10];
+//path1.flatten = 1;s
+
+var path2 = new Path.RegularPolygon(view.center, 5, 40);
+path2.strokeColor = 'black';
+path2.fillColor = 'grey';
+path2.visible = true;
+path2.opacity = .20;
+//path2.flatten = 1;
+
+var path3 = new Path.RegularPolygon(view.center, 5, 60);
+path3.strokeColor = 'black';
+path3.fillColor = 'grey';
+path3.visible = true;
+path3.opacity = .20;
+path3.dashArray = [5,10];
+//path3.flatten = 1;
+
+
+var path4 = new Path.RegularPolygon(view.center, 6, 90);
+path4.strokeColor = 'black';
+path4.visible = true;
+path4.fillColor = 'grey';
+path4.opacity = .20;
+//path4.flatten = 1;
+
+var path5 = new Path.RegularPolygon(view.center, 7, 110);
+path5.strokeColor = 'black';
+path5.visible = true;
+path5.fillColor = 'grey';
+path5.opacity = .20;
+path5.dashArray = [5,10];
+//path5.flatten = 1;
+
+var path6 = new Path.RegularPolygon(view.center, 8, 130);
+path6.strokeColor = 'black';
+path6.visible = true;
+path6.fillColor = 'grey';
+path6.opacity = .20;
+//path6.flatten = 1;
+
+var path7 = new Path.RegularPolygon(view.center, 9, 150);
+path7.strokeColor = 'black';
+path7.visible = true;
+path7.fillColor = 'grey';
+path7.opacity = .20;
+path7.dashArray = [5,10];
+//path7.flatten = 1;
+
+var path8 = new Path.RegularPolygon(view.center, 10, 170);
+path8.strokeColor = 'black';
+path8.visible = true;
+path8.fillColor = 'grey';
+path8.opacity = .20;
+//path8.flatten = 1;
+
+var path9 = new Path.RegularPolygon(view.center, 11, 190);
+path9.strokeColor = 'black';
+path9.visible = true;
+path9.fillColor = 'grey';
+path9.opacity = .20;
+path9.dashArray = [5,10];
+//path9.flatten = 1;
+
+var path10 = new Path.RegularPolygon(view.center, 12, 210);
+path10.strokeColor = 'black';
+path10.visible = true;
+path10.fillColor = 'grey';
+path10.opacity = .20;
+
+//path10.flatten = 1;
+
+var path11 = new Path.RegularPolygon(view.center, 13, 230);
+path11.strokeColor = 'black';
+path11.visible = true;
+path11.fillColor = 'grey';
+path11.opacity = .20;
+path11.dashArray = [5,10];
+//path11.flatten = 1;
+
+var path12 = new Path.RegularPolygon(view.center, 14, 245);
+path12.strokeColor = 'black';
+path12.visible = true;
+path12.fillColor = 'grey';
+path12.opacity = .20;
+//path12.flatten = 1;
+
+
+
+function onFrame(event) {
+  path1.rotate(3);
+  path2.rotate(-2.5);
+  path3.rotate(2);
+  path4.rotate(-2.5);
+  path5.rotate(2);
+  path6.rotate(-2.5);
+  path7.rotate(2);
+  path8.rotate(-2.5);
+  path9.rotate(2);
+  path10.rotate(-2.5);
+  path11.rotate(1);
+  path12.rotate(-0.5);
+
+
+  Timeline.update();
+  email.update(event.time);
+}
+
+/*function onFrame(event) {
+  email.update(event.time)
+  console.log(email.value);
+  console.log(email.avgValue);
+  console.log(email.delta);
+  console.log(email.count);
+  email.onEmail = function(count){
+    console.log('You've got a message!)
+  }
+}
+*/
+
+
+for (var i=0; i<numAgents1; i++){
+  var randomAgent1 = new Agent(new Point(view.center.x, view.center.y-250));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent1.setPath(incoming);
+  randomAgent1.addBehaviour(new Behaviour.FollowPath(path1,true));
+  randomAgent1.addBehaviour(new Behaviour.Trace('grey', 1));
+  randomAgent1.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent1);
+}
+
+for (var i=0; i<numAgents2; i++){
+  var randomAgent2 = new Agent(new Point(view.center.x + 175, 0));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent2.setPath(incoming);
+  randomAgent2.addBehaviour(new Behaviour.FollowPath(path2,true));
+  randomAgent2.addBehaviour(new Behaviour.Trace('grey', 1));
+  randomAgent2.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent2);
+}
+  
+for (var i=0; i<numAgents3; i++){
+  var randomAgent3 = new Agent(new Point(view.center.x + 250, 175));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent3.setPath(incoming);
+  randomAgent3.addBehaviour(new Behaviour.FollowPath(path3,true));
+  randomAgent3.addBehaviour(new Behaviour.Trace('grey', 1));
+  randomAgent3.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent3); 
+}
+
+for (var i=0; i<numAgents4; i++){
+  var randomAgent4 = new Agent(new Point(view.center.x + 250, 250));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent4.setPath(incoming);
+  randomAgent4.addBehaviour(new Behaviour.FollowPath(path4,true));
+  randomAgent4.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent4.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent4); 
+}
+
+for (var i=0; i<numAgents5; i++){
+  var randomAgent5 = new Agent(new Point(view.center.x + 250, 375));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent5.setPath(incoming);
+  randomAgent5.addBehaviour(new Behaviour.FollowPath(path5,true));
+  randomAgent5.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent5.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent5); 
+}
+
+for (var i=0; i<numAgents6; i++){
+  var randomAgent6 = new Agent(new Point(view.center.x +175, 500));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent6.setPath(incoming);
+  randomAgent6.addBehaviour(new Behaviour.FollowPath(path6,true));
+  randomAgent6.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent6.addBehaviour(new Behaviour.Repulse(30));
+  agents.push(randomAgent6); 
+}
+
+for (var i=0; i<numAgents7; i++){
+  var randomAgent7 = new Agent(new Point(view.center.x, view.center.y + 250));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent7.setPath(incoming);
+  randomAgent7.addBehaviour(new Behaviour.FollowPath(path7,true));
+  randomAgent7.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent7.addBehaviour(new Behaviour.Repulse(40));
+  agents.push(randomAgent7); 
+}
+
+for (var i=0; i<numAgents8; i++){
+  var randomAgent8 = new Agent(new Point(175, 500));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent8.setPath(incoming);
+  randomAgent8.addBehaviour(new Behaviour.FollowPath(path8,true));
+  randomAgent8.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent8.addBehaviour(new Behaviour.Repulse(50));
+  agents.push(randomAgent8); 
+}
+
+for (var i=0; i<numAgents9; i++){
+  var randomAgent9 = new Agent(new Point(0, 375));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent9.setPath(incoming);
+  randomAgent9.addBehaviour(new Behaviour.FollowPath(path9,true));
+  randomAgent9.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent9.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent9); 
+}
+
+for (var i=0; i<numAgents10; i++){
+  var randomAgent10 = new Agent(new Point(0, view.center.y));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent10.setPath(incoming);
+  randomAgent10.addBehaviour(new Behaviour.FollowPath(path10,true));
+  randomAgent10.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent10.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent10); 
+}
+
+for (var i=0; i<numAgents11; i++){
+  var randomAgent11 = new Agent(new Point(0, 100));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent11.setPath(incoming);
+  randomAgent11.addBehaviour(new Behaviour.FollowPath(path11,true));
+  randomAgent11.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent11.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent11); 
+}
+
+for (var i=0; i<numAgents12; i++){
+  var randomAgent12 = new Agent(new Point(100, 0));
+  var incoming = new Shape.Circle(view.center, 2);
+  incoming.fillColor = 'black';
+  randomAgent12.setPath(incoming);
+  randomAgent12.addBehaviour(new Behaviour.FollowPath(path12,true));
+  randomAgent12.addBehaviour(new Behaviour.Trace('black', 1));
+  randomAgent12.addBehaviour(new Behaviour.Repulse(10));
+  agents.push(randomAgent12); 
+}
+
+
+
+
+
+
+
+
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:white;"></canvas>
+</body>
+</html>

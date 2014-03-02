@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+	<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+	<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+	<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+	<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+	<script type="text/paperscript" canvas="myCanvas">
+
+		Behaviour.RepulsePointAnimated = function(point, radius) {
+			this.radius = radius || 50
+			this.update = function(agent, deltaTime, frame) {
+				var force = new Point(0, 0);
+				var dist = point.subtract(agent.position);
+				var len = dist.length;
+
+				if (len < this.radius) {
+					if (len > 0.2) {
+						force = force.subtract(dist.scale(this.radius/len));
+					}
+				}
+				agent.force  = agent.force.add(force);
+			}
+		}
+
+		var bulbsquare = new Path.RegularPolygon(new Point(250,0), 4, 40);
+		bulbsquare.fillColor = 'yellow';
+		bulbsquare.visible = false;
+		var bulbcircle = new Path.Circle(new Point(250,70),55);
+		bulbcircle.fillColor = 'yellow';
+		bulbcircle.visible = false;
+		var bulb = bulbsquare.unite(bulbcircle);
+		bulb.fillColor= 'yellow';
+		bulb.selected = false;
+		bulb.flatten (20);
+		bulb.smooth();
+		bulb.dashArray = [7,2];
+		bulb.strokeColor= 'white';
+		bulb.strokeWidth= 0.5;
+
+
+
+		var numAgents = 50;
+		var agents = [];
+		var bulbSegments = 20;
+		var weather = new WeatherSignal();
+
+
+		for (var i=0; i<numAgents; i++){
+			var startPoint = new Agent(0,0);
+			startPoint.position.x = Math.random() * view.size.width;
+			startPoint.position.y =  Math.random() * view.size.height;
+
+			var fly= new Path.Star([250,500], 15,2,8);
+			fly.fillColor = 'white';
+			startPoint.setPath(fly);
+
+			var target = new Point([250,70]);
+			var targetcircle = new Path.Circle(target, 10);
+			targetcircle.strokeColor = 'red';
+			targetcircle.strokeWidth = 2;
+			targetcircle.visible = false;
+
+			startPoint.addBehaviour(new Behaviour.FollowPoint(target));
+			startPoint.addBehaviour(new Behaviour.Shake(15));
+			startPoint.addBehaviour(new Behaviour.Repulse(30));
+
+			for (var j=0; j<bulbSegments; j++) {
+				startPoint.addBehaviour(new Behaviour.RepulsePointAnimated(bulb.segments[j].point, 50));
+			};
+			agents.push(startPoint);
+		}
+
+		function animateBulb(){
+			for(var agentIndex=0; agentIndex < agents.length; agentIndex++) {
+				for (var i = 3; i<bulbSegments+3; i++){
+				agents[agentIndex].behaviours[i].radius = 200 * weather.temperature;
+				}
+			}
+
+			if (weather.temperature<1){
+				if(weather.temperature>0){
+					Timeline.anim(bulb.fillColor).to({brightness: Math.abs(weather.temperature-1)});
+
+					//Timeline.anim(startPoint.behaviours[3]).to({radius: weather.temperature *10});
+				}
+			}
+		// 	for (var j =0; j<agents.length; j++){
+		// 		if (weather.temperature<1){
+		// 		Timeline.anim(target)
+		// 			.to ({x:Math.random()*view.size.width,y:Math.random()*view.size.height});
+		// }	
+
+		// }
+
+		}
+
+		function onFrame(event){
+			weather.update(event.time)
+			animateBulb();
+			
+			//console.log(weather.temperature);
+			Timeline.update();
+
+		}
+
+
+</script>
+</head>
+<body style="background:#444444">
+	<canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+</body>
+</html>

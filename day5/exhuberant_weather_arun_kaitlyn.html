@@ -1,0 +1,248 @@
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <script type="text/javascript" src="js/paper.js"></script>
+  <script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+  <script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+  <script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+  <script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+  <script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+  <script type="text/paperscript" canvas="myCanvas">
+
+  
+  var numAgents = 7;
+  var agents = [];
+  var shape = new Path.Circle(new Point(100, 100), new Size(30, 30))
+  shape.fillColor = 'darkgrey';
+
+  shape.position = view.center;
+
+  //Timeline.anim(shape.position).to({x:view.center.x, y:view.center.y}, 1, Timeline.Easing.Cubic.EaseOut)
+   
+
+  //Wind
+  //speed
+  //object
+  //Repulse
+  //movelineDirection
+
+   //Line01
+  var path = new Path.Line([700,50], 0, 50);
+  path.strokeColor = 'blue';
+  path.visible = false;
+
+  var rainbowBehaviour = new Behaviour();
+  rainbowBehaviour.update = function(agent, deltaTime) {
+     agent.shape.fillColor.hue += 2;
+     agent.trace.strokeColor.hue += 2;
+  }
+
+  for(var i=0; i<numAgents; i++) {
+    var randomAgent = new Agent(new Point(-3, 50));
+   
+    randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+    randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+    
+    randomAgent.addBehaviour(new Behaviour.RepulseMouse(70));
+    randomAgent.addBehaviour(rainbowBehaviour);
+
+    agents.push(randomAgent);
+    path.smooth();
+    
+}
+
+ //Line02
+  var path = new Path.Line([700,100], 0, 100);
+  path.strokeColor = 'blue';
+  path.visible = false;
+
+  var rainbowBehaviour = new Behaviour();
+  rainbowBehaviour.update = function(agent, deltaTime) {
+     agent.shape.fillColor.hue += 2;
+     agent.trace.strokeColor.hue += 2;
+  }
+
+  for(var i=0; i<numAgents; i++) {
+    var randomAgent = new Agent(new Point(-3, 100));
+   
+    randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+    randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+    
+    randomAgent.addBehaviour(new Behaviour.RepulseMouse(70));
+    randomAgent.addBehaviour(rainbowBehaviour);
+   
+    agents.push(randomAgent);
+    path.smooth();
+
+  }
+  //Line03
+  var path = new Path.Line([700,150], 0, 150);
+  path.strokeColor = 'blue';
+  path.visible = false;
+
+  var rainbowBehaviour = new Behaviour();
+  rainbowBehaviour.update = function(agent, deltaTime) {
+     agent.shape.fillColor.hue += 2;
+     agent.trace.strokeColor.hue += 2;
+  }
+
+  for(var i=0; i<numAgents; i++) {
+    var randomAgent = new Agent(new Point(-3, 150));
+   
+    randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+    randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+   
+    randomAgent.addBehaviour(new Behaviour.RepulseMouse(70));
+    randomAgent.addBehaviour(rainbowBehaviour);
+    
+    agents.push(randomAgent);
+    path.smooth();
+    
+
+  }
+
+//Line04
+  var path = new Path.Line([700,220], 0, 220);
+  path.strokeColor = 'blue';
+  path.visible = false;
+
+  var rainbowBehaviour = new Behaviour();
+  rainbowBehaviour.update = function(agent, deltaTime) {
+     agent.shape.fillColor.hue += 2;
+     agent.trace.strokeColor.hue += 2;
+  }
+
+  for(var i=0; i<numAgents; i++) {
+    var randomAgent = new Agent(new Point(-3, 220));
+   
+    randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+    randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+    
+    randomAgent.addBehaviour(new Behaviour.RepulsePoint(shape.position,70));
+    randomAgent.addBehaviour(rainbowBehaviour);
+    
+    agents.push(randomAgent);
+    path.smooth();
+
+
+  }
+   //Line04
+  var path = new Path.Line([700,270], 0, 270);
+  path.strokeColor = 'blue';
+  path.visible = false;
+
+  var rainbowBehaviour = new Behaviour();
+  rainbowBehaviour.update = function(agent, deltaTime) {
+     agent.shape.fillColor.hue += 2;
+     agent.trace.strokeColor.hue += 2;
+  }
+
+  for(var i=0; i<numAgents; i++) {
+    var randomAgent = new Agent(new Point(-3, 270));
+
+    
+   
+    randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+    //randomAgent.addBehaviour(new Behaviour.Walk(new Point(50, 0)));
+    randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+   
+    randomAgent.addBehaviour(new Behaviour.RepulsePoint(shape.position,70));
+    randomAgent.addBehaviour(rainbowBehaviour);
+
+    agents.push(randomAgent);
+    path.smooth();
+    
+
+  }
+  //Line05
+  // var path = new Path.Line([700,300], 0, 300);
+  // path.strokeColor = 'blue';
+  // path.visible = false;
+
+  // var rainbowBehaviour = new Behaviour();
+  // rainbowBehaviour.update = function(agent, deltaTime) {
+  //    agent.shape.fillColor.hue += 2;
+  //    agent.trace.strokeColor.hue += 2;
+  // }
+
+  // for(var i=0; i<100; i++) {
+  //   var randomAgent = new Agent(new Point(-3, 300));
+    
+    
+   
+  //   randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+  //   randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+   
+  //   randomAgent.addBehaviour(new Behaviour.RepulseMouse(50));
+  //   randomAgent.addBehaviour(rainbowBehaviour);
+    
+  //   agents.push(randomAgent);
+  //   path.smooth();
+
+  // }
+
+  //Line06
+  var path = new Path.Line([700,350], 0, 350);
+  path.strokeColor = 'blue';
+  path.visible = false;
+
+  var rainbowBehaviour = new Behaviour();
+  rainbowBehaviour.update = function(agent, deltaTime) {
+     agent.shape.fillColor.hue += 2;
+     agent.trace.strokeColor.hue += 2;
+  }
+
+  for(var i=0; i<numAgents; i++) {
+    var randomAgent = new Agent(new Point(-3, 350));
+   
+    randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+    randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+   
+    randomAgent.addBehaviour(new Behaviour.RepulseMouse(70));
+    randomAgent.addBehaviour(rainbowBehaviour);
+    
+    agents.push(randomAgent);
+    path.smooth();
+    
+
+  }
+  //Line07
+  var path = new Path.Line([700,400], 0, 400);
+  path.strokeColor = 'blue';
+  path.visible = false;
+
+  var rainbowBehaviour = new Behaviour();
+  rainbowBehaviour.update = function(agent, deltaTime) {
+     agent.shape.fillColor.hue += 2;
+     agent.trace.strokeColor.hue += 2;
+  }
+
+  for(var i=0; i<numAgents; i++) {
+    var randomAgent = new Agent(new Point(-3, 400));
+
+    randomAgent.addBehaviour(new Behaviour.FollowPath(path, true));
+    randomAgent.addBehaviour(new Behaviour.Trace('blue'));
+
+    randomAgent.addBehaviour(new Behaviour.RepulseMouse(70));
+    randomAgent.addBehaviour(rainbowBehaviour);
+
+    agents.push(randomAgent);
+    path.smooth();
+
+  }
+
+   onFrame = function(frame) {
+
+    Timeline.anim(shape).to({scale:1 + 0.2 * Math.sin(frame.time * 5)}, 0)
+
+    Timeline.update();
+
+    
+  }
+
+  </script>
+  </head>
+  <body style="background:#444444">
+    <canvas id="myCanvas" width="500" height="500" style="background:black;"></canvas>
+  </body>
+  </html>

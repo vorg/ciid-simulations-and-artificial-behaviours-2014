@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+var sizeCircle = 30;
+var sizeCrown = 30;
+var sizeNipple = 10;
+var email = new EmailSignal();
+
+
+
+var circleL = new Shape.Circle(new Point(view.size.width * 1/4,view.size.height* 2/4),sizeCircle);
+circleL.fillColor = new Color ("#FDCBBF");
+
+
+var circleR = new Shape.Circle(new Point(view.size.width * 3/4,view.size.height* 2/4),sizeCircle);
+circleR.fillColor = new Color ("#FDCBBF");
+
+
+var crownL = new Shape.Circle(new Point(view.size.width * 1/4,view.size.height* 2/4),sizeCrown);
+crownL.fillColor = new Color ("#FB9B8D");
+
+
+var crownR = new Shape.Circle(new Point(view.size.width * 3/4,view.size.height* 2/4),sizeCrown);
+crownR.fillColor = new Color  ("#FB9B8D");
+
+
+var nippleL = new Shape.Circle(new Point(view.size.width * 1/4,view.size.height* 2/4),sizeNipple);
+nippleL.fillColor = new Color ("#F68373");
+
+var nippleR = new Shape.Circle(new Point(view.size.width * 3/4,view.size.height* 2/4),sizeNipple);
+nippleR.fillColor = new Color ("#F68373");
+
+function changeNColor(){
+  if (email.value > 0) {
+      nippleR.fillColor = new Color ("DarkRed");
+      nippleL.fillColor = new Color ("DarkRed");
+      crownR.fillColor = new Color  ("9f0d00");
+      crownL.fillColor = new Color  ("9f0d00");
+    } else {
+      nippleR.fillColor = new Color ("#F68373");
+      nippleL.fillColor = new Color ("#F68373");
+      crownR.fillColor = new Color  ("#FB9B8D");
+      crownL.fillColor = new Color  ("#FB9B8D");
+    }
+}
+
+var TotalNumEmail = 0;
+
+email.onEmail = function(count) {
+  grow();
+}
+
+function grow () {
+
+  console.log(email.count);
+
+  TotalNumEmail += email.count;
+  //sizeCircle = 30 + (TotalNumEmail * 2);
+  //console.log(TotalNumEmail);
+
+  if (email.count > 0)  {
+     Timeline.anim(circleR).to({scale:1 + 0.5 * TotalNumEmail},0.5,Timeline.Easing.Elastic.EaseInOut); 
+     Timeline.anim(circleL).to({scale:1 + 0.5 * TotalNumEmail},0.5, Timeline.Easing.Elastic.EaseInOut); 
+  }  
+}
+
+function shrink() {
+  if (email.count == 0){
+    TotalNumEmail *= 0.99; 
+    Timeline.anim(circleR).to({scale:1 + 0.5 * TotalNumEmail},0,Timeline.Easing.Elastic.EaseInOut); 
+ Timeline.anim(circleL).to({scale:1 + 0.5 * TotalNumEmail},0,Timeline.Easing.Elastic.EaseInOut); 
+  }
+
+} 
+
+// var clickCount = 0;
+
+//   //this will happen only when we click our rectangle
+//   shape.onMouseDown = function(){
+//     //color has r,g,b,hue,saturation and brightness, alpha
+//     //Math.random() return number 0..1, while hue has value 0...360
+//     var hueValue = Math.random() * 360;
+//     Timeline.anim(shape.fillColor).to({hue:hueValue});
+
+//     clickCount +=1;
+//     Timeline.anim(shape).to({rotation:clickCount * 360})
+
+function onFrame(event){
+  Timeline.update()
+    email.update(event.time);
+    changeNColor();
+    shrink();
+    
+   // Math.sin(event.time);
+  }
+
+</script>
+</head>
+<body style="background:white">
+  <canvas id="myCanvas" width="500" height="500" style="background:#F9C0B1;"></canvas>
+</body>
+</html>

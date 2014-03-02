@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+
+
+var weather = new WeatherSignal();
+var sfondo= new Path.RegularPolygon(view.size.width/2,view.size.height/2,4,500);
+sfondo.fillColor= "#6d91f8";
+
+//****************LEAF*******************
+
+var bodyLeaf = new Path.Circle(new Point(250, 250), 25);
+bodyLeaf.fillColor = "#237C10";
+bodyLeaf.fillColor.alpha=0.85;
+//bodyLeaf.selected= true;
+bodyLeaf.segments[1].point += [0, -80];
+bodyLeaf.segments[3].point += [0, +5];
+
+var gambo = new Path; //line of the leaf
+
+var point1= new Point(250,158);
+var point2= new Point(250,295);
+var gambo= new Path;
+gambo.strokeColor = '#237C10'; //#397c5d
+gambo.strokeWidth=4;
+gambostrokeCap="round";
+gambo.add(point1);
+gambo.add(point2);
+
+var leaf = new Group([gambo, bodyLeaf]);
+leaf.position=[600,600];
+leaf.scale(0.55, 0.38);
+
+//******************END LEAF**************
+
+
+//Curve(point1, handle1, handle2, point2)
+var pointC0= new Point(248,307);
+var pointC1= new Point(210,385);
+var pointC2= new Point(320,460);
+var pointC3= new Point(230,550);
+var curve= new Path();
+curve.moveTo(pointC0);
+curve.cubicCurveTo(pointC1,pointC2, pointC3);
+console.log(pointC0,pointC1,pointC2, pointC3);
+curve.strokeColor="black";
+curve.strokeWidth=3;
+
+var balloon = new Path.Circle(new Point(250, 250), 40);
+balloon.fillColor = "red";
+balloon.segments[1].point += [0, -2];
+balloon.segments[3].point += [0, +13];
+
+var pointB1= new Point(248,302);
+var pointB2= new Point(252,308);
+var pointB3= new Point(244,308);
+var triangleBalloon= new Path;
+triangleBalloon.fillColor="red";
+triangleBalloon.add(pointB1);
+triangleBalloon.add(pointB2);
+triangleBalloon.add(pointB3);
+triangleBalloon.close=true;
+
+var completeBalloon= new Group([curve, balloon, triangleBalloon]);
+completeBalloon.scale(2.2);
+completeBalloon.position += [0,150];
+
+var leafArray = [];
+var numLeaves = 30;
+
+
+for (var i = 0; i < numLeaves; i++) {
+	var copyLeaf = leaf.clone();
+	//copyLeaf.position = new Point(Math.random()*600,Math.random()*600);
+	copyLeaf.position = new Point(Math.random()*600,Math.random()*650 - 250);
+	leafArray.push(copyLeaf);
+}
+
+function onMouseDown(event){
+  console.log(event.point);
+}
+
+
+var oldRotation = 0;
+
+function onFrame(event) {
+	//var addx= Math.floor(Math.random() * (0.2 - -0.2 + 0.2)) + -0.2;
+	//var addy= Math.floor(Math.random() * (0.2- -0.2 + 0.2)) + -0.2;
+	//Math.floor(Math.random() * (UpperRange - LowerRange + 1)) + LowerRange;
+	//completeBalloon.position += [addx,addy];
+	for (var i=0; i<leafArray.length; i++ ){
+
+		weather.update(event.time);
+
+		//wind direction
+		var newRotation = weather.windDirection;
+	  	var rotation = oldRotation - newRotation;
+	  	var copyLeaf1 = leafArray[i];
+	  	copyLeaf1.rotate(rotation);
+
+	  	//wind speed
+	  	var newSpeed=weather.windSpeed;
+	  	copyLeaf1.position.x -= newSpeed/3*Math.random()*1.5;
+	  	copyLeaf1.position.y += newSpeed/10*Math.random()*1.5;
+
+	  	if(copyLeaf1.position.x >view.size.width){
+	  		copyLeaf1.position.x=0;
+	  	}
+	  	if(copyLeaf1.position.x + 50<0){
+	  		copyLeaf1.position.x=view.size.width;
+	  	}
+	  	if(copyLeaf1.position.y -50 > view.size.height){
+	  		copyLeaf1.position.y=0;
+	  	}
+
+	  	// avg wind speed level (0..1)
+	  	var avgSpeed= weather.avgValue;
+	  	sfondo.fillColor.alpha= avgSpeed;
+
+	  	}
+	  	
+	oldRotation = newRotation;  	
+}
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:white;"></canvas>
+</body>
+</html>

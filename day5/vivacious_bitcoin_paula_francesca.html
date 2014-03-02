@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="js/paper-error.js"></script><!-- error helper -->
+<script type="text/javascript" src="js/paper-timeline.js"></script><!-- animation library -->
+<script type="text/javascript" src="js/paper-agents.js"></script><!-- agent library -->
+<script type="text/javascript" src="js/signals-data.js"></script><!-- data -->
+<script type="text/javascript" src="js/signals.js"></script><!-- signals library -->
+<script type="text/paperscript" canvas="myCanvas">
+//map function
+function map(value, start1, stop1, start2, stop2) {
+ 	var mappedValue = ((value-start1)/(stop1 - start1))*(stop2-start2)+start2;
+	return mappedValue;
+}
+
+//all the variables
+var bitcoin = new BitcoinSignal();
+var radius = 15;
+var circle = new Path.Circle(view.center,radius);
+var flowerRadius = 1;
+// var tracePath = new Path({
+// 	fillColor: new Color(0,.5,.5,.5)
+// });
+var traceLines = [];
+var totalFactor = 0;          
+var scaleFactor = 0;               
+//the draw loop					                                      
+function onFrame(event) { 
+	//slow down data
+  var resetTime = (event.time % 60);
+	var time = resetTime;
+  bitcoin.update(time);                                  
+	
+  // do the flower thing               
+  var waveOffset = Math.sin(time*5*bitcoin.avgValue)*200*bitcoin.value;
+  var circleOffX = Math.sin(time)*(flowerRadius*80*bitcoin.value+waveOffset);
+  var circleOffY = Math.cos(time)*(flowerRadius*80*bitcoin.value+waveOffset);
+  var x = view.center.x + circleOffX;        
+  var y = view.center.y + circleOffY;
+  circle.position = [x,y];
+	
+  //trace 
+	var traceLine = new Path.Line(view.center,circle.position);
+	traceLine.strokeColor = new Color(0,.2);
+	traceLines.push(traceLine);
+  // tracePath.add(circle.position);
+  if (traceLines.length > 300) {
+		traceLines[0].remove();
+    traceLines.shift();
+  }
+  
+	
+	totalFactor += scaleFactor;
+  if ((event.count % (60*6)) == 0) {
+  	console.log('time'+time);
+		console.log('totalFactor'+totalFactor);
+ }
+ 
+  if ((event.count % 3600) == 0) { //every minute, reset... 
+	  circle.remove();
+	  circle = new Path.RegularPolygon([x,y],36,radius);
+	  circle.fillColor = 'black';
+		scaleFactor = -totalFactor;
+	}
+	else {
+	 // if (event.delta = 0) {
+	 // 		scaleFactor = -totalFactor;			
+	 // 	}
+		// else {
+			scaleFactor = bitcoin.delta*5;
+		// }
+	  for (i = 0; i<circle.segments.length; i++){
+		  var angle = Math.atan((circle.segments[i].point.y-circle.position.y)/(circle.segments[i].point.x-circle.position.x));
+		  if ((i%2) ==0 ){
+			  if (circle.segments[i].point.x<circle.position.x){
+		  		  circle.segments[i].point.x = circle.segments[i].point.x - (Math.cos(angle)*scaleFactor);
+				    circle.segments[i].point.y = circle.segments[i].point.y - (Math.sin(angle)*scaleFactor); 
+			  }
+		  else {
+		  		  circle.segments[i].point.x = circle.segments[i].point.x + (Math.cos(angle)*scaleFactor);
+				 	  circle.segments[i].point.y = circle.segments[i].point.y + (Math.sin(angle)*scaleFactor); 
+			  }
+		  }
+	  } // end for loop to calculate points
+	}
+ 	  
+}
+
+</script>
+</head>
+<body style="background:#444444">
+  <canvas id="myCanvas" width="500" height="500" style="background:white;"></canvas>
+</body>
+</html>

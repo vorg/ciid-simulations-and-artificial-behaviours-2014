@@ -131,4 +131,6 @@ Example:
 		console.log(weather.temperature);
 	}
 
+### Results day5
 
+[![assertive_bitcoin_henriette_Claudia](day5/explorations/gif/assertive_bitcoin_henriette_Claudia.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/assertive_bitcoin_henriette_Claudia.html)

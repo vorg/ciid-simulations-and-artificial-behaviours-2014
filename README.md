@@ -5,6 +5,42 @@ Workshop at [CIID](http://ciid.dk), Copenhagen, February 2014 by [David Gauthier
 
 This workshop investigates the potential of software as ground for design observations, explorations and artistic utterances. It focuses on concepts and techniques of computer simulations and artificial behaviour modelling, that is, the ways computation may be used to impart machines with anthropomorphic and naturalistic traits, character, actions and reactions. 
 
+### Exploration Results
+
+**Assertive**
+
+[![assertive_bitcoin_henriette_Claudia](day5/explorations/gif/assertive_bitcoin_henriette_Claudia.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/assertive_bitcoin_henriette_Claudia.html)
+[![assertive_glucose_paula_francesca](day5/explorations/gif/assertive_glucose_paula_francesca.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/assertive_glucose_paula_francesca.html)
+[![assertive_wind_julian_anders](day5/explorations/gif/assertive_wind_julian_anders.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/assertive_wind_julian_anders.html)
+
+**Attention seeking**
+
+[![attention_email_angelia_peter](day5/explorations/gif/attention_email_angelia_peter.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/attention_email_angelia_peter.html)
+[![attention_email_julian_anders](day5/explorations/gif/attention_email_julian_anders.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/attention_email_julian_anders.html)
+[![attentionseeking_temprature_hisangLin_arunima](day5/explorations/gif/attentionseeking_temprature_hisangLin_arunima.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/attentionseeking_temprature_hisangLin_arunima.html)
+
+**Exuberant**
+
+[![dramatic_email_haz_martino](day5/explorations/gif/dramatic_email_haz_martino.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/dramatic_email_haz_martino.html)
+[![exhuberant_weather_arun_kaitlyn](day5/explorations/gif/exhuberant_weather_arun_kaitlyn.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exhuberant_weather_arun_kaitlyn.html)
+[![exuberant_Weather_Chiayu_Yash](day5/explorations/gif/exuberant_Weather_Chiayu_Yash.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_Weather_Chiayu_Yash.html)
+[![exuberant_bloodglucose_hisangLin_arunima](day5/explorations/gif/exuberant_bloodglucose_hisangLin_arunima.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_bloodglucose_hisangLin_arunima.html)
+[![exuberant_email_claudia_henriette](day5/explorations/gif/exuberant_email_claudia_henriette.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_email_claudia_henriette.html)
+[![exuberant_glucose_Myoung_Samantha](day5/explorations/gif/exuberant_glucose_Myoung_Samantha.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_glucose_Myoung_Samantha.html)
+[![exuberant_temp_Amalia_Bethany](day5/explorations/gif/exuberant_temp_Amalia_Bethany.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_temp_Amalia_Bethany.html)
+[![exuberant_wind_angelisa_peter](day5/explorations/gif/exuberant_wind_angelisa_peter.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_wind_angelisa_peter.html)
+
+**Vivacious**
+
+[![vivacious_bitcoin_Samer_Simon](day5/explorations/gif/vivacious_bitcoin_Samer_Simon.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_bitcoin_Samer_Simon.html)
+[![vivacious_bitcoin_paula_francesca](day5/explorations/gif/vivacious_bitcoin_paula_francesca.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_bitcoin_paula_francesca.html)
+[![vivacious_email_Samer_Simon](day5/explorations/gif/vivacious_email_Samer_Simon.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_email_Samer_Simon.html)
+[![vivacious_email_bethany_amalia](day5/explorations/gif/vivacious_email_bethany_amalia.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_email_bethany_amalia.html)
+[![vivacious_glucose_arun_kaitlyn](day5/explorations/gif/vivacious_glucose_arun_kaitlyn.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_glucose_arun_kaitlyn.html)
+[![vivacious_glucose_yash_chiayu](day5/explorations/gif/vivacious_glucose_yash_chiayu.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_glucose_yash_chiayu.html)
+[![vivacious_temp_haz_martino](day5/explorations/gif/vivacious_temp_haz_martino.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_temp_haz_martino.html)
+[![vivacious_weather_Myoung_Samantha](day5/explorations/gif/vivacious_weather_Myoung_Samantha.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_weather_Myoung_Samantha.html)
+[![vivaciuos_weather_saurabh_akarsh.html](day5/explorations/gif/vivaciuos_weather_saurabh_akarsh.html.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivaciuos_weather_saurabh_akarsh.html.html)
 
 ## Day 4: Signals
 
@@ -131,40 +167,5 @@ Example:
 		console.log(weather.temperature);
 	}
 
-### Results day5
 
-**Assertive**
-
-[![assertive_bitcoin_henriette_Claudia](day5/explorations/gif/assertive_bitcoin_henriette_Claudia.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/assertive_bitcoin_henriette_Claudia.html)
-[![assertive_glucose_paula_francesca](day5/explorations/gif/assertive_glucose_paula_francesca.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/assertive_glucose_paula_francesca.html)
-[![assertive_wind_julian_anders](day5/explorations/gif/assertive_wind_julian_anders.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/assertive_wind_julian_anders.html)
-
-**Attention seeking**
-
-[![attention_email_angelia_peter](day5/explorations/gif/attention_email_angelia_peter.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/attention_email_angelia_peter.html)
-[![attention_email_julian_anders](day5/explorations/gif/attention_email_julian_anders.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/attention_email_julian_anders.html)
-[![attentionseeking_temprature_hisangLin_arunima](day5/explorations/gif/attentionseeking_temprature_hisangLin_arunima.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/attentionseeking_temprature_hisangLin_arunima.html)
-
-**Exuberant**
-
-[![dramatic_email_haz_martino](day5/explorations/gif/dramatic_email_haz_martino.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/dramatic_email_haz_martino.html)
-[![exhuberant_weather_arun_kaitlyn](day5/explorations/gif/exhuberant_weather_arun_kaitlyn.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exhuberant_weather_arun_kaitlyn.html)
-[![exuberant_Weather_Chiayu_Yash](day5/explorations/gif/exuberant_Weather_Chiayu_Yash.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_Weather_Chiayu_Yash.html)
-[![exuberant_bloodglucose_hisangLin_arunima](day5/explorations/gif/exuberant_bloodglucose_hisangLin_arunima.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_bloodglucose_hisangLin_arunima.html)
-[![exuberant_email_claudia_henriette](day5/explorations/gif/exuberant_email_claudia_henriette.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_email_claudia_henriette.html)
-[![exuberant_glucose_Myoung_Samantha](day5/explorations/gif/exuberant_glucose_Myoung_Samantha.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_glucose_Myoung_Samantha.html)
-[![exuberant_temp_Amalia_Bethany](day5/explorations/gif/exuberant_temp_Amalia_Bethany.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_temp_Amalia_Bethany.html)
-[![exuberant_wind_angelisa_peter](day5/explorations/gif/exuberant_wind_angelisa_peter.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/exuberant_wind_angelisa_peter.html)
-
-**Vivacious**
-
-[![vivacious_bitcoin_Samer_Simon](day5/explorations/gif/vivacious_bitcoin_Samer_Simon.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_bitcoin_Samer_Simon.html)
-[![vivacious_bitcoin_paula_francesca](day5/explorations/gif/vivacious_bitcoin_paula_francesca.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_bitcoin_paula_francesca.html)
-[![vivacious_email_Samer_Simon](day5/explorations/gif/vivacious_email_Samer_Simon.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_email_Samer_Simon.html)
-[![vivacious_email_bethany_amalia](day5/explorations/gif/vivacious_email_bethany_amalia.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_email_bethany_amalia.html)
-[![vivacious_glucose_arun_kaitlyn](day5/explorations/gif/vivacious_glucose_arun_kaitlyn.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_glucose_arun_kaitlyn.html)
-[![vivacious_glucose_yash_chiayu](day5/explorations/gif/vivacious_glucose_yash_chiayu.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_glucose_yash_chiayu.html)
-[![vivacious_temp_haz_martino](day5/explorations/gif/vivacious_temp_haz_martino.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_temp_haz_martino.html)
-[![vivacious_weather_Myoung_Samantha](day5/explorations/gif/vivacious_weather_Myoung_Samantha.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivacious_weather_Myoung_Samantha.html)
-[![vivaciuos_weather_saurabh_akarsh.html](day5/explorations/gif/vivaciuos_weather_saurabh_akarsh.html.gif)](https://rawgithub.com/vorg/ciid-simulations-and-artificial-behaviours-2014/master/day5/explorations/vivaciuos_weather_saurabh_akarsh.html.html)
 
